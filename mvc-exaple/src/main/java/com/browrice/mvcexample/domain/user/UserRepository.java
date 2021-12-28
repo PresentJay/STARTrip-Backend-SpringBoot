@@ -1,6 +1,6 @@
-package com.browrice.mvcexample.repository;
+package com.browrice.mvcexample.domain.user;
 
-import com.browrice.mvcexample.domain.User;
+import com.browrice.mvcexample.domain.user.User;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,7 +1,6 @@
-package com.browrice.mvcexample.repository;
+package com.browrice.mvcexample.domain.user;
 
 
-import com.browrice.mvcexample.domain.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;

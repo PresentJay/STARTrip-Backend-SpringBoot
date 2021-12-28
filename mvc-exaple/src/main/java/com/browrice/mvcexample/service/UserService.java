@@ -1,7 +1,7 @@
 package com.browrice.mvcexample.service;
 
-import com.browrice.mvcexample.domain.User;
-import com.browrice.mvcexample.repository.UserRepository;
+import com.browrice.mvcexample.domain.user.User;
+import com.browrice.mvcexample.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +18,14 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    // 새로운 쌀 등록
+    // 새로운 유저 등록
     public Long create(User user) {
         validateDuplicateUser(user);
         userRepository.save(user);
         return user.getId();
     }
 
+    // 중복검사
     private void validateDuplicateUser(User user) {
         userRepository.findByName(user.getName())
                 .ifPresent(u -> {

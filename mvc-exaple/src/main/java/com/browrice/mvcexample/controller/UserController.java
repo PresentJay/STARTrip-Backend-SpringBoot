@@ -1,6 +1,6 @@
 package com.browrice.mvcexample.controller;
 
-import com.browrice.mvcexample.domain.User;
+import com.browrice.mvcexample.domain.user.User;
 import com.browrice.mvcexample.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.browrice.mvcexample.domain;
+package com.browrice.mvcexample.domain.user;
 
 import lombok.Getter;
 import lombok.Setter;
