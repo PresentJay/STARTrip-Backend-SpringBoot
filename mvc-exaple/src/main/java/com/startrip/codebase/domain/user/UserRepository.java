@@ -1,6 +1,4 @@
-package com.browrice.mvcexample.domain.user;
-
-import com.browrice.mvcexample.domain.user.User;
+package com.startrip.codebase.domain.user;
 
 import java.util.List;
 import java.util.Optional;

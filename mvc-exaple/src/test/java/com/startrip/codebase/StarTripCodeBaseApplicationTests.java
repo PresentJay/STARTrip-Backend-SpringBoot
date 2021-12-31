@@ -1,10 +1,10 @@
-package com.browrice.mvcexample;
+package com.startrip.codebase;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BrownriceMvcExampleApplicationTests {
+class StarTripCodeBaseApplicationTests {
 
     @Test
     void contextLoads() {

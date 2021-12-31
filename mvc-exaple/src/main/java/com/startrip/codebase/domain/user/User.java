@@ -1,4 +1,4 @@
-package com.browrice.mvcexample.domain.user;
+package com.startrip.codebase.domain.user;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,7 +1,7 @@
-package com.browrice.mvcexample.service;
+package com.startrip.codebase.service;
 
-import com.browrice.mvcexample.domain.user.User;
-import com.browrice.mvcexample.domain.user.UserRepository;
+import com.startrip.codebase.domain.user.User;
+import com.startrip.codebase.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +34,7 @@ public class UserService {
     }
 
     // 전체 조회
-    public List<User> findRices(){
+    public List<User> findUsers(){
         return userRepository.findAll();
     }
 

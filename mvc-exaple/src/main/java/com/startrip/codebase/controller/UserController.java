@@ -1,9 +1,11 @@
-package com.browrice.mvcexample.controller;
+package com.startrip.codebase.controller;
 
-import com.browrice.mvcexample.domain.user.User;
-import com.browrice.mvcexample.service.UserService;
+import com.startrip.codebase.domain.user.User;
+import com.startrip.codebase.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController()
 @RequestMapping("/user")
@@ -20,6 +22,11 @@ public class UserController {
     public User getRice(@PathVariable("userId") Long id) {
         User user = userService.findOne(id).get();
         return user;
+    }
+
+    @GetMapping()
+    public List<User> allUser(){
+        return userService.findUsers();
     }
 
     @PostMapping("/new")
