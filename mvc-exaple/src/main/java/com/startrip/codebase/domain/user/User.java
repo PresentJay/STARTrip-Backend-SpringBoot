@@ -10,5 +10,7 @@ import lombok.ToString;
 public class User {
     private Long id;
 
-    private String name; // 원산지
+    private String name;
+
+
 }
