@@ -13,6 +13,9 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging' //기존 로깅툴 제외
+    }
 }
 
 repositories {
@@ -22,7 +25,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
+    implementation 'org.springframework.boot:spring-boot-stater-log4j2' //log
     compileOnly 'org.projectlombok:lombok'
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
