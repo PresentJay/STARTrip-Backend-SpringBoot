@@ -18,6 +18,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/")
+    public String home() {
+        return "hello docker world";
+    }
+
     @GetMapping("/{userId}")
     public User getRice(@PathVariable("userId") Long id) {
         User user = userService.findOne(id).get();
