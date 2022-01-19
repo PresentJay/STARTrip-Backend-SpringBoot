@@ -22,6 +22,8 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security:2.6.2'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.2'
 
     compileOnly 'org.projectlombok:lombok'
 
