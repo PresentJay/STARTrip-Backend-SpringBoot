@@ -36,6 +36,6 @@ public class UserController {
 
         userService.create(user);
 
-        return "저장됨 " + user.getEmail();
+        return user.getEmail();
     }
 }
