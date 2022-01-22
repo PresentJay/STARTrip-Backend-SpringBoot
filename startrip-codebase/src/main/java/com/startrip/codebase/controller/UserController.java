@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController()
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
@@ -24,23 +24,23 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public User getRice(@PathVariable("userId") Long id) {
+    public User login(@PathVariable("userId") Long id) {
         User user = userService.findOne(id).get();
         return user;
     }
 
-    @GetMapping()
+    @GetMapping("/")
     public List<User> allUser(){
         return userService.findUsers();
     }
 
-    @PostMapping("/new")
-    public String create(@RequestParam("name") String name) {
+    @PostMapping("/signup")
+    public String signup(@RequestParam("email") String email) {
         User user = new User();
-        user.setName(name);
+        user.setEmail(email);
 
         userService.create(user);
 
-        return "저장됨 " + user.getName();
+        return user.getEmail();
     }
 }
