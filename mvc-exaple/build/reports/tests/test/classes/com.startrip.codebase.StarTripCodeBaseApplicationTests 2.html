@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - StarTripCodeBaseApplicationTests</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>StarTripCodeBaseApplicationTests</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.startrip.codebase.html">com.startrip.codebase</a> &gt; StarTripCodeBaseApplicationTests</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">1</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.385s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">contextLoads()</td>
+<td class="success">0.385s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>20:56:40.105 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.aot.test.AotCacheAwareContextLoaderDelegate]
+20:56:40.122 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+20:56:40.147 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [com.startrip.codebase.StarTripCodeBaseApplicationTests] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
+20:56:40.157 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.startrip.codebase.StarTripCodeBaseApplicationTests], using SpringBootContextLoader
+20:56:40.160 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.startrip.codebase.StarTripCodeBaseApplicationTests]: class path resource [com/startrip/codebase/StarTripCodeBaseApplicationTests-context.xml] does not exist
+20:56:40.161 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.startrip.codebase.StarTripCodeBaseApplicationTests]: class path resource [com/startrip/codebase/StarTripCodeBaseApplicationTestsContext.groovy] does not exist
+20:56:40.161 [Test worker] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.startrip.codebase.StarTripCodeBaseApplicationTests]: no resource found for suffixes {-context.xml, Context.groovy}.
+20:56:40.162 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.startrip.codebase.StarTripCodeBaseApplicationTests]: StarTripCodeBaseApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+20:56:40.212 [Test worker] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [com.startrip.codebase.StarTripCodeBaseApplicationTests]
+20:56:40.227 [Test worker] DEBUG org.springframework.context.index.CandidateComponentsIndexLoader - Loaded 1 index(es)
+20:56:40.267 [Test worker] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Using candidate component class from index: com.startrip.codebase.StarTripCodeBaseApplication
+20:56:40.268 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.startrip.codebase.StarTripCodeBaseApplication for test class com.startrip.codebase.StarTripCodeBaseApplicationTests
+20:56:40.357 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [com.startrip.codebase.StarTripCodeBaseApplicationTests]: using defaults.
+20:56:40.358 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.aot.test.AotDependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+20:56:40.368 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [org/springframework/transaction/interceptor/TransactionAttributeSource]
+20:56:40.369 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Skipping candidate TestExecutionListener [org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener] due to a missing dependency. Specify custom listener classes or make the default listener classes and their required dependencies available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
+20:56:40.370 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@3c0fae6c, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@4c168660, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@52b56a3e, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@fd0e5b6, org.springframework.aot.test.AotDependencyInjectionTestExecutionListener@4eed46ee, org.springframework.test.context.support.DirtiesContextTestExecutionListener@36b0fcd5, org.springframework.test.context.event.EventPublishingTestExecutionListener@4fad94a7, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@475835b1, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@6326d182, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@5241cf67, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@716a7124, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@77192705, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@226642a5]
+20:56:40.373 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@611df6e3 testClass = StarTripCodeBaseApplicationTests, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@5f2f577 testClass = StarTripCodeBaseApplicationTests, locations = '{}', classes = '{class com.startrip.codebase.StarTripCodeBaseApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@53dbe163, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@61a88b8c, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@3f270e0a, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@70f59913, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@2a448449, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@1f97cf0d], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true]], class annotated with @DirtiesContext [false] with mode [null].
+20:56:40.383 [Test worker] INFO org.springframework.aot.test.AotCacheAwareContextLoaderDelegate - Loading test ApplicationContext in AOT mode using org.springframework.aot.test.boot.AotSpringBootConfigContextLoader@6a988392
+20:56:40.404 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}
+2022-01-15 20:56:40.585  INFO 9584 --- [    Test worker] o.s.nativex.NativeListener               : AOT mode enabled
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.6.2)
+
+2022-01-15 20:56:40.741  INFO 9584 --- [    Test worker] c.s.c.StarTripCodeBaseApplicationTests   : Starting StarTripCodeBaseApplicationTests using Java 15.0.1 on DESKTOP-JQCBIKN with PID 9584 (started by 정민영 in C:\Users\정민영\Desktop\DB LAB\BrownRice\STARTrip\STARTrip\mvc-exaple)
+2022-01-15 20:56:40.741  INFO 9584 --- [    Test worker] c.s.c.StarTripCodeBaseApplicationTests   : No active profile set, falling back to default profiles: default
+2022-01-15 20:56:41.364  INFO 9584 --- [    Test worker] c.s.c.StarTripCodeBaseApplicationTests   : Started StarTripCodeBaseApplicationTests in 0.954 seconds (JVM running for 1.988)
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 7.3.2</a> at 2022. 1. 15. 오후 8:56:41</p>
+</div>
+</div>
+</body>
+</html>
