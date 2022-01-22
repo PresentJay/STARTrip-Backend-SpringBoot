@@ -27,7 +27,7 @@ public class UserService {
 
     // 중복검사
     private void validateDuplicateUser(User user) {
-        userRepository.findByName(user.getName())
+        userRepository.findByEmail(user.getEmail())
                 .ifPresent(u -> {
                     throw new IllegalStateException("이미 존재하는 유저입니다.");
                 });

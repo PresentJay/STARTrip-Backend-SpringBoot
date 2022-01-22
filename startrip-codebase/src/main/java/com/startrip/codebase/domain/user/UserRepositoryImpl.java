@@ -24,9 +24,9 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByName(String name) {
+    public Optional<User> findByEmail(String email) {
         return store.values().stream()
-                .filter(user -> user.getName().equals(name))
+                .filter(user -> user.getEmail().equals(email))
                 .findAny();
     }
 
