@@ -29,11 +29,6 @@ public class UserController {
         return user;
     }
 
-    @GetMapping("/")
-    public List<User> allUser(){
-        return userService.findUsers();
-    }
-
     @PostMapping("/signup")
     public String signup(@RequestParam("email") String email) {
         User user = new User();
