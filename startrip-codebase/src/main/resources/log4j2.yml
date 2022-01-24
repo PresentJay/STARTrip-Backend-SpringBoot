@@ -1,0 +1,45 @@
+Configuration:
+  name: Default
+  status: INFO
+  Properties:
+    Property:
+      name: LOG_PATTERN
+      value: "%d{HH:mm:ss.SSSZ} [%t] %msg%n"
+
+  Appenders:
+    Console:
+      name: STARTrip_ConsoleLog
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: "${LOG_PATTERN}"
+
+    RollingFile:
+      name: STARTrip_FileLog
+      fileName: ./logs/STARTrip.log
+      filePattern: ./logs/STARTrip-$d{yyyy-MM-dd}-%i.log
+      PatternLayout:
+        pattern: "{LOG_PATTERN}"
+        charset: UTF-8
+      Policies:
+        TimeBasedTriggeringPolicy:
+          interval: 1
+        SizeBasedTriggeringPolicy:
+          size: 100000KB
+      DefaultRolloverStrategy:
+          max: 20
+          fileIndex: min
+
+  Loggers:
+    Root:
+      level: info
+      additivity: false
+      AppenderRef:
+        - ref: STARTrip_ConsoleLog
+        - ref: STARTrip_FileLog
+    Logger:
+      name: com.startip.codebase.controller.SearchHistory
+      level: info
+      additivity: false
+      AppenderRef:
+        - ref: STARTrip_ConsoleLog
+        - ref: STARTrip_FileLog
