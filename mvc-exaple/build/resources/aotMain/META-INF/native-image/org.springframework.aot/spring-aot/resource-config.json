@@ -1,0 +1,85 @@
+{
+  "resources": {
+    "includes": [
+      {
+        "pattern": "META-INF/MANIFEST.MF"
+      },
+      {
+        "pattern": "META-INF/services/.*"
+      },
+      {
+        "pattern": "META-INF/spring.binders"
+      },
+      {
+        "pattern": "META-INF/spring.components"
+      },
+      {
+        "pattern": "^META-INF/build-info.properties"
+      },
+      {
+        "pattern": "^META-INF/resources/.*"
+      },
+      {
+        "pattern": "^git.properties"
+      },
+      {
+        "pattern": "^public/.*"
+      },
+      {
+        "pattern": "^resources/.*"
+      },
+      {
+        "pattern": "^static/.*"
+      },
+      {
+        "pattern": "^templates/.*"
+      },
+      {
+        "pattern": "application.*.properties"
+      },
+      {
+        "pattern": "application.*.yaml"
+      },
+      {
+        "pattern": "application.*.yml"
+      },
+      {
+        "pattern": "application.properties"
+      },
+      {
+        "pattern": "banner.txt"
+      },
+      {
+        "pattern": "db/.*"
+      },
+      {
+        "pattern": "logging.properties"
+      },
+      {
+        "pattern": "messages/.*"
+      },
+      {
+        "pattern": "org/apache/catalina/startup/MimeTypeMappings.properties"
+      },
+      {
+        "pattern": "org/springframework/boot/logging/.*.properties"
+      },
+      {
+        "pattern": "org/springframework/boot/logging/.*.xml"
+      },
+      {
+        "pattern": "org/springframework/boot/logging/java/logging.properties"
+      },
+      {
+        "pattern": "org/springframework/http/mime.types"
+      },
+      {
+        "pattern": "org/springframework/web/util/HtmlCharacterEntityReferences.properties"
+      },
+      {
+        "pattern": "spring.properties"
+      }
+    ]
+  },
+  "bundles": []
+}

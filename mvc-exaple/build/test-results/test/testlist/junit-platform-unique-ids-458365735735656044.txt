@@ -1,0 +1,1 @@
+[engine:junit-jupiter]/[class:com.startrip.codebase.StarTripCodeBaseApplicationTests]/[method:contextLoads()]
