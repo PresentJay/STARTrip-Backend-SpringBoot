@@ -1,28 +1,17 @@
 package com.startrip.codebase.domain.user;
 
 import com.startrip.codebase.constant.Role;
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.*;
-import java.util.Collection;
-import java.util.Set;
-
-@Entity
-@Table(name = "user")
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@ToString
 public class User {
 
-    @Id
-    @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long id;
 
-    @Column(unique = true)
     private String email;
 
     private String password;
@@ -33,6 +22,5 @@ public class User {
 
     private Boolean receive_email;
 
-    @Enumerated
-    private Role authorities;
+    private Role role;
 }
