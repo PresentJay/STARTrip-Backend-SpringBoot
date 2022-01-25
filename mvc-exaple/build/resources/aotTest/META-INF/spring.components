@@ -1,6 +1,0 @@
-#
-#Wed Jan 19 18:32:27 KST 2022
-com.startrip.codebase.controller.UserController=org.springframework.stereotype.Component
-com.startrip.codebase.domain.user.UserRepositoryImpl=org.springframework.stereotype.Component
-com.startrip.codebase.StarTripCodeBaseApplication=org.springframework.stereotype.Component,org.springframework.boot.SpringBootConfiguration
-com.startrip.codebase.service.UserService=org.springframework.stereotype.Component

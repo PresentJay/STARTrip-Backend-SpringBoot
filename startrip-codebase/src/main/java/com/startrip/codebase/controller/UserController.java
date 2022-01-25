@@ -18,20 +18,15 @@ public class UserController {
         this.userService = userService;
     }
 
-//    @GetMapping("/")
-//    public String home() {
-//        return "hello docker world";
-//    }
+    @GetMapping("/")
+    public String home() {
+        return "hello docker world";
+    }
 
     @GetMapping("/{userId}")
     public User login(@PathVariable("userId") Long id) {
         User user = userService.findOne(id).get();
         return user;
-    }
-
-    @GetMapping("/")
-    public List<User> allUser(){
-        return userService.findUsers();
     }
 
     @PostMapping("/signup")
