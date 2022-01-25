@@ -18,7 +18,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public String home() {
         return "hello docker world";
     }
@@ -27,6 +27,11 @@ public class UserController {
     public User login(@PathVariable("userId") Long id) {
         User user = userService.findOne(id).get();
         return user;
+    }
+
+    @PostMapping("/login")
+    public String login(){
+        return "로그인";
     }
 
     @PostMapping("/signup")
