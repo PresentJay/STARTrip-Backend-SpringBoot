@@ -18,11 +18,6 @@ spring:
         show_sql: true
         format_sql: true
 
-jwt:
-  header: Authorization
-  secret: c3RhcnRyaXAtY29kZWJhc2Utand0LXRva2VuLXNlY3JldC1zdGFydHJpcC1jb2RlYmFzZS1qd3QtdG9rZW4tc2VjcmV0LXN0YXJ0cmlwLWNvZGViYXNlLWp3dC10b2tlbi1zZWNyZXQtc3RhcnRyaXAtY29kZWJhc2Utand0LXRva2VuLXNlY3JldC1zdGFydHJpcC1jb2RlYmFzZS1qd3QtdG9rZW4tc2VjcmV0LXN0YXJ0cmlwLWNvZGViYXNlLWp3dC10b2tlbi1zZWNyZXQK
-  token-validity-in-seconds: 86400
-
 logging:
   config: classpath:log4j2.xml
   level:
