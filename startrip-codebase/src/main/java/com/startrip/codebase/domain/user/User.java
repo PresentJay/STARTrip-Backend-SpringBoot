@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "\"User\"")
 @Getter
 @Setter
 @Builder
@@ -22,7 +22,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(unique = true)
+    @Column(unique = true) // 중복 이메일이 안되도록 설정
     private String email;
 
     private String password;
@@ -33,6 +33,6 @@ public class User {
 
     private Boolean receive_email;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Role authorities;
 }
