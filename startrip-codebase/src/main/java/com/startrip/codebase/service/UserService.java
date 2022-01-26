@@ -22,7 +22,7 @@ public class UserService {
     public Long create(User user) {
         validateDuplicateUser(user);
         userRepository.save(user);
-        return user.getId();
+        return user.getUserId();
     }
 
     // 중복검사

@@ -1,4 +1,5 @@
 spring:
+<<<<<<< HEAD
   profiles:
     active: local
     include:
@@ -12,6 +13,20 @@ spring:
     hikari:
       maximum-pool-size: 4
   jpa:
+=======
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+>>>>>>> parent of 5e2ddd7 (Revert "complete the story #10")
     hibernate:
       ddl-auto: create-drop
     properties:
@@ -21,3 +36,9 @@ spring:
 
 logging:
   config: classpath:log4j2.xml
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
