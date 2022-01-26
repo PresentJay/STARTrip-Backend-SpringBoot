@@ -1,10 +1,10 @@
 Configuration:
   name: Default
-  status: INFO
+  status: info
   Properties:
     Property:
       name: LOG_PATTERN
-      value: "%d{HH:mm:ss.SSSZ} [%t] %msg%n"
+      value: "%d{HH:mm:ss.SSS} [%t] [%-5p] [%t] %msg%n"
 
   Appenders:
     Console:
@@ -36,10 +36,12 @@ Configuration:
       AppenderRef:
         - ref: STARTrip_ConsoleLog
         - ref: STARTrip_FileLog
+
+          # 패키지별로 로그레벨을 달리 하고 싶다면 여기에 Logger 부분을 추가하세요! (아래는 예시)
     Logger:
-      name: com.startip.codebase.controller.SearchHistory
-      level: info
-      additivity: false
+      name: com.startip.codebase.exPackage  #적용할 패키지 경로
+      level: debug #출력시키고 싶은 로그레벨 ( debug 이상의 로그레벨을 다 뜨도록 하겠다~)
+      additivity: false #중복으로 발생하는 로그는 제외시키겠다~
       AppenderRef:
-        - ref: STARTrip_ConsoleLog
-        - ref: STARTrip_FileLog
+        - ref: STARTrip_ConsoleLog # 윗단에서 만든 Appender를 적용시키겠다 (console에 출력시킴)
+        - ref: STARTrip_FileLog # (File로 저장시킴)
