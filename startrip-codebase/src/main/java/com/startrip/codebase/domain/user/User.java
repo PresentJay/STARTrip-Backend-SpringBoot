@@ -5,6 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.Set;
+
+@Entity
+@Table(name = "\"User\"")
 @Getter
 @Setter
 @ToString
@@ -12,6 +18,7 @@ public class User {
 
     private Long id;
 
+    @Column(unique = true) // 중복 이메일이 안되도록 설정
     private String email;
 
     private String password;
@@ -22,5 +29,6 @@ public class User {
 
     private Boolean receive_email;
 
-    private Role role;
+    @Enumerated(EnumType.STRING)
+    private Role authorities;
 }

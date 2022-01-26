@@ -1,2 +1,23 @@
+spring:
+  profiles:
+    active: local
+    include:
+      - jwt
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/startrip
+    username: postgres
+    password: postgres
+
+    hikari:
+      maximum-pool-size: 4
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
 logging:
   config: classpath:log4j2.xml
