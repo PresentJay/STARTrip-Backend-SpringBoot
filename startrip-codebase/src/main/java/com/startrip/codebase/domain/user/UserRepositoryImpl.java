@@ -13,8 +13,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User save(User user) {
-        user.setUserId(++sequnce);
-        store.put(user.getUserId(), user);
+        user.setId(++sequnce);
+        store.put(user.getId(), user);
         return user;
     }
 

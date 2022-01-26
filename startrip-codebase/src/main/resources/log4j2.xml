@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Configuration status="debug">
+<Configuration status="INFO">
     <Properties>
         <!-- <Property name="LOG_PATTERN">%d{HH:mm:ss.SSSZ} [%t] %-5level %logger{36} - %msg%n</Property> -->
         <Property name="LOG_PATTERN">%d{HH:mm:ss.SSSZ} [%t] %msg%n</Property>
@@ -25,7 +25,7 @@
 
 
     <Loggers>
-        <Root level="debug" additivity="false">
+        <Root level="info" additivity="false">
             <AppenderRef ref="STARTrip_ConsoleLog" />
             <AppenderRef ref="STARTrip_FileLog" />
         </Root>

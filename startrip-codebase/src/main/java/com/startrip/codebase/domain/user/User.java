@@ -1,8 +1,9 @@
 package com.startrip.codebase.domain.user;
 
 import com.startrip.codebase.constant.Role;
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -12,15 +13,10 @@ import java.util.Set;
 @Table(name = "\"User\"")
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@ToString
 public class User {
 
-    @Id
-    @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long id;
 
     @Column(unique = true) // 중복 이메일이 안되도록 설정
     private String email;
