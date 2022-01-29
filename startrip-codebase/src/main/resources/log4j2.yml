@@ -4,7 +4,7 @@ Configuration:
   Properties:
     Property:
       name: LOG_PATTERN
-      value: "%d{HH:mm:ss.SSS} [%t] [%-5p] [%t] %msg%n"
+      value: "%d{HH:mm:ss.SSS} [%t] %highlight{[%-5p]} %msg%n}"
 
   Appenders:
     Console:
