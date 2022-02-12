@@ -1,9 +1,11 @@
 FROM openjdk:11
 
-ARG JAR_FILE=build/libs/mvc-example-0.0.1-SNAPSHOT.jar
+ARG JAVA_OPTS
 
-COPY ${JAR_FILE_PATH} app.jar
+ENV JAVA_OPTS=$JAVA_OPTS
+
+COPY build/libs/*.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
