@@ -17,6 +17,7 @@ public class PlaceController {
 
     private PlaceService placeService;
 
+    //search
     @GetMapping("/search")
     public List<Place> finePlace_nameContains(String place_name){
         return this.placeService.findPlace_nameContains(place_name);
@@ -32,10 +33,30 @@ public class PlaceController {
         return this.placeService.findPlace_nameEndswith(place_name);
     }
 
-    @GetMapping("/gtlt")
+    @GetMapping("/search/viewtime/gtlt")
     public Map<String, List<Place>> findGTLT(Integer id){
         return this.placeService.findGTLT(id);
     }
+
+    //sort
+    @GetMapping("/sort-repo/viewtime/DESC")
+    public List<Place> allSortByRepository() {
+        List<Place> placeList = this.placeService.allSortByRepository();
+        return placeList;
+    }
+
+    @GetMapping("/sort/viewtime/DESC")
+    public List<Place> allSortBySort(){
+        List<Place> placeList = this.placeService.allSortBySort();
+        return placeList;
+    }
+
+    @GetMapping("/sort/nameASC-viewtimeDESC")
+    public List<Place> allSortListOrder(){
+        List<Place> placeList = this.placeService.allSortListOrder();
+        return placeList;
+    }
+
 
 
 
