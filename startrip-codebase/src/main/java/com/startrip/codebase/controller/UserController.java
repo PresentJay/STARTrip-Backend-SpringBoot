@@ -3,6 +3,7 @@ package com.startrip.codebase.controller;
 import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,5 +1,6 @@
 package com.startrip.codebase.domain.place;
 
+import com.startrip.codebase.domain.category.Category;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,19 +15,21 @@ import java.util.UUID;
 public class Place {
 
     @Id
-    private UUID place_id;
+    @Column(name = "place_id")
+    private UUID placeId = UUID.randomUUID();
 
     @NotNull
     private String address;
 
-    private String place_name;
+    private String placeName;
 
-    private String place_info;
+    private String placeInfo;
 
-    private String place_photo;
+    private String placePhoto;
 
-    @ElementCollection(targetClass = Integer.class)
-    private List<Integer> category_list;
+    @ElementCollection
+    @CollectionTable(name = "category_list")
+    private List<Integer> categorylist;
 
     @NotNull
     private Double latitude;
@@ -34,5 +37,6 @@ public class Place {
     @NotNull
     private Double longitude;
 
-    private Double average_view_time;
+    @Column(name = "average_view_time")
+    private Double averageViewTime;
 }

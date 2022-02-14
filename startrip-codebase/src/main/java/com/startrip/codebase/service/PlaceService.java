@@ -3,6 +3,7 @@ package com.startrip.codebase.service;
 import com.startrip.codebase.domain.place.Place;
 import com.startrip.codebase.domain.place.PlaceRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
@@ -17,28 +18,28 @@ public class PlaceService {
 
     private PlaceRepository placeRepository;
 
-    //search
+    @Autowired
     public PlaceService(PlaceRepository placeRepository){
         this.placeRepository = placeRepository;
     }
 
     public List<Place> findPlace_nameContains(String place_name){
-        return this.placeRepository.findByPlace_nameContains(place_name);
+        return this.placeRepository.findByPlaceNameContains(place_name);
     }
 
     public List<Place> findPlace_nameStartwith(String place_name){
-        return this.placeRepository.findByPlace_nameStartwith(place_name);
+        return this.placeRepository.findByPlaceNameStartsWith(place_name);
     }
 
     public List<Place> findPlace_nameEndswith(String item){
-        return this.placeRepository.findByPlace_nameEndsWith(item);
+        return this.placeRepository.findByPlaceNameEndsWith(item);
     }
 
-    public Map<String, List<Place>> findGTLT(Integer average_view_time){
-        List<Place> gt = this.placeRepository.findByAverage_view_timeGreaterThan(average_view_time);
-        List<Place> gte = this.placeRepository.findByAverage_view_timeGreaterThanEqual(average_view_time);
-        List<Place> lt = this.placeRepository.findByAverage_view_timeLessThan(average_view_time);
-        List<Place> lte = this.placeRepository.findByAverage_view_timeLessThanEqual(average_view_time);
+    public Map<String, List<Place>> findGTLT(Double average_view_time){
+        List<Place> gt = this.placeRepository.findByAverageViewTimeGreaterThan(average_view_time);
+        List<Place> gte = this.placeRepository.findByAverageViewTimeGreaterThanEqual(average_view_time);
+        List<Place> lt = this.placeRepository.findByAverageViewTimeLessThan(average_view_time);
+        List<Place> lte = this.placeRepository.findByAverageViewTimeLessThanEqual(average_view_time);
 
         Map<String, List<Place>> ret = new HashMap<>();
         ret.put("gt", gt);
@@ -52,7 +53,7 @@ public class PlaceService {
     //sort
     public List<Place> allSortByRepository() {
         Sort sort = Sort.by(Sort.Direction.DESC, "average_view_time");
-        return this.placeRepository.findAllByOrderByPlace_nameDesc();
+        return this.placeRepository.findAllByOrderByPlaceNameDesc();
     }
 
     public List<Place> allSortBySort() {

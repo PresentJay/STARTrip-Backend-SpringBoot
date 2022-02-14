@@ -34,7 +34,7 @@ public class PlaceController {
     }
 
     @GetMapping("/search/viewtime/gtlt")
-    public Map<String, List<Place>> findGTLT(Integer id){
+    public Map<String, List<Place>> findGTLT(Double id){
         return this.placeService.findGTLT(id);
     }
 
