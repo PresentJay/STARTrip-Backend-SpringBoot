@@ -9,11 +9,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @Entity
-<<<<<<< HEAD
 @Table(name = "\"User\"")
-=======
-@Table(name = "user")
->>>>>>> parent of 5e2ddd7 (Revert "complete the story #10")
 @Getter
 @Setter
 @Builder
@@ -26,11 +22,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-<<<<<<< HEAD
     @Column(unique = true) // 중복 이메일이 안되도록 설정
-=======
-    @Column(unique = true)
->>>>>>> parent of 5e2ddd7 (Revert "complete the story #10")
     private String email;
 
     private String password;
@@ -41,10 +33,6 @@ public class User {
 
     private Boolean receive_email;
 
-<<<<<<< HEAD
     @Enumerated(EnumType.STRING)
-=======
-    @Enumerated
->>>>>>> parent of 5e2ddd7 (Revert "complete the story #10")
     private Role authorities;
 }
