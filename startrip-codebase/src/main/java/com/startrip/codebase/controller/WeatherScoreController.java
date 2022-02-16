@@ -40,27 +40,6 @@ public class WeatherScoreController {
         this.openApiUtil = openApiUtil;
     }
 
-    @GetMapping("/test")
-    public String test() throws UnsupportedEncodingException {
-        StringBuilder urlBuilder = new StringBuilder("http://api.visitkorea.or.kr/openapi/service/rest/DataLabService/tmapTotalTarItsBroDDList");
-        urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=" + openApiUtil.getDATA_GO_KR_API_KEY2());
-        urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("10", "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("MobileOS", "UTF-8") + "=" + URLEncoder.encode("ETC", "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("MobileApp", "UTF-8") + "=" + URLEncoder.encode("AppTest", "UTF-8"));
-        urlBuilder.append("&" + URLEncoder.encode("baseYm", "UTF-8") + "=" + URLEncoder.encode("202201", "UTF-8"));
-
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_XML);
-
-        HttpEntity<Map<String, String>> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<Map> response = restTemplate.exchange(URI.create(urlBuilder.toString()), HttpMethod.GET, entity, Map.class);
-        System.out.println(response);
-        return response.toString();
-    }
-
     @GetMapping("/weather")
     public @ResponseBody ResponseEntity getWeather() {
         try {
