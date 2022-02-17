@@ -7,8 +7,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/startrip
-    username: localpostgres
-    password: localpostgres
+    username: postgres
+    password: postgres
 
   hikari:
     maximum-pool-size: 4
