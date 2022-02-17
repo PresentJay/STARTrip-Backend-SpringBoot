@@ -15,10 +15,4 @@ class UserControllerTest {
     @Autowired
     UserController userController;
 
-    @Test
-    public void 이용자_저장_테스트() {
-        String savedUserEmail = userController.signup("test@t.com");
-
-        assertThat(savedUserEmail).isEqualTo( "test@t.com");
-    }
 }
