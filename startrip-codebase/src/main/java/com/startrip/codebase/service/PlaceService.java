@@ -4,6 +4,8 @@ import com.startrip.codebase.domain.place.Place;
 import com.startrip.codebase.domain.place.PlaceRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
@@ -23,12 +25,6 @@ public class PlaceService {
         this.placeRepository = placeRepository;
     }
 
-    //sort
-    public List<Place> allSortByRepository() {
-        Sort sort = Sort.by(Sort.Direction.DESC, "average_view_time");
-        return this.placeRepository.findAllByOrderByPlaceNameDesc();
-    }
-
     public List<Place> allSortBySort() {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return this.placeRepository.findAll(sort);
@@ -46,6 +42,14 @@ public class PlaceService {
 
         return this.placeRepository.findAll(sort);
     }
+
+    public Page<Place> list(int page) {
+        //Page<Place>를 반환함, 인자로 넘어온 페이지를 보게 됨.
+        //한 페이지당 데이터를 10개씩 가져옴, 정렬방식은 (내림차순, 플레이스_네임을 기준으로)
+        return this.placeRepository.findAll(PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "place_name")));
+
+    }
+
 
 
 }

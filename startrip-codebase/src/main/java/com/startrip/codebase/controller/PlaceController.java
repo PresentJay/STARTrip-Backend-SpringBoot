@@ -18,12 +18,6 @@ public class PlaceController {
     private PlaceService placeService;
 
     //sort
-    @GetMapping("/sort-repo/viewtime/DESC")
-    public List<Place> allSortByRepository() {
-        List<Place> placeList = this.placeService.allSortByRepository();
-        return placeList;
-    }
-
     @GetMapping("/sort/viewtime/DESC")
     public List<Place> allSortBySort(){
         List<Place> placeList = this.placeService.allSortBySort();
@@ -36,6 +30,10 @@ public class PlaceController {
         return placeList;
     }
 
+    @GetMapping("/list")
+    public List<Place> find(Pageable pageable) {
+        return placeService.list(pageable).getContent();
+    }
 
 
 
