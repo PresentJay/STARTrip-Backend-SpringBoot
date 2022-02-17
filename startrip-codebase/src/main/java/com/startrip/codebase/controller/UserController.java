@@ -1,6 +1,8 @@
 package com.startrip.codebase.controller;
 
 import com.startrip.codebase.domain.user.User;
+import com.startrip.codebase.dto.LoginDto;
+import com.startrip.codebase.dto.SignUpDto;
 import com.startrip.codebase.jwt.JwtFilter;
 import com.startrip.codebase.jwt.TokenProvider;
 import com.startrip.codebase.service.UserService;
@@ -45,9 +47,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public @ResponseBody ResponseEntity login(@RequestParam("id") String id){
+    public @ResponseBody ResponseEntity login(@RequestBody LoginDto loginDto){
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(id, "1234");
+                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -61,12 +63,9 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signup(@RequestParam("email") String email) {
-        User user = new User();
-        user.setEmail(email);
-
+    public @ResponseBody ResponseEntity signup(@RequestBody SignUpDto signUpDto) {
+        User user = User.createUser(signUpDto);
         userService.create(user);
-
-        return user.getEmail();
+        return new ResponseEntity(user, HttpStatus.OK);
     }
 }

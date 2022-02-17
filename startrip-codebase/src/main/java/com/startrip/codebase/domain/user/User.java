@@ -1,6 +1,7 @@
 package com.startrip.codebase.domain.user;
 
 import com.startrip.codebase.constant.Role;
+import com.startrip.codebase.dto.SignUpDto;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -35,4 +36,14 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role authorities;
+
+    public static User createUser(SignUpDto signUpDto) {
+        User user = User.builder()
+                .email(signUpDto.getEmail())
+                .password(signUpDto.getPassword())
+                .nickname("test")
+                .authorities(Role.ROLE_USER)
+                .build();
+        return user;
+    }
 }
