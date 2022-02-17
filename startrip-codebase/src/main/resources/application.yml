@@ -13,12 +13,16 @@ spring:
   hikari:
     maximum-pool-size: 4
 
-jpa:
-  hibernate:
-    ddl-auto: create-drop
-  properties:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  jpa:
     hibernate:
-      show_sql: true
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        show_sql: true
       format_sql: true
 
 logging:
