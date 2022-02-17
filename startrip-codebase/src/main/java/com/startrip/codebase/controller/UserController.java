@@ -64,8 +64,12 @@ public class UserController {
 
     @PostMapping("/signup")
     public @ResponseBody ResponseEntity signup(@RequestBody SignUpDto signUpDto) {
-        User user = User.createUser(signUpDto);
-        userService.create(user);
-        return new ResponseEntity(user, HttpStatus.OK);
+        try {
+            User user = User.createUser(signUpDto);
+            userService.create(user);
+            return new ResponseEntity(signUpDto.getEmail() + " 가입완료", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 }

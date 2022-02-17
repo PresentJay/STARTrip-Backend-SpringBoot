@@ -42,7 +42,7 @@ public class User {
                 .email(signUpDto.getEmail())
                 .password(signUpDto.getPassword())
                 .nickname("test")
-                .authorities(Role.ROLE_USER)
+                .authorities(Role.USER)
                 .build();
         return user;
     }
