@@ -13,6 +13,10 @@ spring:
   hikari:
     maximum-pool-size: 4
 
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 jpa:
   hibernate:
     ddl-auto: create-drop
