@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.LinkedHashMap;
 @RequiredArgsConstructor
 @Slf4j
 @Getter
+@ConfigurationProperties("")
 public class OpenApiUtil {
 
     @Value("${datago.api_key}")

@@ -23,33 +23,6 @@ public class PlaceService {
         this.placeRepository = placeRepository;
     }
 
-    public List<Place> findPlace_nameContains(String place_name){
-        return this.placeRepository.findByPlaceNameContains(place_name);
-    }
-
-    public List<Place> findPlace_nameStartwith(String place_name){
-        return this.placeRepository.findByPlaceNameStartsWith(place_name);
-    }
-
-    public List<Place> findPlace_nameEndswith(String item){
-        return this.placeRepository.findByPlaceNameEndsWith(item);
-    }
-
-    public Map<String, List<Place>> findGTLT(Double average_view_time){
-        List<Place> gt = this.placeRepository.findByAverageViewTimeGreaterThan(average_view_time);
-        List<Place> gte = this.placeRepository.findByAverageViewTimeGreaterThanEqual(average_view_time);
-        List<Place> lt = this.placeRepository.findByAverageViewTimeLessThan(average_view_time);
-        List<Place> lte = this.placeRepository.findByAverageViewTimeLessThanEqual(average_view_time);
-
-        Map<String, List<Place>> ret = new HashMap<>();
-        ret.put("gt", gt);
-        ret.put("gte", gte);
-        ret.put("lt", lt);
-        ret.put("lte", lte);
-
-        return ret;
-    }
-
     //sort
     public List<Place> allSortByRepository() {
         Sort sort = Sort.by(Sort.Direction.DESC, "average_view_time");

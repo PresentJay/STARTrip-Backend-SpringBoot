@@ -17,27 +17,6 @@ public class PlaceController {
 
     private PlaceService placeService;
 
-    //search
-    @GetMapping("/search")
-    public List<Place> finePlace_nameContains(String place_name){
-        return this.placeService.findPlace_nameContains(place_name);
-    }
-
-    @GetMapping("/search/startwith")
-    public List<Place> findItemStartswith(String place_name){
-        return this.placeService.findPlace_nameStartwith(place_name);
-    }
-
-    @GetMapping("/search/endswith")
-    public List<Place> findCompleteItemEndsWith(String place_name){
-        return this.placeService.findPlace_nameEndswith(place_name);
-    }
-
-    @GetMapping("/search/viewtime/gtlt")
-    public Map<String, List<Place>> findGTLT(Double id){
-        return this.placeService.findGTLT(id);
-    }
-
     //sort
     @GetMapping("/sort-repo/viewtime/DESC")
     public List<Place> allSortByRepository() {
