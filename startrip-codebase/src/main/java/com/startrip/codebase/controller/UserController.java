@@ -1,14 +1,18 @@
 package com.startrip.codebase.controller;
 
+import com.nimbusds.oauth2.sdk.TokenResponse;
 import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController()
 @RequestMapping("/api/user")
+@Controller
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 
     private final UserService userService;
@@ -18,10 +22,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("")
-    public String home() {
-        return "hello docker world";
-    }
 
     @GetMapping("/{userId}")
     public User login(@PathVariable("userId") Long id) {
