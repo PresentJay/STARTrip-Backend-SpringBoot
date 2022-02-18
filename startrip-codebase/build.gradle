@@ -56,7 +56,12 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.10.3'   // log4j2
 
 
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb' //mongo
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb' //mong
+
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' //spring security
+
+    implementation group: 'com.squareup.okhttp', name: 'okhttp', version: '2.7.5' //ok http
+
 }
 
 test {
@@ -67,3 +72,5 @@ bootBuildImage {
     builder = 'paketobuildpacks/builder:tiny'
     environment = ['BP_NATIVE_IMAGE': 'true']
 }
+
+
