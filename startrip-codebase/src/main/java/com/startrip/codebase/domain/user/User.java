@@ -1,6 +1,7 @@
 package com.startrip.codebase.domain.user;
 
 import com.startrip.codebase.constant.Role;
+import com.startrip.codebase.dto.SignUpDto;
 import lombok.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,11 +40,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role authorities;
 
-    @ResponseBody
-    @GetMapping("/kakao")
-    public void  kakaoCallback(@RequestParam String code)  {
-
-        System.out.println(code);
-
+    public static User createUser(SignUpDto signUpDto) {
+        User user = User.builder()
+                .email(signUpDto.getEmail())
+                .password(signUpDto.getPassword())
+                .nickname("test")
+                .authorities(Role.USER)
+                .build();
+        return user;
     }
 }
