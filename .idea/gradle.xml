@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="delegatedBuild" value="true" />
+<<<<<<< HEAD
+        <option name="testRunner" value="PLATFORM" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/mvc-exaple" />
+        <option name="gradleJvm" value="zulu-11 (2)" />
+=======
+        <option name="testRunner" value="GRADLE" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/mvc-exaple" />
+        <option name="gradleJvm" value="11" />
+>>>>>>> 6a7b8eb62e416d6af90b3fd5b8dc9f3aa90e7660
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/mvc-exaple" />
