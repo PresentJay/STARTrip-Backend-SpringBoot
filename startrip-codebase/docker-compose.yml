@@ -2,11 +2,15 @@ version: '3.8'
 
 services:
   springboot:
-    image: startrip:0.0.1
+    image: startrip:0.1
     ports:
       - 8080:8080
     depends_on:
       - postgresql
+    environment:
+      SPRING_DATABASE_URL: jdbc:postgresql://postgresql:5432/startrip
+      SPRING_DATASOURCE_USERNAME:  postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
 
   nginx:
     image: nginx

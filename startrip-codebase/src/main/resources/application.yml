@@ -5,10 +5,10 @@ spring:
       - jwt
       - api
 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/startrip
-    username: postgres
-    password: postgres
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/startrip
+#    username: postgres
+#    password: postgres
 
   hikari:
     maximum-pool-size: 4

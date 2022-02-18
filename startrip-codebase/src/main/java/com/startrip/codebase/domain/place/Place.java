@@ -3,29 +3,30 @@ package com.startrip.codebase.domain.place;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
 
 @Getter
+@Setter
 @NoArgsConstructor
-@Entity
 public class Place {
     @Id
-    private UUID place_id;
+    private UUID placeId;
 
     @NotNull
     private String address;
 
-    private String place_name;
+    private String placeName;
 
-    private String place_info;
+    private String placeInfo;
 
-    private String place_photo;
+    private String placePhoto;
 
     @ElementCollection(targetClass = Integer.class)
-    private List<Integer> category_list;
+    private List<Integer> categoryList;
 
     @NotNull
     private Double latitude;
@@ -33,5 +34,5 @@ public class Place {
     @NotNull
     private Double longitude;
 
-    private Double average_view_time;
+    private Double averageViewTime;
 }
