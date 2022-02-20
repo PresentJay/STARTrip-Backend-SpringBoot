@@ -4,6 +4,7 @@ spring:
     include:
       - jwt
       - api
+      - oauth2
 
   #  datasource:
   #    url: jdbc:postgresql://postgresql:5432/startrip
