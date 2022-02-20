@@ -4,7 +4,11 @@ spring:
     include:
       - jwt
       - api
+<<<<<<< HEAD
       - oauth2
+=======
+      - mongoDB
+>>>>>>> f4d118dabe2eff9b8cc1e788d4d1554b4b5d7013
 
   #  datasource:
   #    url: jdbc:postgresql://postgresql:5432/startrip
@@ -25,6 +29,12 @@ spring:
       hibernate:
         show_sql: true
       format_sql: true
+
+  data:
+    mongodb:
+      url: mongodb://127.0.0.1:27017
+      database: mongostartrip
+
 
 logging:
   config: classpath:log4j2.yml
