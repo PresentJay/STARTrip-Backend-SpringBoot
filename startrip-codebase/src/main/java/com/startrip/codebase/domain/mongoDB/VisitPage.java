@@ -16,14 +16,14 @@ public class VisitPage {
     @Id
     private Long id;
     private String ip;
-    private String visit_url;
+    private String visitUrl;
     private Date timeStamp;
 
     @Builder
-    public VisitPage(Long id, String ip, String visit_url, Date timeStamp){
+    public VisitPage(Long id, String ip, String visitUrl, Date timeStamp){
         this.id = id;
         this.ip = ip;
-        this.visit_url = visit_url;
+        this.visitUrl = visitUrl;
         this.timeStamp = timeStamp;
     }
 }
