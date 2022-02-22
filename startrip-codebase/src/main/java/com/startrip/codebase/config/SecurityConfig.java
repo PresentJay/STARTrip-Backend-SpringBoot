@@ -14,6 +14,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
+
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -21,6 +23,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+
+    private String[] swaggerPaths = {"/v2/**", "/configuration/**", "/swagger*/**", "/webjars/**"};
+
 
     public SecurityConfig(
             TokenProvider tokenProvider,
@@ -42,9 +47,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .antMatchers(
                         "/h2-console/**"
-                        ,"/favicon.ico"
-                        ,"/swagger-ui/**"
-                );
+                        , "/favicon.ico"
+                )
+                .antMatchers(swaggerPaths);
     }
 
     @Override
@@ -71,13 +76,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
 
-                .antMatchers("/api/**",
-                        // swagger path
-                        "/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
+                .antMatchers("/api/**", "/ping").permitAll()
 
                 .anyRequest().authenticated()
 
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider));
+
     }
 }

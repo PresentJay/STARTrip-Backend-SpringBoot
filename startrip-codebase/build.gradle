@@ -29,7 +29,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security:2.6.2'
     implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.2'
+
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 
     // JWT 관련 의존성
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
