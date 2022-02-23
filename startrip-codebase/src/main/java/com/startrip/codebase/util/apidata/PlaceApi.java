@@ -1,7 +1,6 @@
-package com.startrip.codebase.util.place;
+package com.startrip.codebase.util.apidata;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.startrip.codebase.domain.place.Place;
 import com.startrip.codebase.util.OpenApiUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +13,6 @@ import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,14 +24,14 @@ public class PlaceApi {
     OpenApiUtil openApiUtil;
 
     public String getApiResult(String date) throws IOException, URISyntaxException {
-        ArrayList<LinkedHashMap> items = get(date);
-        List<String> dataInfo = parse(items);
-        return dataInfo.toString();
+        String items = get(date);
+        store(items);
+        return "ok";
     }
 
-    public ArrayList<LinkedHashMap> get(String date) throws IOException, URISyntaxException {
+    public String get(String date) throws IOException, URISyntaxException {
         StringBuilder urlBuilder = new StringBuilder("http://api.visitkorea.or.kr/openapi/service/rest/DataLabService/tmapTotalTarItsBroDDList");
-        urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=" + openApiUtil.getDATA_GO_KR_API_KEY());
+        urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=" + openApiUtil.getDATA_GO_KR_API_KEY2());
         urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("numOfRows", "UTF-8") + "=" + URLEncoder.encode("10", "UTF-8"));
         urlBuilder.append("&" + URLEncoder.encode("MobileOS", "UTF-8") + "=" + URLEncoder.encode("ETC", "UTF-8"));
@@ -54,32 +51,26 @@ public class PlaceApi {
         String jsonInString = mapper.writeValueAsString(response.getBody().get("response"));
 
         // 추출
-        LinkedHashMap responseResult = (LinkedHashMap) ((LinkedHashMap) response.getBody().get("response")).get("body");
-        LinkedHashMap bodyResult = (LinkedHashMap) responseResult.get("items");
-        ArrayList<LinkedHashMap> items = (ArrayList<LinkedHashMap>) bodyResult.get("item");
+//        LinkedHashMap responseResult = (LinkedHashMap) ((LinkedHashMap) response.getBody().get("response")).get("body");
+//        LinkedHashMap bodyResult = (LinkedHashMap) responseResult.get("items");
+//        ArrayList<LinkedHashMap> items = (ArrayList<LinkedHashMap>) bodyResult.get("item");
 
-        return items;
+//        return items;
+        return jsonInString;
     }
 
-    private List<String> parse(ArrayList<LinkedHashMap> items) {
+    public List<String> store(String items) {
         try {
-            Place place = new Place();
-            List<String> dataInfos = new ArrayList<>();
-
-            for (LinkedHashMap item : items) {
-                List<String> temp = new ArrayList<>();
-
-                String dtlAddrNm = item.get("dtlAddrNm").toString();
-                String itsBroNm = item.get("itsBroNm").toString();
-
-                temp.add(dtlAddrNm);
-                temp.add(itsBroNm);
-                dataInfos.add(String.valueOf(temp));
-
-                place.setAddress(dtlAddrNm);
-                place.setPlaceName(itsBroNm);
+            File file = new File("./src/main/java/com/startrip/codebase/store/bigdata.xml");
+            if (!file.exists()) {
+                file.createNewFile(); // 파일 없으면 새로 생성
             }
-            return dataInfos;
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            writer.write(String.valueOf(items));
+            writer.flush();
+            writer.close();
+
+            return null;
         } catch (Exception e) {
             //log.info(e.getMessage());
             return null;

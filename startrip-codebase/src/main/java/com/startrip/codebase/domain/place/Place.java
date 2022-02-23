@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@Entity
 @NoArgsConstructor
 public class Place {
     @Id

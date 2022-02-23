@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   springboot:
-    image: startrip:0.1
+    image: startrip:0.0.1
     ports:
       - 8080:8080
     depends_on:
