@@ -19,7 +19,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class PlaceApi {
+public class BigDataApi {
     @Autowired // 의존성 주입
     OpenApiUtil openApiUtil;
 
