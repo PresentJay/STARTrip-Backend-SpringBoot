@@ -4,11 +4,8 @@ spring:
     include:
       - jwt
       - api
-<<<<<<< HEAD
       - oauth2
-=======
       - mongoDB
->>>>>>> f4d118dabe2eff9b8cc1e788d4d1554b4b5d7013
 
   #  datasource:
   #    url: jdbc:postgresql://postgresql:5432/startrip

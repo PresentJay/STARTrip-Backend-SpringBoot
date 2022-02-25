@@ -54,8 +54,8 @@ public class AccessToken {
 
         uriBuilder.append("?:grant_type" + "=" + "authorization_code");
         uriBuilder.append("&" + "client_id" + "=" + APP_KEY);
-        uriBuilder.append("&redirect_uri="+ REDIRECT_URI);
-        uriBuilder.append("&code="+ authorizationCode);
+        uriBuilder.append("&" + "redirect_uri" + "="+ REDIRECT_URI);
+        uriBuilder.append("&" + "code" + "="+ authorizationCode);
 
         return uriBuilder.toString();
     }
