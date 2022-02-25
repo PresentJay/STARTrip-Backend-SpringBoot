@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.HttpUrl;
 import com.squareup.okhttp.Request;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,9 +15,9 @@ import java.util.Map;
 
 @Slf4j
 public class AccessToken {
-    private static final String BASE_URL = "https://kauth.kakao.com";
-    private static final String APP_KEY = "cf5763daccdfa2670e27aa192eee8d42";
-    private static final String REDIRECT_URI = "http://localhost:8080/kakao/callback";
+    private static @Value("${client.client_id}") String APP_KEY;
+    private static @Value("${client.token}") String TOKEN_URL;
+    private static @Value("${client.redirect-uri}") String REDIRECT_URI ;
 
     private AccessToken() {}
 
@@ -42,15 +43,9 @@ public class AccessToken {
                 .url(url)
                 .build();
     }
-    /*
-     https://kauth.kakao.com/oauth/authorize
-     ?client_id=cf5763daccdfa2670e27aa192eee8d42
-     &redirect_uri=http://localhost:8080//kakao/callback
-     &response_type=code
 
-     */
     private static String makeHttpUrlWithParameters(String authorizationCode) throws MalformedURLException {
-        StringBuilder uriBuilder = new StringBuilder(BASE_URL + "/oauth/token");
+        StringBuilder uriBuilder = new StringBuilder(TOKEN_URL);
 
         uriBuilder.append("?:grant_type" + "=" + "authorization_code");
         uriBuilder.append("&" + "client_id" + "=" + APP_KEY);

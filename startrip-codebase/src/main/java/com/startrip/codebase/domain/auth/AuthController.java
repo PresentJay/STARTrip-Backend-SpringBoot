@@ -11,7 +11,7 @@ public class AuthController {
     @Autowired
     private GetAccessTokenService service;
 
-    @GetMapping("")
+    @GetMapping("/login")
     public String main() {
         return "index";
     }

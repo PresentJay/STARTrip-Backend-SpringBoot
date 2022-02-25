@@ -11,21 +11,23 @@ spring:
               token: https://kauth.kakao.com/oauth/token
               profile: https://kapi.kakao.com/v2/user/me
           naver:
-            client-id: rnxcG80Y66QtH2nSZpan
+            client_id: rnxcG80Y66QtH2nSZpan
             client-secret: 0SKKznNDiC
             redirect-uri: "http://localhost:8080/naver/callback"
             url:
               login: https://nid.naver.com/oauth2.0/authorize
               token: https://nid.naver.com/oauth2.0/token
               profile: https://openapi.naver.com/v1/nid/me
-          github:
-            client_id: c0f254c6af9409152c67
-            client-secret: cfc0499943333c969603c4b4688b3b4ff00aa1f0
-            redirect-uri: "http://localhost:8080/gihub/callback"
           facebook:
               client_id: 7d392db58e2f079036be464e84e7936c
               client-secret: 0aacfdea23c9f128b530a658edda331c
+              redirect-uri: "http://localhost:8080/facebook/callback"
               url:
                 login: https://www.facebook.com/v3.0/dialog/oauth
                 token: https://graph.facebook.com/v3.0/oauth/access_token
                 profile: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
+
+            #github:
+            #client_id: c0f254c6af9409152c67
+            #client-secret: cfc0499943333c969603c4b4688b3b4ff00aa1f0
+            #redirect-uri: "http://localhost:8080/gihub/callback"
