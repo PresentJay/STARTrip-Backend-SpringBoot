@@ -38,3 +38,4 @@ out/
 
 application-jwt.yml
 application-api.yml
+application-oauth2.yml
