@@ -40,6 +40,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role authorities;
 
+    public User update(String name, String picture) {
+        this.name = name;
+        this.picture_url = picture;
+
+        return this;
+    }
+
     public static User createUser(SignUpDto signUpDto) {
         User user = User.builder()
                 .email(signUpDto.getEmail())

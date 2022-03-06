@@ -1,9 +1,11 @@
 package com.startrip.codebase.config;
 
+import com.startrip.codebase.domain.auth.CustomOAuth2UserService;
 import com.startrip.codebase.jwt.JwtAccessDeniedHandler;
 import com.startrip.codebase.jwt.JwtAuthenticationEntryPoint;
 import com.startrip.codebase.jwt.JwtSecurityConfig;
 import com.startrip.codebase.jwt.TokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,22 +17,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final CustomOAuth2UserService customOAuth2UserService;
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-
-    public SecurityConfig(
-            TokenProvider tokenProvider,
-            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-            JwtAccessDeniedHandler jwtAccessDeniedHandler
-    ) {
-        this.tokenProvider = tokenProvider;
-        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -49,6 +42,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .oauth2Login()
+                        .userInfoEndpoint()
+                                .userService(customOAuth2UserService);
+                                        //.authorizationRequestRepository()
         httpSecurity
                 // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
                 .csrf().disable()
@@ -80,4 +78,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider));
     }
+
 }

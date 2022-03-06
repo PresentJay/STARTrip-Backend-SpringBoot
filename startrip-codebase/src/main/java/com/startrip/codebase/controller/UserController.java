@@ -41,7 +41,7 @@ public class UserController {
         return user;
     }
 
-    @PostMapping("/login")
+    @PostMapping("/login2")
     public @ResponseBody ResponseEntity login(@RequestBody LoginDto loginDto){
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
@@ -57,7 +57,7 @@ public class UserController {
         return new ResponseEntity<>(jwt, httpHeaders, HttpStatus.OK);
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/signup2")
     public @ResponseBody ResponseEntity signup(@RequestBody SignUpDto signUpDto) {
         try {
             User user = User.createUser(signUpDto);
