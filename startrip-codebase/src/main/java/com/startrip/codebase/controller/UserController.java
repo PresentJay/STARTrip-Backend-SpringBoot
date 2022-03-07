@@ -59,6 +59,7 @@ public class UserController {
         return new ResponseEntity<>(jwt, httpHeaders, HttpStatus.OK);
     }
 
+    // Auth End-point
     @GetMapping("/auth/success")
     public @ResponseBody ResponseEntity login(@RequestParam("token") String token){
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -68,7 +69,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/signup2")
+    @PostMapping("/signup")
     public @ResponseBody
     ResponseEntity signup(@RequestBody SignUpDto signUpDto) {
 

@@ -29,7 +29,6 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException, IOException {
-
         String token = tokenProvider.createToken((OAuth2AuthenticationToken) authentication);
 
         String uri =  UriComponentsBuilder.fromUriString("/api/user/auth/success")
