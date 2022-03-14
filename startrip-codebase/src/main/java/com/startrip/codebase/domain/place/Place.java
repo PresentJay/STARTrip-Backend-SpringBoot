@@ -4,6 +4,7 @@ import com.startrip.codebase.domain.category.Category;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
