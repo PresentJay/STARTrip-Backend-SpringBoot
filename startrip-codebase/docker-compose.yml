@@ -28,8 +28,8 @@ services:
     volumes:
       - db_datas:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=compose-postgres
-      - POSTGRES_PASSWORD=compose-postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
       - PGDATA= /var/lib/postgresql/data/pgdata
     ports:
       - 5432:5432

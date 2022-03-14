@@ -16,7 +16,7 @@ Configuration:
     RollingFile:
       name: STARTrip_FileLog
       fileName: ./logs/STARTrip.log
-      filePattern: ./logs/STARTrip-$d{yyyy-MM-dd}-%i.log
+      filePattern: ./logs/STARTrip-%d{yyyy-MM-dd}-%i.log
       PatternLayout:
         pattern: "{LOG_PATTERN}"
         charset: UTF-8
@@ -26,8 +26,8 @@ Configuration:
         SizeBasedTriggeringPolicy:
           size: 100000KB
       DefaultRolloverStrategy:
-          max: 20
-          fileIndex: min
+        max: 20
+        fileIndex: min
 
   Loggers:
     Root:
