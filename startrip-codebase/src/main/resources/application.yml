@@ -4,6 +4,7 @@ spring:
     include:
       - jwt
       - api
+      - oauth2
       - mongoDB
 
 

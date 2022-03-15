@@ -31,8 +31,8 @@ public class UserService {
 
     // 중복검사
     private void validateDuplicateUser(User user) {
-        User savedUser = userRepository.findByEmail(user.getEmail());
-        if (savedUser != null) {
+        Optional<User> savedUser = userRepository.findByEmail(user.getEmail());
+        if (savedUser.isPresent()) {
             throw new RuntimeException("존재하는 유저입니다.");
         }
 
