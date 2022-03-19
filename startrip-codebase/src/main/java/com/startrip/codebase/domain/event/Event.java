@@ -1,9 +1,7 @@
 package com.startrip.codebase.domain.event;
 
-import com.startrip.codebase.dto.NewEventDto;
-import com.startrip.codebase.dto.UpdateEventDto;
+import com.startrip.codebase.dto.event.UpdateEventDto;
 import lombok.*;
-import org.hibernate.annotations.GeneratorType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

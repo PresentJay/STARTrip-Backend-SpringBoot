@@ -2,12 +2,10 @@ package com.startrip.codebase.service;
 
 import com.startrip.codebase.domain.event.Event;
 import com.startrip.codebase.domain.event.EventRepository;
-import com.startrip.codebase.dto.NewEventDto;
-import com.startrip.codebase.dto.ResponseEventDto;
-import com.startrip.codebase.dto.UpdateEventDto;
-import lombok.RequiredArgsConstructor;
+import com.startrip.codebase.dto.event.NewEventDto;
+import com.startrip.codebase.dto.event.ResponseEventDto;
+import com.startrip.codebase.dto.event.UpdateEventDto;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.core.async.RingBufferLogEventTranslator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

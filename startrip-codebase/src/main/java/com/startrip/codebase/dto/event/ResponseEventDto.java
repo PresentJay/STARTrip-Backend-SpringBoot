@@ -1,4 +1,4 @@
-package com.startrip.codebase.dto;
+package com.startrip.codebase.dto.event;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class UpdateEventDto {
+public class ResponseEventDto {
 
     private String eventTitle;
 

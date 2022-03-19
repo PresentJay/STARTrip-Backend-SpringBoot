@@ -1,14 +1,12 @@
 package com.startrip.codebase.controller;
 
 import com.startrip.codebase.domain.event.Event;
-import com.startrip.codebase.dto.NewEventDto;
-import com.startrip.codebase.dto.ResponseEventDto;
-import com.startrip.codebase.dto.UpdateEventDto;
+import com.startrip.codebase.dto.event.NewEventDto;
+import com.startrip.codebase.dto.event.ResponseEventDto;
+import com.startrip.codebase.dto.event.UpdateEventDto;
 import com.startrip.codebase.service.EventService;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

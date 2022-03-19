@@ -1,4 +1,4 @@
-package com.startrip.codebase.dto;
+package com.startrip.codebase.dto.event;
 
 import lombok.Getter;
 import lombok.Setter;
