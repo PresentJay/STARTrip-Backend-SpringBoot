@@ -1,9 +1,9 @@
 package com.startrip.codebase.controller;
 
 import com.startrip.codebase.domain.event.Event;
-import com.startrip.codebase.dto.event.NewEventDto;
-import com.startrip.codebase.dto.event.ResponseEventDto;
-import com.startrip.codebase.dto.event.UpdateEventDto;
+import com.startrip.codebase.domain.event.dto.NewEventDto;
+import com.startrip.codebase.domain.event.dto.ResponseEventDto;
+import com.startrip.codebase.domain.event.dto.UpdateEventDto;
 import com.startrip.codebase.service.EventService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,21 +21,26 @@ public class EventController {
         this.eventService = eventService;
     }
 
-    // REST 설계 갑시다..
-    @GetMapping("/events")
+    @GetMapping("/event")
     public List<ResponseEventDto> getEvents() {
         List<ResponseEventDto> events = eventService.allEvent();
         return events;
     }
-    // CRUD
 
-    @GetMapping("/events/{id}")
+    @PostMapping("/event")
+    public ResponseEntity
+    createEvent(@RequestBody NewEventDto dto) {
+        eventService.createEvent(dto);
+        return new ResponseEntity("이벤트 생성", HttpStatus.OK);
+    }
+
+    @GetMapping("/event/{id}")
     public Event getEvent(@PathVariable("id") Long id) {
         Event event = eventService.getEvent(id);
         return event;
     }
 
-    @PostMapping("/events/{id}")
+    @PostMapping("/event/{id}")
     public ResponseEntity updateEvent(@PathVariable("id") Long id, @RequestBody UpdateEventDto dto) {
         try{
             eventService.updateEvent(id, dto);
@@ -47,19 +52,11 @@ public class EventController {
     }
 
 
-    @DeleteMapping("/events/{id}")
+    @DeleteMapping("/event/{id}")
     public String deleteEvent(@PathVariable("id") Long id){
         eventService.deleteEvent(id);
         return "삭제";
     }
 
 
-    @PostMapping("/events")
-    public ResponseEntity
-    createEvent(@RequestBody NewEventDto dto) {
-
-        eventService.createEvent(dto);
-
-        return new ResponseEntity("이벤트 생성", HttpStatus.OK);
-    }
 }

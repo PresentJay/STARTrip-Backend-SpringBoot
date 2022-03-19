@@ -2,9 +2,9 @@ package com.startrip.codebase.service;
 
 import com.startrip.codebase.domain.event.Event;
 import com.startrip.codebase.domain.event.EventRepository;
-import com.startrip.codebase.dto.event.NewEventDto;
-import com.startrip.codebase.dto.event.ResponseEventDto;
-import com.startrip.codebase.dto.event.UpdateEventDto;
+import com.startrip.codebase.domain.event.dto.NewEventDto;
+import com.startrip.codebase.domain.event.dto.ResponseEventDto;
+import com.startrip.codebase.domain.event.dto.UpdateEventDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,8 +28,8 @@ public class EventService {
     public void createEvent(NewEventDto dto) {
         Event event = Event.builder()
                 .eventTitle(dto.getEventTitle())
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now().plusDays(1))
+                .startDate(dto.getStartDate())
+                .endDate(dto.getEndDate())
                 .build();
         eventRepository.save(event);
         log.info(event.toString());
