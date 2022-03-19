@@ -62,7 +62,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb' //mongo
 
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' //spring security
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client' // OAuth
 
     implementation group: 'com.squareup.okhttp', name: 'okhttp', version: '2.7.5' //ok http
 

@@ -7,10 +7,6 @@ spring:
       - oauth2
       - mongoDB
 
-  #  datasource:
-  #    url: jdbc:postgresql://postgresql:5432/startrip
-  #    username: postgres
-  #    password: postgres
 
   hikari:
     maximum-pool-size: 4

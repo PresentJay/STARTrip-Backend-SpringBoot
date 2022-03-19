@@ -17,9 +17,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController()
 @RequestMapping("/api/user")
-@Controller
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 
@@ -34,15 +35,8 @@ public class UserController {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
-
-    @GetMapping("/{userId}")
-    public User login(@PathVariable("userId") Long id) {
-        User user = userService.findOne(id).get();
-        return user;
-    }
-
     @PostMapping("/login")
-    public @ResponseBody ResponseEntity login(@RequestBody LoginDto loginDto){
+    public @ResponseBody ResponseEntity login(@RequestBody LoginDto loginDto){ // JAVA 리플렉션
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
 
@@ -57,8 +51,20 @@ public class UserController {
         return new ResponseEntity<>(jwt, httpHeaders, HttpStatus.OK);
     }
 
+    // Auth End-point
+    @GetMapping("/auth/success")
+    public @ResponseBody ResponseEntity login(@RequestParam("token") String token){
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token);
+
+        return new ResponseEntity<>(token, httpHeaders, HttpStatus.OK);
+    }
+
+
     @PostMapping("/signup")
-    public @ResponseBody ResponseEntity signup(@RequestBody SignUpDto signUpDto) {
+    public @ResponseBody
+    ResponseEntity signup(@RequestBody SignUpDto signUpDto) {
+
         try {
             User user = User.createUser(signUpDto);
             userService.create(user);
