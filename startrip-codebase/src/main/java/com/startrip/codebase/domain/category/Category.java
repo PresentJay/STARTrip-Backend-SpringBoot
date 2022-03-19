@@ -1,30 +1,49 @@
 package com.startrip.codebase.domain.category;
 
 import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@NoArgsConstructor
 @Entity
+@Table(name = "\"Category\"")
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Category {
+
     @Id
-    private Integer category_id; // PK
+    @Column(name = "category_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long categoryId; // PK
 
-    @NotNull
-    private String category_name;
+    @ManyToOne(fetch = FetchType.EAGER) //최상위 카테고리
+    @JoinColumn (name ="category_root_id")
+    private Category categoryRootId;
 
-    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER) //상위 카테고리
+    @JoinColumn (name ="category_parent_id")
+    private Category categoryParentId;
+
+    @Column(name = "category_name")
+    private String categoryName;
+
+    //자식 카테고리들
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "categoryParentId", cascade = CascadeType.PERSIST)
+    @JoinColumn (name ="child_Categories")
+    private List<Category> childCategories = new ArrayList<>();
+
+
+    @Column(nullable = false)
     private Integer depth;
 
-    // 순환 참조
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id", insertable=false, updatable=false)
-    private Category category_up_id; // 부모
-
+    /*
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category_up_id")
-    private List<Category> children; // 자식
+    private List<Category> children; // 자식 */
 }
