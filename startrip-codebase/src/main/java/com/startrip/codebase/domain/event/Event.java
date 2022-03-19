@@ -1,47 +1,35 @@
 package com.startrip.codebase.domain.event;
 
-import com.sun.istack.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.startrip.codebase.dto.NewEventDto;
+import com.startrip.codebase.dto.UpdateEventDto;
+import lombok.*;
+import org.hibernate.annotations.GeneratorType;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
+@Entity
+@Builder
 @Getter
 @NoArgsConstructor
-@Entity
+@AllArgsConstructor
+@ToString
 public class Event {
+
     @Id
-    private UUID event_id;
+    @Column(name = "event_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long eventId;
 
-    @NotNull
-    private Long creator_id;
+    private String eventTitle;
 
-    @NotNull
-    private UUID place_id;
+    private LocalDateTime startDate; // 시작 날짜
 
-    @NotNull
-    @ElementCollection(targetClass = Integer.class)
-    private List<Integer> category_list;
+    private LocalDateTime endDate; // 끝 날짜
 
-    @NotNull
-    private String event_title;
-
-    private String event_text;
-
-    private String event_photo;
-
-    private Date start_date;
-
-    private Date end_date;
-
-    private Date updated_date;
-
-    private Boolean repeat;
-
-    private String repeat_cycle;
+    public void update(UpdateEventDto dto) {
+        this.eventTitle = dto.getEventTitle();
+        this.startDate = dto.getStartDate();
+        this.endDate = dto.getEndDate();
+    }
 }
