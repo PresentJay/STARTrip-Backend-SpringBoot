@@ -1,6 +1,6 @@
 package com.startrip.codebase.domain.category;
 
-import com.sun.istack.NotNull;
+import com.startrip.codebase.dto.category.CreateCategoryDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,27 +23,29 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId; // PK
 
-    @ManyToOne(fetch = FetchType.EAGER) //최상위 카테고리
-    @JoinColumn (name ="category_root_id")
-    private Category categoryRootId;
-
     @ManyToOne(fetch = FetchType.EAGER) //상위 카테고리
-    @JoinColumn (name ="category_parent_id")
-    private Category categoryParentId;
+    @JoinColumn (name ="category_parent")
+    private Category categoryParent;
 
     @Column(name = "category_name")
     private String categoryName;
 
     //자식 카테고리들
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "categoryParentId", cascade = CascadeType.PERSIST)
-    @JoinColumn (name ="child_Categories")
-    private List<Category> childCategories = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "categoryParent", cascade = CascadeType.PERSIST)
+    @JoinColumn (name ="category_child_id")
+    private List<Category> categoryChildId = new ArrayList<>();
 
 
     @Column(nullable = false)
     private Integer depth;
 
+
     /*
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category_up_id")
-    private List<Category> children; // 자식 */
+    public Category(Category categoryParent, String categoryName, Integer depth){
+        this.categoryParent = categoryParent;
+        this.categoryName = categoryName;
+        this.depth = depth;
+    } */
+
+
 }
