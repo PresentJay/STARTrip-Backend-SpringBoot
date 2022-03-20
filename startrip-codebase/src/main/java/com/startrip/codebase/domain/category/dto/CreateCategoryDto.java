@@ -1,4 +1,4 @@
-package com.startrip.codebase.dto.category;
+package com.startrip.codebase.domain.category.dto;
 
 
 import com.startrip.codebase.domain.category.Category;
