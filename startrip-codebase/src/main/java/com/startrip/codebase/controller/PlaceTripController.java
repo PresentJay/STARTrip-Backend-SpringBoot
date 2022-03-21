@@ -23,18 +23,18 @@ public class PlaceTripController {
         this.placeTripService = placeTripService;
     }
 
-    // All
-    @GetMapping("/placetrip")
-    public List<ResponsePlaceTripDto> getAllPlaceTrip() {
-        List<ResponsePlaceTripDto> placeTrip = placeTripService.allPlaceTrip();
-        return placeTrip;
-    }
-
     // Create
     @PostMapping("/placetrip")
     public ResponseEntity createPlaceTrip(@RequestBody CreatePlaceTripDto dto) {
         placeTripService.createPlaceTrip(dto);
         return new ResponseEntity("Place Trip 생성", HttpStatus.OK);
+    }
+
+    // All
+    @GetMapping("/placetrip")
+    public List<ResponsePlaceTripDto> getAllPlaceTrip() {
+        List<ResponsePlaceTripDto> placeTrip = placeTripService.allPlaceTrip();
+        return placeTrip;
     }
 
     // Get

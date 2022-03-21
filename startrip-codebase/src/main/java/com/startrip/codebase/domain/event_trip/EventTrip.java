@@ -1,5 +1,6 @@
 package com.startrip.codebase.domain.event_trip;
 
+import com.startrip.codebase.dto.event_trip.UpdateEventTripDto;
 import com.startrip.codebase.dto.place_trip.UpdatePlaceTripDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,4 +43,16 @@ public class EventTrip {
     private String transportation;
 
     private String title;
+
+    public void update(UpdateEventTripDto dto) {
+        this.tripId = dto.getTripId();
+        this.userId = dto.getUserId();
+        this.userPartner = dto.getUserPartner();
+        this.eventId = dto.getEventId();
+        this.startTime = dto.getStartTime();
+        this.endTime = dto.getEndTime();
+        this.state = dto.getState();
+        this.transportation = dto.getTransportation();
+        this.title = dto.getTitle();
+    }
 }
