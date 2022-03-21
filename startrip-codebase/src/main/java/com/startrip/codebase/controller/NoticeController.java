@@ -44,7 +44,7 @@ public class NoticeController {
         return new ResponseEntity("생성되었습니다", HttpStatus.OK);
     }
 
-    @PostMapping("/notice/{id}")
+    @PutMapping("/notice/{id}")
     public @ResponseBody
     ResponseEntity updateNotice(@PathVariable("id") Long id, NewNoticeDto dto) {
         noticeService.updateNotice(id, dto);
