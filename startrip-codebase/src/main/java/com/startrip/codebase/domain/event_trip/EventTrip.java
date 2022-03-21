@@ -1,5 +1,8 @@
 package com.startrip.codebase.domain.event_trip;
 
+import com.startrip.codebase.dto.place_trip.UpdatePlaceTripDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +13,9 @@ import java.sql.Date;
 import java.util.UUID;
 
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class EventTrip {
     @Id
@@ -26,9 +31,11 @@ public class EventTrip {
     @Column(name = "event_id")
     private UUID eventId = UUID.randomUUID();
 
-    private Date start_time;
+    @Column(name = "start_time")
+    private Date startTime;
 
-    private Date end_time;
+    @Column(name = "end_time")
+    private Date endTime;
 
     private String state;
 
