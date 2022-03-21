@@ -45,6 +45,14 @@ public class CategoryController {
         return category;
     }
 
+    // 수정
 
+
+    // 삭제
+    @DeleteMapping("/delete/{id}")
+    public String deleteCategory(@PathVariable("id") Long id){
+        categoryService.deleteCategory(id);
+        return "삭제";
+    }
 
 }
