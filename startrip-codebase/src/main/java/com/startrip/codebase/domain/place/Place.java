@@ -19,18 +19,8 @@ public class Place {
     @Column(name = "place_id")
     private UUID placeId = UUID.randomUUID();
 
-    @NotNull
-    private String address;
-
-    private String placeName;
-
-    private String placeInfo;
-
-    private String placePhoto;
-
-    @ElementCollection
-    @CollectionTable(name = "category_list")
-    private List<Integer> categorylist;
+    @Column(name = "category_id")
+    private UUID eventId = UUID.randomUUID();
 
     @NotNull
     private Double latitude;
@@ -38,6 +28,14 @@ public class Place {
     @NotNull
     private Double longitude;
 
-    @Column(name = "average_view_time")
-    private Double averageViewTime;
+    @NotNull
+    private String address;
+
+    private String placePhoto;
+
+    private String placeDescription;
+
+    private String placeName;
+
+    private Int phoneNumber;
 }

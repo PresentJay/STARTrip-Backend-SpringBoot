@@ -11,8 +11,4 @@ import java.util.UUID;
 @Repository
 public interface PlaceRepository extends JpaRepository<Place, UUID> {
 
-    //페이징
-    Page<Place> findByPlaceName(String PlaceName, Pageable pageable);
-    //페이징 ver2
-    Page<Place> findAll(Pageable pageable);
 }
