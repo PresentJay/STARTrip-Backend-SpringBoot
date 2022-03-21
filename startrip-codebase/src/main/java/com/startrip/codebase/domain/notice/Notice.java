@@ -1,7 +1,10 @@
 package com.startrip.codebase.domain.notice;
 
 import com.startrip.codebase.domain.user.User;
+import com.startrip.codebase.dto.notice.NewNoticeDto;
 import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +16,9 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Builder
 public class Notice {
 
     @Id
@@ -42,4 +47,19 @@ public class Notice {
     private Integer like_count;
 
     private Integer view_count;
+
+    public static Notice of (NewNoticeDto dto){
+        Notice notice = Notice.builder()
+                .title(dto.getTitle())
+                .text(dto.getText())
+                .attachment(dto.getAttachment())
+                .build();
+        return notice;
+    }
+
+    public void update(NewNoticeDto dto) {
+        this.title = dto.getTitle();
+        this.text = dto.getText();
+        this.attachment = dto.getAttachment();
+    }
 }

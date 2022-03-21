@@ -2,6 +2,7 @@ package com.startrip.codebase.service;
 
 import com.startrip.codebase.domain.notice.Notice;
 import com.startrip.codebase.domain.notice.NoticeRepository;
+import com.startrip.codebase.dto.notice.NewNoticeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +31,19 @@ public class NoticeService {
         return notice.get();
     }
 
-    public void createNotice() {
+    public void createNotice(NewNoticeDto dto) {
+        Notice notice = Notice.of(dto);
+        noticeRepository.save(notice);
+    }
 
+    public void updateNotice(Long id, NewNoticeDto dto){
+        Notice notice = getNotice(id);
+        notice.update(dto);
+        noticeRepository.save(notice);
+    }
+
+    public void deleteNotice(Long id) {
+        noticeRepository.deleteById(id);
     }
 
 }
