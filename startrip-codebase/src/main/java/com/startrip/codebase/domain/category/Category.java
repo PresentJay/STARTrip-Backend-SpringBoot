@@ -27,8 +27,8 @@ public class Category {
     private String categoryName;
 
     //자식 카테고리들
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "categoryParent", cascade = CascadeType.PERSIST)
-    @JoinColumn (name ="category_child_id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "categoryParentID", cascade = CascadeType.PERSIST)
+    @Column (name ="category_child_id")
     private List<Category> categoryChildId = new ArrayList<>();
 
     @Column(nullable = false)

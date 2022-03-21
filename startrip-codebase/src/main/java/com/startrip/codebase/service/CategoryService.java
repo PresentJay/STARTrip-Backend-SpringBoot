@@ -22,12 +22,17 @@ public class CategoryService {
 
     public void createCategory(CreateCategoryDto dto) {
         Category category = Category.builder()
-                .categoryParent(dto.getCategoryParentId()) //create할 땐 parent를 안 넣나?
+                .categoryParentID(dto.getCategoryParentId()) //create할 땐 parent를 안 넣나?
                 .categoryName(dto.getCategoryName())
                 .depth(dto.getDepth())
                 .build();
         categoryRepository.save(category);
         log.info(category.toString());
+    }
+
+    public List<Category> getCategory() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories;
     }
 
 }

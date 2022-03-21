@@ -10,7 +10,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CreateCategoryDto {
-
     private Long categoryId;
     private Long categoryParentId;
     private String categoryName;
