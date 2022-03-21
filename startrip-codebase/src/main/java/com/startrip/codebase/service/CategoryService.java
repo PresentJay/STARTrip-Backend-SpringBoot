@@ -4,6 +4,7 @@ package com.startrip.codebase.service;
 import com.startrip.codebase.domain.category.Category;
 import com.startrip.codebase.domain.category.CategoryRepository;
 import com.startrip.codebase.domain.category.dto.CreateCategoryDto;
+import com.startrip.codebase.domain.event.Event;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +31,14 @@ public class CategoryService {
         log.info(category.toString());
     }
 
-    public List<Category> getCategory() {
+    public List<Category> getCategoryList() {
         List<Category> categories = categoryRepository.findAll();
         return categories;
     }
+
+    public Event getCategory(Long id){
+        return eventRepository.findById(id).get();
+    }
+
 
 }

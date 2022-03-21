@@ -34,16 +34,17 @@ public class CategoryController {
     //목록 보기
     @GetMapping("/list")
     public List<Category> getCategory() {
-        List<Category> categories = categoryService.getCategory();
+        List<Category> categories = categoryService.getCategoryList();
         return categories;
     }
 
     // 단일 보기
-    @GetMapping("/{id}")
+
+    /* @GetMapping("/{id}")
     public Category getCategory(@PathVariable("id") Long id) {
         Category category = categoryService.getCategory(id); //미구현
         return category;
-    }
+    } */
 
 
 
