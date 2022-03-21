@@ -39,13 +39,11 @@ public class CategoryController {
     }
 
     // 단일 보기
-
-    /* @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public Category getCategory(@PathVariable("id") Long id) {
-        Category category = categoryService.getCategory(id); //미구현
+        Category category = categoryService.getCategory(id);
         return category;
-    } */
-
+    }
 
 
 

@@ -36,9 +36,15 @@ public class CategoryService {
         return categories;
     }
 
-    public Event getCategory(Long id){
-        return eventRepository.findById(id).get();
+    public Category getCategory(Long id){
+        //왜 나는 id를 integer로 받아야한다고 그럴까? id를 Integer로 설정한 곳이 없는 것 같은데.
+        return categoryRepository.findById(id).get();
     }
+
+    public void deleteCategory(Long id){
+        categoryRepository.deleteById(id);
+    }
+
 
 
 }
