@@ -1,12 +1,12 @@
 package com.startrip.codebase.domain.notice;
 
+import com.startrip.codebase.domain.user.User;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -15,26 +15,29 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 public class Notice {
-    @Id
-    private UUID notice_id;
 
-    @NotNull
-    private Long creator_id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long notice_id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private User creator_id;
 
     @NotNull
     @ElementCollection(targetClass = Integer.class)
     private List<Integer> category_list;
 
     @NotNull
-    private String notice_title;
+    private String title;
 
-    private String notice_text;
+    @NotNull
+    private String text;
 
-    private String notice_attachment;
+    private String attachment; // file url
 
-    private Date created_date;
+    private LocalDateTime createdTime;
 
-    private Date updated_date;
+    private LocalDateTime updatedTime;
 
     private Integer like_count;
 
