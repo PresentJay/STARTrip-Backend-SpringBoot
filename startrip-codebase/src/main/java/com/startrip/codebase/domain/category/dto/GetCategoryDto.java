@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class GetCategoryDto {
-    private Long categoryId;
+
     private Long categoryParentId;
     private String categoryName;
     private Integer depth;

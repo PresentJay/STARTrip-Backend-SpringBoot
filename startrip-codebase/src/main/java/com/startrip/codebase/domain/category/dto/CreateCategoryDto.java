@@ -1,6 +1,5 @@
 package com.startrip.codebase.domain.category.dto;
 
-
 import com.startrip.codebase.domain.category.Category;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

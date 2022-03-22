@@ -1,6 +1,5 @@
 package com.startrip.codebase.domain.category.dto;
 
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,7 +9,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UpdateCategoryDto {
 
-    private Long categoryId;
     private Long categoryParentId;
     private String categoryName;
     private Integer depth;
