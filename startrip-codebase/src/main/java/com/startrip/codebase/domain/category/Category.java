@@ -29,4 +29,15 @@ public class Category {
     @Column(nullable = false)
     private Integer depth;
 
+
+    //dto -> Entity
+    public static Category createCategory(CreateCategoryDto dto) {
+        // createDto에 있던 categoryParentId는 여기서 Entity로 바꾸지 않는다.
+        Category category = Category.builder()
+                .categoryName(dto.getCategoryName())
+                .depth(dto.getDepth())
+                .build();
+        return category;
+    }
+
 }
