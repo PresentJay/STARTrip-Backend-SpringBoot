@@ -18,8 +18,8 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
 
-    @ManyToOne(fetch = FetchType.LAZY )
-    @JoinColumn(name = "category_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_parent_id")
     private Category categoryParent;
 
     @Column(name = "category_name", unique = true)
@@ -39,12 +39,14 @@ public class Category {
         return category;
     }
 
+
     @Builder // id를 제외하여 builder를 적용시킬 것이므로 따로 생성자 위에 builder 패턴을 적용하였음.
     public Category (Category categoryParent, String categoryName, Integer depth){
         this.categoryParent = categoryParent;
         this.categoryName = categoryName;
         this.depth = depth;
     }
+
 
     public void setDepth(Integer depth){
         this.depth = depth;
