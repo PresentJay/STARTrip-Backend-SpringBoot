@@ -8,6 +8,7 @@ import com.startrip.codebase.domain.category.dto.UpdateCategoryDto;
 import com.startrip.codebase.domain.event.Event;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -86,6 +87,7 @@ public class CategoryService {
     }
 
     // Delete: api/categories/{id}
+    @Transactional
     public void deleteCategory(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("삭제하려는 카테고리가 존재하지 않음"));

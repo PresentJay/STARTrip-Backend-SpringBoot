@@ -19,8 +19,8 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_parent_id")
+    @ManyToOne(fetch = FetchType.EAGER) // TODO : 삭제 시 에러 발생함
+    @JoinColumn(name = "category_parent_id", nullable = false)
     private Category categoryParent;
 
     @Column(name = "category_name", unique = true)
