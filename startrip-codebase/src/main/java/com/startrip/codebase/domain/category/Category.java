@@ -9,7 +9,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Category {
@@ -23,7 +22,7 @@ public class Category {
     @JoinColumn(name = "category_id")
     private Category categoryParent;
 
-    @Column(name = "category_name", nullable = false)
+    @Column(name = "category_name", unique = true)
     private String categoryName;
 
     @Column(nullable = false)
@@ -38,6 +37,25 @@ public class Category {
                 .depth(dto.getDepth())
                 .build();
         return category;
+    }
+
+    @Builder // id를 제외하여 builder를 적용시킬 것이므로 따로 생성자 위에 builder 패턴을 적용하였음.
+    public Category (Category categoryParent, String categoryName, Integer depth){
+        this.categoryParent = categoryParent;
+        this.categoryName = categoryName;
+        this.depth = depth;
+    }
+
+    public void setDepth(Integer depth){
+        this.depth = depth;
+    }
+
+    public void setCategoryName(String categoryName){
+        this.categoryName = categoryName;
+    }
+
+    public void setCategoryParent(Category categoryParent){
+        this.categoryParent = categoryParent;
     }
 
 }
