@@ -52,7 +52,7 @@ public class PlaceTripController {
         } catch (Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity("", HttpStatus.OK);
+        return new ResponseEntity("Place Trip 업데이트", HttpStatus.OK);
     }
 
     // Delete
