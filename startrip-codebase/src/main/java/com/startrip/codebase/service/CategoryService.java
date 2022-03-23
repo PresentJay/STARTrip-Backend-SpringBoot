@@ -71,6 +71,7 @@ public class CategoryService {
     public Category getCategory(Long id){
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않음"));
+
         return category;
     }
 
@@ -79,7 +80,6 @@ public class CategoryService {
         // 조회
         Category category = categoryRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("수정하려는 카테고리가 존재하지 않음"));
-
         // 상위 카테고리를 변경할 수 있도록 해야하는가?
         //우선, 이름만 변경할 수 있도록
         category.setCategoryName(dto.getCategoryName());

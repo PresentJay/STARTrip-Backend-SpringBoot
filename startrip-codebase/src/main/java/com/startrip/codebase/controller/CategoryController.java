@@ -37,8 +37,13 @@ public class CategoryController {
 
     // 단일 보기
     @GetMapping("/categories/{id}")
-    public ResponseEntity<Category> getCategory(@PathVariable("id") Long id) {
-        Category category = categoryService.getCategory(id);
+    public ResponseEntity getCategory(@PathVariable("id") Long id) {
+        Category category;
+        try{
+            category = categoryService.getCategory(id);
+        } catch (IllegalArgumentException e){
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 

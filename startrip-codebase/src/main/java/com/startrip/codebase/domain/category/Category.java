@@ -1,5 +1,6 @@
 package com.startrip.codebase.domain.category;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.startrip.codebase.domain.category.dto.CreateCategoryDto;
 import lombok.*;
 
@@ -18,7 +19,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_parent_id")
     private Category categoryParent;
 
