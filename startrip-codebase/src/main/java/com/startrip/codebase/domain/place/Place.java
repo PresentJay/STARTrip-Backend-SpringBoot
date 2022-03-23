@@ -35,7 +35,9 @@ public class Place {
 
     private String placeDescription;
 
+    @NotNull
     private String placeName;
 
     private Int phoneNumber;
+
 }
