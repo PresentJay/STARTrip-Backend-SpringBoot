@@ -40,6 +40,7 @@ public class CategoryService {
                     .categoryName("ROOT")
                     .build()
                 );
+            categoryRepository.save(rootCategory);
 
             category.setDepth(1);
             category.setCategoryParent(rootCategory);
