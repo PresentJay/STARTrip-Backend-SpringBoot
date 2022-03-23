@@ -39,10 +39,9 @@ public class CategoryService {
                     .categoryName("ROOT")
                     .build()
                 );
-            category.builder()
-                    .categoryParent(rootCategory)
-                    .depth(1)
-                    .build();
+
+            category.setDepth(1);
+            category.setCategoryParent(rootCategory);
         } else {
             /* 하위분류의 생성일 경우 */
 
@@ -50,10 +49,9 @@ public class CategoryService {
             Long categoryParentId = dto.getCategoryParentId();
             Category parentCategory = categoryRepository.findById(categoryParentId)
                     .orElseThrow(() -> new IllegalArgumentException("부모 카테고리 부재"));
-            category.builder()
-                    .categoryParent(parentCategory)
-                    .depth(parentCategory.getDepth() + 1)
-                    .build();
+
+            category.setDepth(parentCategory.getDepth() +1);
+            category.setCategoryParent(parentCategory);
         }
 
         categoryRepository.save(category); //저장
@@ -86,8 +84,4 @@ public class CategoryService {
 
     public void deleteCategory(Long id){
         categoryRepository.deleteById(id); */
-    }
-
-
-
 }
