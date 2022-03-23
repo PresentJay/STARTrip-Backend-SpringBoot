@@ -16,6 +16,7 @@ import java.util.Optional;
 @Slf4j
 public class CategoryService {
 
+    //예외처리 진행되지 않은 상태
     private final CategoryRepository categoryRepository;
 
     // 인자 하나만 있는 건 스프링 특정 버전 이후부턴 알아서 인식한다고 했었음.
@@ -58,30 +59,36 @@ public class CategoryService {
         log.info(category.getCategoryName());
     }
 
-    /*
+    // GET: api/categories,
     public List<Category> getCategoryList() {
         List<Category> categories = categoryRepository.findAll();
         return categories;
     }
 
+
+    // GET: api/categories/{id}
     public Category getCategory(Long id){
-        //왜 나는 id를 integer로 받아야한다고 그럴까? id를 Integer로 설정한 곳이 없는 것 같은데.
-        return categoryRepository.findById(id).get();
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않음"));
+        return category;
     }
 
+    // Patch: api/categories/{id}
     public void updateCategory(Long id, UpdateCategoryDto dto){
         // 조회
-        Optional<Category> category = categoryRepository.findById(id);
-        if (category.isEmpty()){
-            throw new RuntimeException("존재하지 않는 카테고리 조회");
-        }
-        Category use = category.get();
+        Category category = categoryRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("수정하려는 카테고리가 존재하지 않음"));
 
-        use.update(dto);
-
-        categoryRepository.save(use);
+        // 상위 카테고리를 변경할 수 있도록 해야하는가?
+        //우선, 이름만 변경할 수 있도록
+        category.setCategoryName(dto.getCategoryName());
     }
 
-    public void deleteCategory(Long id){
-        categoryRepository.deleteById(id); */
+    // Delete: api/categories/{id}
+    public void deleteCategory(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("삭제하려는 카테고리가 존재하지 않음"));
+
+        categoryRepository.deleteById(id);
+    }
 }
