@@ -26,9 +26,15 @@ public class PlaceController {
         this.placeService = placeService;
     }
 
+    @GetMapping("/place")
+    public @ResponseBody
+    ResponseEntity showPlace(PlaceDto dto) {
+        return new ResponseEntity(placeService.allPlace(), HttpStatus.OK);
+    }
+
     @PostMapping("/place")
     public @ResponseBody
-    ResponseEntity addNotice(PlaceDto dto) {
+    ResponseEntity addPlace(PlaceDto dto) {
         placeService.createPlace(dto);
         return new ResponseEntity("생성되었습니다", HttpStatus.OK);
     }
