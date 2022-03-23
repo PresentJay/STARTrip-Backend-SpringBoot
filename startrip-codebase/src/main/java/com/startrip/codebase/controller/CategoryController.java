@@ -1,58 +1,63 @@
 package com.startrip.codebase.controller;
 
 import com.startrip.codebase.domain.category.Category;
+import com.startrip.codebase.domain.category.CategoryRepository;
 import com.startrip.codebase.domain.category.dto.CreateCategoryDto;
-import com.startrip.codebase.domain.event.Event;
+import com.startrip.codebase.domain.category.dto.UpdateCategoryDto;
 import com.startrip.codebase.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("api/category")
+@RequestMapping("/api")
 public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @Autowired
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
-
-    //생성
-    @PostMapping("/create")
-    public String createCategory(@RequestBody CreateCategoryDto dto) {
+    @PostMapping("/categories")
+    public ResponseEntity<String> createCategory(@RequestBody CreateCategoryDto dto) {
         categoryService.createCategory(dto);
-        return dto.getCategoryName() + " 생성";
+        return new ResponseEntity<>("카테고리 생성", HttpStatus.OK);
     }
 
-    //목록 보기
-    @GetMapping("/list")
-    public List<Category> getCategory() {
+
+    @GetMapping("/categories")
+    public ResponseEntity<List<Category>> getCategory() {
         List<Category> categories = categoryService.getCategoryList();
-        return categories;
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
     // 단일 보기
-    @GetMapping("/get/{id}")
-    public Category getCategory(@PathVariable("id") Long id) {
+    @GetMapping("/categories/{id}")
+    public ResponseEntity<Category> getCategory(@PathVariable("id") Long id) {
         Category category = categoryService.getCategory(id);
-        return category;
+        return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
     // 수정
-
+    @PostMapping("/categories/{id}")
+    public ResponseEntity<String> updateEvent(@PathVariable("id") Long id, @RequestBody UpdateCategoryDto dto) {
+        try{
+            categoryService.updateCategory(id, dto);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("수정", HttpStatus.OK);
+    }
 
     // 삭제
-    @DeleteMapping("/delete/{id}")
-    public String deleteCategory(@PathVariable("id") Long id){
+    @DeleteMapping("/categories/{id}")
+    public ResponseEntity<String> deleteCategory(@PathVariable("id") Long id){
         categoryService.deleteCategory(id);
-        return "삭제";
+        return new ResponseEntity<>("삭제", HttpStatus.OK);
     }
 
 }
