@@ -28,6 +28,7 @@ public class Notice {
     @OneToOne(fetch = FetchType.LAZY)
     private User creator_id;
 
+    // TODO : 값 타입 컬렉션 보단 관계 매핑으로 설계 고려
     @NotNull
     @ElementCollection(targetClass = Integer.class)
     private List<Integer> category_list;
@@ -53,6 +54,9 @@ public class Notice {
                 .title(dto.getTitle())
                 .text(dto.getText())
                 .attachment(dto.getAttachment())
+                .createdTime(LocalDateTime.now())
+                .like_count(0)
+                .view_count(0)
                 .build();
         return notice;
     }
@@ -61,5 +65,6 @@ public class Notice {
         this.title = dto.getTitle();
         this.text = dto.getText();
         this.attachment = dto.getAttachment();
+        this.updatedTime = LocalDateTime.now();
     }
 }
