@@ -21,7 +21,7 @@ import java.util.UUID;
 public class EventTrip {
     @Id
     @Column(name = "trip_id")
-    private UUID tripId = UUID.randomUUID();
+    private UUID tripId;
 
     @Column(name = "user_id")
     private Long userId;
@@ -30,7 +30,7 @@ public class EventTrip {
     private String userPartner;
 
     @Column(name = "event_id")
-    private UUID eventId = UUID.randomUUID();
+    private UUID eventId;
 
     @Column(name = "start_time")
     private Date startTime;

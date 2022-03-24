@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.sql.Date;
+import java.util.Date;
 import java.util.UUID;
 
 @Getter
@@ -20,7 +20,7 @@ import java.util.UUID;
 public class PlaceTrip {
     @Id
     @Column(name = "trip_id")
-    private UUID tripId = UUID.randomUUID();
+    private UUID tripId;
 
     @Column(name = "user_id")
     private Long userId;
@@ -29,7 +29,7 @@ public class PlaceTrip {
     private String userPartner;
 
     @Column(name = "place_id")
-    private UUID placeId = UUID.randomUUID();
+    private UUID placeId;
 
     @Column(name = "start_time")
     private Date startTime;
@@ -44,13 +44,11 @@ public class PlaceTrip {
     private String title;
 
     public void update(UpdatePlaceTripDto dto) {
-        this.tripId = dto.getTripId();
-        this.userId = dto.getUserId();
         this.userPartner = dto.getUserPartner();
         this.placeId = dto.getPlaceId();
         this.startTime = dto.getStartTime();
         this.endTime = dto.getEndTime();
-        this.state = dto.getState();
+        this.state = dto.placeTripState();
         this.transportation = dto.getTransportation();
         this.title = dto.getTitle();
     }

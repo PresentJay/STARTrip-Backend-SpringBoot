@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -26,6 +23,7 @@ public class PlaceTripService {
 
     // Create
     public void createPlaceTrip(CreatePlaceTripDto dto) {
+
         PlaceTrip placeTrip = PlaceTrip.builder()
                 .tripId(dto.getTripId())
                 .userId(dto.getUserId())
@@ -33,7 +31,7 @@ public class PlaceTripService {
                 .placeId(dto.getPlaceId())
                 .startTime(dto.getStartTime())
                 .endTime(dto.getEndTime())
-                .state(dto.getState())
+                .state(dto.placeTripState())
                 .transportation(dto.getTransportation())
                 .title(dto.getTitle())
                 .build();

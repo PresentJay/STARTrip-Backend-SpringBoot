@@ -49,10 +49,10 @@ public class PlaceTripControllerTest {
                 UUID.fromString("e3661498-9473-4c06-9d52-464cc2f59429"),
                 Long.valueOf("123"),
                 "a",
-                UUID.randomUUID(),
+                UUID.fromString("0f1e5a75-f3f4-4dbe-b739-e428e511e0e8"),
                 Date.valueOf("2022-03-23"),
-                Date.valueOf("2022-03-24"),
-                "여행 계획",
+                Date.valueOf("2022-03-25"),
+                null,
                 "버스",
                 "울산 여행");
 
@@ -87,10 +87,10 @@ public class PlaceTripControllerTest {
                 UUID.fromString("e3661498-9473-4c06-9d52-464cc2f59429"),
                 Long.valueOf("123"),
                 "b",
-                UUID.randomUUID(),
+                UUID.fromString("8dd5c0b9-912b-491b-80e7-987157a090e1"),
                 Date.valueOf("2022-03-25"),
                 Date.valueOf("2022-03-30"),
-                "여행 계획",
+                null,
                 "택시",
                 "울산 여행");
 
@@ -103,6 +103,14 @@ public class PlaceTripControllerTest {
         ).andExpect(status().isOk()).andDo(print());
     }
 
+//    @DisplayName("Update 후 Get 테스트")
+//    @Test
+//    public void test4_1() throws Exception {
+//        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/placetrip/e3661498-9473-4c06-9d52-464cc2f59429")
+//                .accept(MediaType.APPLICATION_JSON)
+//        ).andExpect(status().isOk()).andDo(print());
+//    }
+
     @DisplayName("Delete 테스트")
     @Test
     public void test5() throws Exception {
@@ -110,4 +118,12 @@ public class PlaceTripControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print());
     }
+
+//    @DisplayName("Delete 후 Get 테스트")
+//    @Test
+//    public void test5_1() throws Exception {
+//        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/placetrip/e3661498-9473-4c06-9d52-464cc2f59429")
+//                .accept(MediaType.APPLICATION_JSON)
+//        ).andExpect(status().isOk()).andDo(print());
+//    }
 }
