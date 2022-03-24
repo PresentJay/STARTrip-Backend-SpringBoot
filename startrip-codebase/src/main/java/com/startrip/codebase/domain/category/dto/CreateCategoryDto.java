@@ -12,10 +12,8 @@ public class CreateCategoryDto {
 
     private Long categoryParentId;
     private String categoryName;
-    private Integer depth;
 
     public CreateCategoryDto (Category entity) {
-        this.depth = entity.getDepth();
         this.categoryName = entity.getCategoryName();
 
         //parent가 최초의 대분류일 경우를 처리하기 위함

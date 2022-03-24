@@ -20,7 +20,7 @@ public class Category {
     private Long id; // PK
 
     @ManyToOne(fetch = FetchType.EAGER) // TODO : 삭제 시 에러 발생함
-    @JoinColumn(name = "category_parent_id", nullable = false)
+    @JoinColumn(name = "category_parent_id")
     private Category categoryParent;
 
     @Column(name = "category_name", unique = true)
@@ -35,7 +35,6 @@ public class Category {
         // createDto에 있던 categoryParentId는 여기서 Entity로 바꾸지 않는다.
         Category category = Category.builder()
                 .categoryName(dto.getCategoryName())
-                .depth(dto.getDepth())
                 .build();
         return category;
     }

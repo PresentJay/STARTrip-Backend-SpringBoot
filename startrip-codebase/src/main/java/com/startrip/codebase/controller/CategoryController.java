@@ -48,7 +48,7 @@ public class CategoryController {
     }
 
     // 수정
-    @PostMapping("/categories/{id}")
+    @PatchMapping("/categories/{id}")
     public ResponseEntity<String> updateEvent(@PathVariable("id") Long id, @RequestBody UpdateCategoryDto dto) {
         try{
             categoryService.updateCategory(id, dto);
