@@ -20,7 +20,7 @@ public class Category {
     private Long id; // PK
 
     @ManyToOne(fetch = FetchType.EAGER) // TODO : 삭제 시 에러 발생함
-    @JoinColumn(name = "category_parent_id", nullable = false)
+    @JoinColumn(name = "category_parent_id", nullable = true) // category parent 가 없을 때 어떻게 할지?
     private Category categoryParent;
 
     @Column(name = "category_name", unique = true)

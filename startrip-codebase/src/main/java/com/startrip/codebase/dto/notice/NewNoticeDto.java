@@ -12,7 +12,7 @@ public class NewNoticeDto {
 
     private String userEmail;
 
-    private Integer categoryId;
+    private Long categoryId;
 
     @NotNull
     private String title;
