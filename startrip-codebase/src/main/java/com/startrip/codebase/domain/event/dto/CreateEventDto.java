@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class NewEventDto {
+public class CreateEventDto {
 
     private Long placeId;
 

@@ -1,7 +1,7 @@
 package com.startrip.codebase.controller;
 
 import com.startrip.codebase.domain.event.Event;
-import com.startrip.codebase.domain.event.dto.NewEventDto;
+import com.startrip.codebase.domain.event.dto.CreateEventDto;
 import com.startrip.codebase.domain.event.dto.ResponseEventDto;
 import com.startrip.codebase.domain.event.dto.UpdateEventDto;
 import com.startrip.codebase.service.EventService;
@@ -31,7 +31,7 @@ public class EventController {
 
     @PostMapping("/event")
     public ResponseEntity
-    createEvent(@RequestBody NewEventDto dto) {
+    createEvent(@RequestBody CreateEventDto dto) {
         eventService.createEvent(dto);
         return new ResponseEntity("이벤트 생성", HttpStatus.OK);
     }

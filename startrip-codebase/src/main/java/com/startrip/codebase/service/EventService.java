@@ -2,7 +2,7 @@ package com.startrip.codebase.service;
 
 import com.startrip.codebase.domain.event.Event;
 import com.startrip.codebase.domain.event.EventRepository;
-import com.startrip.codebase.domain.event.dto.NewEventDto;
+import com.startrip.codebase.domain.event.dto.CreateEventDto;
 import com.startrip.codebase.domain.event.dto.ResponseEventDto;
 import com.startrip.codebase.domain.event.dto.UpdateEventDto;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public void createEvent(NewEventDto dto) {
+    public void createEvent(CreateEventDto dto) {
         Event event = Event.builder()
                 .eventTitle(dto.getEventTitle())
                 .startDate(dto.getStartDate())

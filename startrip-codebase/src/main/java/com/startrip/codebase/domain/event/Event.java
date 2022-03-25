@@ -1,8 +1,8 @@
 package com.startrip.codebase.domain.event;
 
 import com.startrip.codebase.domain.category.Category;
-import com.startrip.codebase.domain.place.Place;
 import com.startrip.codebase.domain.event.dto.UpdateEventDto;
+import com.startrip.codebase.domain.place.Place;
 import lombok.*;
 
 import javax.persistence.*;
