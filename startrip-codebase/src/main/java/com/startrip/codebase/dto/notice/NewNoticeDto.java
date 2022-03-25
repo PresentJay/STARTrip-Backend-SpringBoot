@@ -10,6 +10,10 @@ import java.time.LocalDateTime;
 @Setter
 public class NewNoticeDto {
 
+    private String userEmail;
+
+    private Integer categoryId;
+
     @NotNull
     private String title;
 

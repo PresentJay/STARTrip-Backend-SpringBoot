@@ -1,5 +1,6 @@
 package com.startrip.codebase.domain.notice;
 
+import com.startrip.codebase.domain.category.Category;
 import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.dto.notice.NewNoticeDto;
 import com.sun.istack.NotNull;
@@ -23,15 +24,15 @@ public class Notice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long notice_id;
+    private Long noticeId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private User creator_id;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    // TODO : 값 타입 컬렉션 보단 관계 매핑으로 설계 고려
-    @NotNull
-    @ElementCollection(targetClass = Integer.class)
-    private List<Integer> category_list;
+    @OneToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @NotNull
     private String title;
@@ -45,18 +46,20 @@ public class Notice {
 
     private LocalDateTime updatedTime;
 
-    private Integer like_count;
+    private Integer likeCount;
 
-    private Integer view_count;
+    private Integer viewCount;
 
-    public static Notice of (NewNoticeDto dto){
+    public static Notice of (NewNoticeDto dto, User user, Category category){
         Notice notice = Notice.builder()
+                .user(user)
+                .category(category)
                 .title(dto.getTitle())
                 .text(dto.getText())
                 .attachment(dto.getAttachment())
                 .createdTime(LocalDateTime.now())
-                .like_count(0)
-                .view_count(0)
+                .likeCount(0)
+                .viewCount(0)
                 .build();
         return notice;
     }
@@ -66,5 +69,9 @@ public class Notice {
         this.text = dto.getText();
         this.attachment = dto.getAttachment();
         this.updatedTime = LocalDateTime.now();
+    }
+
+    public void increaseViewCount(){
+        this.viewCount++;  // Deadlock?
     }
 }
