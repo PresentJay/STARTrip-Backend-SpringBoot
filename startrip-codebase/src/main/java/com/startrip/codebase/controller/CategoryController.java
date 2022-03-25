@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @RestController
@@ -44,12 +45,13 @@ public class CategoryController {
         } catch (IllegalArgumentException e){
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
     // 수정
     @PatchMapping("/categories/{id}")
-    public ResponseEntity<String> updateEvent(@PathVariable("id") Long id, @RequestBody UpdateCategoryDto dto) {
+    public ResponseEntity updateEvent(@PathVariable("id") Long id, @RequestBody UpdateCategoryDto dto) {
         try{
             categoryService.updateCategory(id, dto);
         } catch (Exception e){
@@ -60,8 +62,12 @@ public class CategoryController {
 
     // 삭제
     @DeleteMapping("/categories/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable("id") Long id){
-        categoryService.deleteCategory(id);
+    public ResponseEntity deleteCategory(@PathVariable(name = "id") @NotBlank Long id){
+        try {
+            categoryService.deleteCategory(id);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>("삭제", HttpStatus.OK);
     }
 

@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,12 +87,40 @@ public class CategoryService {
         category.setCategoryName(dto.getCategoryName());
     }
 
+
     // Delete: api/categories/{id}
     @Transactional
     public void deleteCategory(Long id) {
-        Category category = categoryRepository.findById(id)
+
+        Category category =  categoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("삭제하려는 카테고리가 존재하지 않음"));
 
-        categoryRepository.deleteById(id);
+        // 현재 id를 통해서 categoryParent로 갖고 있는 category들을 찾자
+        Category parentCategory = categoryRepository.findById(category.getCategoryParent().getId())
+                .orElseThrow(() -> new IllegalArgumentException(("삭제하려는 카테고리의 부모가 없음 ")));
+
+        // category를 찾은 후, 이들을 undefined이름의 객체를 부모 id로 갖도록 만들자
+        Optional<List<Category>> optional = Optional.ofNullable(categoryRepository.findAllByCategoryParent(parentCategory));
+        List<Category> childCategories = optional.orElse(null);
+
+
+        // 찾았다면
+        if (childCategories != null ) {
+            // undefiendParent를 붙여줄 건데, 사전에 없었으면 만들어 주자.
+            Category undefinedParent = categoryRepository.findCategoryByCategoryName("undefinedParent")
+                    .orElseGet(() -> Category.builder()
+                            .depth(0)
+                            .categoryName("undefinedParent")
+                            .build()
+                    );
+            for(Category childCategory : childCategories){
+                childCategory.setCategoryParent(undefinedParent);
+
+            }
+        // 하위 카테고리가 없던 거라면
+        }
+
+        categoryRepository.deleteById(category.getId());
+
     }
 }
