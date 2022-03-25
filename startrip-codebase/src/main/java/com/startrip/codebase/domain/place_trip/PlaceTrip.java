@@ -44,6 +44,8 @@ public class PlaceTrip {
     private String title;
 
     public void update(UpdatePlaceTripDto dto) {
+        this.tripId = dto.getTripId();
+        this.userId = dto.getUserId();
         this.userPartner = dto.getUserPartner();
         this.placeId = dto.getPlaceId();
         this.startTime = dto.getStartTime();
