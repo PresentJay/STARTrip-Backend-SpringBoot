@@ -10,8 +10,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class UpdatePlaceTripDto {
-    private UUID tripId;
-    private Long userId;
     private String userPartner;
     private UUID placeId;
     private java.util.Date startTime;
