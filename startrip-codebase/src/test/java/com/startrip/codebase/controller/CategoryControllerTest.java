@@ -63,27 +63,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
           .build();
  }
 
-  @DisplayName("Step1: CREATE")
-  @Order(1)
-  @Test
-  void test1() throws Exception {
-   String jsonData = "{\"categoryName\" : \"맛집\", "
-           + "\"categoryParentId\" : null }";
-   mockMvc.perform(post("/api/categories")
-                   .contentType(MediaType.APPLICATION_JSON) // JSON 타입으로 지정
-                   .content(jsonData)
-   ).andExpect(status().isOk()).andDo(print());
-  }
+ @DisplayName("Step1: CREATE")
+ @Order(1)
+ @Test
+ void test1() throws Exception {
+  String jsonData = "{\"categoryName\" : \"맛집\", "
+          + "\"categoryParentId\" : null }";
+  mockMvc.perform(post("/api/categories")
+          .contentType(MediaType.APPLICATION_JSON) // JSON 타입으로 지정
+          .content(jsonData)
+  ).andExpect(status().isOk()).andDo(print());
+ }
 
 
-  @DisplayName("Step2: GET(All View)")
-  @Order(2)
-  @Test
-   void test2() throws Exception {
-   mockMvc.perform(get("/api/categories")
-           .accept(MediaType.APPLICATION_JSON)
-   ).andExpect(status().isOk()).andDo(print());
-  }
+ @DisplayName("Step2: GET(All View)")
+ @Order(2)
+ @Test
+ void test2() throws Exception {
+  mockMvc.perform(get("/api/categories")
+          .accept(MediaType.APPLICATION_JSON)
+  ).andExpect(status().isOk()).andDo(print());
+ }
 
 
  @DisplayName("Step3: GET(Detail View)")
@@ -147,4 +147,5 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  }*/
 
 
+ }
 }
