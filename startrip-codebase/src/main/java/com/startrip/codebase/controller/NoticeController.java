@@ -39,14 +39,14 @@ public class NoticeController {
 
     @PostMapping("/notice")
     public @ResponseBody
-    ResponseEntity addNotice(NewNoticeDto dto) {
+    ResponseEntity addNotice(@RequestBody NewNoticeDto dto) {
         noticeService.createNotice(dto);
         return new ResponseEntity("생성되었습니다", HttpStatus.OK);
     }
 
     @PutMapping("/notice/{id}")
     public @ResponseBody
-    ResponseEntity updateNotice(@PathVariable("id") Long id, NewNoticeDto dto) {
+    ResponseEntity updateNotice(@PathVariable("id") Long id,@RequestBody NewNoticeDto dto) {
         noticeService.updateNotice(id, dto);
         return new ResponseEntity("수정되었습니다", HttpStatus.OK);
     }

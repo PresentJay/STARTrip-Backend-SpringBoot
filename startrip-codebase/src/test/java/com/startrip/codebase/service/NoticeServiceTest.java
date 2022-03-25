@@ -33,7 +33,6 @@ class NoticeServiceTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @Transactional
     private void createNotice(User user, Category category) {
         Notice notice = Notice.builder()
                 .user(user)

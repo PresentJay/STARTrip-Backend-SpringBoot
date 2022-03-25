@@ -24,9 +24,12 @@ public class NoticeService {
     private CategoryRepository categoryRepository;
 
     @Autowired
-    public NoticeService(NoticeRepository noticeRepository) {
+    public NoticeService(NoticeRepository noticeRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
         this.noticeRepository = noticeRepository;
+        this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
     }
+
 
     public List<Notice> allNotice() {
         return noticeRepository.findAll();
@@ -54,7 +57,9 @@ public class NoticeService {
     }
 
     public void updateNotice(Long id, NewNoticeDto dto){
-        Notice notice = getNotice(id);
+        Notice notice = noticeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 게시글이 없습니다"));
+
         notice.update(dto);
         noticeRepository.save(notice);
     }
