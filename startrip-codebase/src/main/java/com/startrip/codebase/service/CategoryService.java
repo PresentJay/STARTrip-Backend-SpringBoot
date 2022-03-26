@@ -139,9 +139,9 @@ public class CategoryService {
 
     private void childs(Category parent, List<Category> result) {
         List<Category> childList = categoryRepository.findAllByCategoryParent(parent);
-        for (Category item : childList) {
-            childs(item, result);
-            result.add(item);
+        for (Category child : childList) {
+            childs(child, result);
+            result.add(child);
         }
     }
 }
