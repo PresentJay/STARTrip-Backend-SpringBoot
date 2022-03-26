@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreateCategoryDto {
 
-    private Long categoryParentId;
+    private String categoryParentName;
     private String categoryName;
 
     public CreateCategoryDto (Category entity) {
@@ -18,9 +18,9 @@ public class CreateCategoryDto {
 
         //parent가 최초의 대분류일 경우를 처리하기 위함
         if (entity.getCategoryParent() == null) {
-            this.categoryParentId = 0L;
+            this.categoryParentName = "ROOT";
         } else {
-            this.categoryParentId = entity.getCategoryParent().getId();
+            this.categoryParentName = entity.getCategoryParent().getCategoryName();
         }
     }
 }

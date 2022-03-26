@@ -15,4 +15,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findCategoryByCategoryName (String categoryName);
 
     Boolean existsByCategoryParent(Category categoryParent); //없는지 조회하기 위함
+
+
+    @Query("select max(c.depth) as max_depth from Category c")
+    Integer findByDepthMax();
 }

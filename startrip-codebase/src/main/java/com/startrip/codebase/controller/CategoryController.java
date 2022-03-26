@@ -23,7 +23,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @PostMapping("/categories")
+    @PostMapping("/categories") // N 개 이상의 카테고리 생성
     public ResponseEntity<String> createCategory(@RequestBody CreateCategoryDto dto) {
         categoryService.createCategory(dto);
         return new ResponseEntity<>("카테고리 생성", HttpStatus.OK);
@@ -40,9 +40,9 @@ public class CategoryController {
     @GetMapping("/categories/{id}")
     public ResponseEntity getCategory(@PathVariable("id") Long id) {
         Category category;
-        try{
+        try {
             category = categoryService.getCategory(id);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
@@ -52,23 +52,34 @@ public class CategoryController {
     // 수정
     @PutMapping("/categories/{id}")
     public ResponseEntity updateEvent(@PathVariable("id") Long id, @RequestBody UpdateCategoryDto dto) {
-        try{
+        try {
             categoryService.updateCategory(id, dto);
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("수정", HttpStatus.OK);
     }
 
     // 삭제
-    @DeleteMapping("/categories/{id}")
-    public ResponseEntity deleteCategory(@PathVariable(name = "id") @NotBlank Long id){
+    @DeleteMapping("/categories/{categoryName}")
+    public ResponseEntity deleteCategory(@PathVariable(name = "categoryName") @NotBlank String name) {
         try {
-            categoryService.deleteCategory(id);
+            categoryService.deleteCategory(name);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("삭제", HttpStatus.OK);
     }
 
+    @GetMapping("/category/child/{categoryName}")
+    public ResponseEntity getCategoryChildrens(@PathVariable("categoryName") String name) {
+        List<Category> childrens = null;
+        try {
+            childrens = categoryService.getChildrens(name);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity(childrens, HttpStatus.OK);
+    }
 }

@@ -7,6 +7,7 @@ import com.startrip.codebase.domain.category.dto.CreateCategoryDto;
 import com.startrip.codebase.domain.category.dto.UpdateCategoryDto;
 import com.startrip.codebase.domain.event.Event;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.apache.bcel.classfile.annotation.RuntimeInvisAnnos;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,10 +34,10 @@ public class CategoryService {
         Category category = Category.createCategory(dto);
 
         // 상위 카테고리 넣어주기
-        if(dto.getCategoryParentId() == null){
+        if(dto.getCategoryParentName() == null){
             /* 대분류의 생성일 경우 */
             // 진짜 Root가 없는지 확인하고.
-            Category rootCategory = categoryRepository.findById(0L)
+            Category rootCategory = categoryRepository.findById(1L)
                 .orElseGet( ()-> Category.builder()
                     .depth(0)
                     .categoryName("ROOT")
@@ -50,8 +51,8 @@ public class CategoryService {
             /* 하위분류의 생성일 경우 */
 
             // 해당 부모카테고리가 있는지 찾아본다, Optional이므로 없으면 예외발생
-            Long categoryParentId = dto.getCategoryParentId();
-            Category parentCategory = categoryRepository.findById(categoryParentId)
+            String categoryParentName = dto.getCategoryParentName();
+            Category parentCategory = categoryRepository.findCategoryByCategoryName(categoryParentName)
                     .orElseThrow(() -> new IllegalArgumentException("부모 카테고리 부재"));
 
             category.setDepth(parentCategory.getDepth() +1);
@@ -90,36 +91,57 @@ public class CategoryService {
 
     // Delete: api/categories/{id}
     @Transactional
-    public void deleteCategory(Long id) {
-
-        Category category =  categoryRepository.findById(id)
+    public void deleteCategory(String name) {
+        Category category =  categoryRepository.findCategoryByCategoryName(name)
                 .orElseThrow(() -> new IllegalArgumentException("삭제하려는 카테고리가 존재하지 않음"));
 
-        // 현재 id를 통해서 categoryParent로 갖고 있는 category들을 찾자
-        Category parentCategory = categoryRepository.findById(category.getCategoryParent().getId())
-                .orElseThrow(() -> new IllegalArgumentException(("삭제하려는 카테고리의 부모가 없음 ")));
-
         // category를 찾은 후, 이들을 undefined이름의 객체를 부모 id로 갖도록 만들자
-        Optional<List<Category>> optional = Optional.ofNullable(categoryRepository.findAllByCategoryParent(parentCategory));
-        List<Category> childCategories = optional.orElse(null);
+        List<Category> childrens = getChildrens(category.getCategoryName());
 
         // 찾았다면
-        if (childCategories != null ) {
+        if (childrens != null ) {
             // undefinedParent를 붙여줄 건데, 사전에 없었으면 만들어 주자.
             Category undefinedParent = categoryRepository.findCategoryByCategoryName("UndefinedParent")
                     .orElseGet(() -> Category.builder()
                             .depth(0)
                             .categoryName("UndefinedParent")
+                            .categoryParent(null)
                             .build()
                     );
-            for(Category childCategory : childCategories){
+            categoryRepository.save(undefinedParent);
+
+            for(Category childCategory : childrens){
                 childCategory.setCategoryParent(undefinedParent);
-
+                categoryRepository.save(childCategory);
             }
-        // 하위 카테고리가 없던 거라면
+            // 하위 카테고리가 없던 거라면
         }
+        category.setCategoryParent(null);
+        categoryRepository.delete(category);
+    }
 
-        categoryRepository.deleteById(category.getId());
+    @Transactional
+    public List<Category> getChildrens(String categoryName) {
+        Category category = categoryRepository.findCategoryByCategoryName(categoryName)
+                .orElseThrow(() -> new RuntimeException("해당 ID의 카테고리가 없습니다"));
 
+        // 파라미터로 받은 ID 를 부모로 가지는 카테고리를 조회한다.
+        //Integer max = categoryRepository.findByDepthMax();
+
+        // 해당 ID 를 부모로 가지는 애들 찾는건
+        List<Category> results = new ArrayList<>();
+
+        childs(category, results);
+
+        return results;
+    }
+
+
+    private void childs(Category parent, List<Category> result) {
+        List<Category> childList = categoryRepository.findAllByCategoryParent(parent);
+        for (Category item : childList) {
+            childs(item, result);
+            result.add(item);
+        }
     }
 }
