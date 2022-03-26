@@ -50,7 +50,7 @@ public class CategoryController {
     }
 
     // 수정
-    @PatchMapping("/categories/{id}")
+    @PutMapping("/categories/{id}")
     public ResponseEntity updateEvent(@PathVariable("id") Long id, @RequestBody UpdateCategoryDto dto) {
         try{
             categoryService.updateCategory(id, dto);

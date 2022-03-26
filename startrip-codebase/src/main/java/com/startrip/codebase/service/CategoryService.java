@@ -29,7 +29,7 @@ public class CategoryService {
     // POST: api/categories
     public void createCategory(CreateCategoryDto dto) {
 
-        //생성
+        //생성   려
         Category category = Category.createCategory(dto);
 
         // 상위 카테고리 넣어주기
@@ -103,14 +103,13 @@ public class CategoryService {
         Optional<List<Category>> optional = Optional.ofNullable(categoryRepository.findAllByCategoryParent(parentCategory));
         List<Category> childCategories = optional.orElse(null);
 
-
         // 찾았다면
         if (childCategories != null ) {
-            // undefiendParent를 붙여줄 건데, 사전에 없었으면 만들어 주자.
-            Category undefinedParent = categoryRepository.findCategoryByCategoryName("undefinedParent")
+            // undefinedParent를 붙여줄 건데, 사전에 없었으면 만들어 주자.
+            Category undefinedParent = categoryRepository.findCategoryByCategoryName("UndefinedParent")
                     .orElseGet(() -> Category.builder()
                             .depth(0)
-                            .categoryName("undefinedParent")
+                            .categoryName("UndefinedParent")
                             .build()
                     );
             for(Category childCategory : childCategories){
