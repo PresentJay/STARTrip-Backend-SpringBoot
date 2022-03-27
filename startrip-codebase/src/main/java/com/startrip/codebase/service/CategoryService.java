@@ -96,7 +96,7 @@ public class CategoryService {
                 .orElseThrow(() -> new IllegalArgumentException("삭제하려는 카테고리가 존재하지 않음"));
 
         // category를 찾은 후, 이들을 undefined이름의 객체를 부모 id로 갖도록 만들자
-        List<Category> childrens = getChildrens(category.getCategoryName());
+        List<Category> childrens = getChildren(category.getCategoryName());
 
         // 찾았다면
         if (childrens != null ) {
@@ -114,6 +114,7 @@ public class CategoryService {
                 childCategory.setCategoryParent(undefinedParent);
                 categoryRepository.save(childCategory);
             }
+
             // 하위 카테고리가 없던 거라면
         }
         category.setCategoryParent(null);
@@ -121,7 +122,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public List<Category> getChildrens(String categoryName) {
+    public List<Category> getChildren(String categoryName) {
         Category category = categoryRepository.findCategoryByCategoryName(categoryName)
                 .orElseThrow(() -> new RuntimeException("해당 ID의 카테고리가 없습니다"));
 
@@ -130,17 +131,29 @@ public class CategoryService {
 
         // 해당 ID 를 부모로 가지는 애들 찾는건
         List<Category> results = new ArrayList<>();
-
-        childs(category, results);
+        recursionFindChildren(category, results);
 
         return results;
     }
 
+    // Get : api/category/{id}
+    public List<Category> getDepthPlus1Children (String categoryName ) {
+            Category category = categoryRepository.findCategoryByCategoryName(categoryName)
+                    .orElseThrow(() -> new RuntimeException("해당 ID의 카테고리가 없습니다."));
 
-    private void childs(Category parent, List<Category> result) {
+            // 현재 카테고리의 depth를 얻자
+            Integer depth = category.getDepth() +1;
+
+            // Depth + 1인 아이를 찾자
+            List<Category> depthPlus1Categories = categoryRepository.findAllByDepthAndCategoryParent(depth, category);
+
+            return depthPlus1Categories;
+    }
+
+    private void recursionFindChildren(Category parent, List<Category> result) {
         List<Category> childList = categoryRepository.findAllByCategoryParent(parent);
         for (Category child : childList) {
-            childs(child, result);
+            recursionFindChildren(child, result);
             result.add(child);
         }
     }

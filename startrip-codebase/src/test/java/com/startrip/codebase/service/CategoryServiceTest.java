@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
@@ -78,7 +79,7 @@ class CategoryServiceTest {
     void get_childrens () {
         setup1();
 
-        List<Category> childrens = categoryService.getChildrens("경관");
+        List<Category> childrens = categoryService.getChildren("경관");
 
         assertThat(childrens.get(0).getCategoryName()).isEqualTo("자연");
         assertThat(childrens.get(1).getCategoryName()).isEqualTo("인조물");
@@ -90,7 +91,7 @@ class CategoryServiceTest {
     void get_childrens_2 () {
         setup1();
 
-        List<Category> childrens = categoryService.getChildrens("ROOT");
+        List<Category> childrens = categoryService.getChildren("ROOT");
 
         assertThat(childrens).hasSize(6);
     }
@@ -101,7 +102,7 @@ class CategoryServiceTest {
         setup1();
 
         categoryService.deleteCategory("경관");
-        List<Category> childrens = categoryService.getChildrens("UndefinedParent");
+        List<Category> childrens = categoryService.getChildren("UndefinedParent");
 
         assertThat(childrens.get(0).getCategoryParent().getCategoryName()).isEqualTo("UndefinedParent");
         assertThat(childrens.get(1).getCategoryParent().getCategoryName()).isEqualTo("UndefinedParent");
