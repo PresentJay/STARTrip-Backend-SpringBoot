@@ -8,6 +8,7 @@ import com.startrip.codebase.domain.notice.NoticeRepository;
 import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.domain.user.UserRepository;
 import com.startrip.codebase.dto.notice.NewNoticeDto;
+import com.startrip.codebase.dto.noticecomment.NewCommentDto;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -93,8 +94,36 @@ class NoticeControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("게시글 조회 API 가 작동한다")
+    @DisplayName("게시글에 코멘트 생성 API가 작동한다")
     @Order(2)
+    @Test
+    void notice_comment() throws Exception {
+        // given
+        User temp = User.builder()
+                .name("성훈")
+                .email("hoon@h.com")
+                .nickname("hoon")
+                .password("1234")
+                .build();
+        userRepository.save(temp);
+
+        NewCommentDto dto = new NewCommentDto();
+        dto.setNoticeId(1L);
+        dto.setCommentText("댓글내용");
+        dto.setUserEmail(temp.getEmail());
+
+        // when
+        mockMvc.perform(post("/api/notice/1/comment")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto))
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().string("댓글 생성되었습니다."))
+                .andDo(print());
+    }
+
+    @DisplayName("게시글 조회 API 가 작동한다")
+    @Order(3)
     @Test
     void notice_get() throws Exception {
 
@@ -107,7 +136,7 @@ class NoticeControllerTest {
 
 
     @DisplayName("게시글 수정 API 가 작동한다")
-    @Order(3)
+    @Order(4)
     @Test
     void notice_put() throws Exception {
 
@@ -126,7 +155,7 @@ class NoticeControllerTest {
     }
 
     @DisplayName("게시글 상세 조회 API 가 작동한다")
-    @Order(4)
+    @Order(5)
     @Test
     void notice_detail_get() throws Exception {
         mockMvc.perform(get("/api/notice/1"))
@@ -135,7 +164,7 @@ class NoticeControllerTest {
     }
 
     @DisplayName("게시글 삭제 API 가 작동한다")
-    @Order(5)
+    @Order(6)
     @Test
     void notice_delete() throws Exception {
         mockMvc.perform(delete("/api/notice/1"))
