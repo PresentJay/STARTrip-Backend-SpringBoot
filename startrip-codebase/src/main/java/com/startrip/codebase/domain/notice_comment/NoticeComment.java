@@ -47,8 +47,10 @@ public class NoticeComment {
         NoticeComment comment = NoticeComment.builder()
                 .user(user)
                 .commentText(dto.getCommentText())
+                .createdTime(LocalDateTime.now())
                 .notice(notice)
                 .build();
+
         return comment;
     }
 }
