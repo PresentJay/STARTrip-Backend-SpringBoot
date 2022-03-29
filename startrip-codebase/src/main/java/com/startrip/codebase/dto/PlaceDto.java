@@ -16,6 +16,6 @@ public class PlaceDto {
 
     private String placeDescription;
     private String placePhoto;
-    private Integer phoneNumber;
+    private String phoneNumber;
 
 }

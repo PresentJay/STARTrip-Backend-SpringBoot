@@ -39,7 +39,7 @@ public class Place {
     @NotNull
     private String placeName;
 
-    private Integer phoneNumber;
+    private String phoneNumber;
 
     public static Place of (PlaceDto dto){
         Place place = Place.builder()
