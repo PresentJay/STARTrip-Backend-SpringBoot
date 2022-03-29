@@ -1,12 +1,11 @@
 package com.startrip.codebase.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.startrip.codebase.domain.place_trip.PlaceTrip;
-import com.startrip.codebase.domain.place_trip.PlaceTripRepository;
+import com.startrip.codebase.domain.state.State;
 import com.startrip.codebase.dto.place_trip.CreatePlaceTripDto;
 import com.startrip.codebase.dto.place_trip.UpdatePlaceTripDto;
+import com.startrip.codebase.service.StateService;
 import com.startrip.codebase.service.trip.PlaceTripService;
-import org.hibernate.sql.Update;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +22,7 @@ import java.sql.Date;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -31,19 +31,16 @@ public class PlaceTripControllerTest {
     public MockMvc mockMvc;
 
     private final PlaceTripService placeTripService;
-    public final PlaceTripRepository placeTripRepository;
 
     @Autowired
-    public PlaceTripControllerTest(PlaceTripService placeTripService, PlaceTripRepository placeTripRepository) {
+    public PlaceTripControllerTest(PlaceTripService placeTripService) {
         this.placeTripService = placeTripService;
-        this.placeTripRepository = placeTripRepository;
     }
 
     @BeforeEach
     public void before() {
         mockMvc = MockMvcBuilders.standaloneSetup(new PlaceTripController(placeTripService))
                 .addFilters(new CharacterEncodingFilter("UTF-8", true)) // 한글 깨짐 해결
-                .alwaysExpect(status().isOk())
                 .build();
     }
 
@@ -57,7 +54,6 @@ public class PlaceTripControllerTest {
         dto.setPlaceId(UUID.fromString("0f1e5a75-f3f4-4dbe-b739-e428e511e0e8"));
         dto.setStartTime(Date.valueOf("2022-03-23"));
         dto.setEndTime(Date.valueOf("2022-03-25"));
-        dto.setState(null);
         dto.setTransportation("버스");
         dto.setTitle("울산 여행");
 
@@ -79,7 +75,6 @@ public class PlaceTripControllerTest {
         dto.setPlaceId(UUID.fromString("1f1e5a75-f3f4-4dbe-b739-e428e511e0e8"));
         dto.setStartTime(Date.valueOf("2022-03-29"));
         dto.setEndTime(Date.valueOf("2022-03-30"));
-        dto.setState(null);
         dto.setTransportation("기차");
         dto.setTitle("김해 여행");
 
@@ -115,7 +110,6 @@ public class PlaceTripControllerTest {
         dto.setPlaceId(UUID.fromString("0f1e5a75-f3f4-4dbe-b739-e428e511e0e8"));
         dto.setStartTime(Date.valueOf("2022-03-25"));
         dto.setEndTime(Date.valueOf("2022-03-26"));
-        dto.setState(null);
         dto.setTransportation("택시");
         dto.setTitle("울산 여행");
 
@@ -144,15 +138,17 @@ public class PlaceTripControllerTest {
         ).andExpect(status().isOk()).andDo(print());
     }
 
-    @DisplayName("Delete 후 Get 테스트1")
+    @DisplayName("Delete 후 없는 데이터를 조회한다") //  지운 데이터 조회
     @Test
     public void test8() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/placetrip/e3661498-9473-4c06-9d52-464cc2f59429")
-                .accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isBadRequest()).andDo(print());
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("없는 데이터입니다."))
+            .andDo(print());
     }
 
-    @DisplayName("Delete 후 Get 테스트2")
+    @DisplayName("Delete 후 있는 데이터를 조회한다") // 지우지 않은 데이터 조회
     @Test
     public void test9() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/placetrip/a3661498-9473-4c06-9d52-464cc2f59429")

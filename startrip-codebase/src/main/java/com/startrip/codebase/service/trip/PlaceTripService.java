@@ -2,6 +2,7 @@ package com.startrip.codebase.service.trip;
 
 import com.startrip.codebase.domain.place_trip.PlaceTrip;
 import com.startrip.codebase.domain.place_trip.PlaceTripRepository;
+import com.startrip.codebase.domain.state.StateRepository;
 import com.startrip.codebase.dto.place_trip.CreatePlaceTripDto;
 import com.startrip.codebase.dto.place_trip.ResponsePlaceTripDto;
 import com.startrip.codebase.dto.place_trip.UpdatePlaceTripDto;
@@ -15,15 +16,16 @@ import java.util.*;
 @Slf4j
 public class PlaceTripService {
     private final PlaceTripRepository placeTripRepository;
+    private final StateRepository stateRepository;
 
     @Autowired
-    public PlaceTripService(PlaceTripRepository placeTripRepository) {
+    public PlaceTripService(PlaceTripRepository placeTripRepository, StateRepository stateRepository) {
         this.placeTripRepository = placeTripRepository;
+        this.stateRepository = stateRepository;
     }
 
     // Create
     public void createPlaceTrip(CreatePlaceTripDto dto) {
-
         PlaceTrip placeTrip = PlaceTrip.builder()
                 .tripId(dto.getTripId())
                 .userId(dto.getUserId())
@@ -31,10 +33,11 @@ public class PlaceTripService {
                 .placeId(dto.getPlaceId())
                 .startTime(dto.getStartTime())
                 .endTime(dto.getEndTime())
-                .state(dto.placeTripState())
+                .state(dto.getState())
                 .transportation(dto.getTransportation())
                 .title(dto.getTitle())
                 .build();
+
         placeTripRepository.save(placeTrip);
         log.info(placeTrip.toString());
     }
@@ -58,7 +61,9 @@ public class PlaceTripService {
 
     // Get
     public PlaceTrip getPlaceTrip(UUID id){
-        return placeTripRepository.findById(id).get();
+        return placeTripRepository.findById(id).orElseThrow(() -> {
+            throw new NoSuchElementException("없는 데이터입니다.");
+        });
     }
 
     // Update

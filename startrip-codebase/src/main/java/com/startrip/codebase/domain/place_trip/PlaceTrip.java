@@ -1,14 +1,14 @@
 package com.startrip.codebase.domain.place_trip;
 
+import com.startrip.codebase.domain.state.State;
+import com.startrip.codebase.domain.state.StateRepository;
 import com.startrip.codebase.dto.place_trip.UpdatePlaceTripDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 
@@ -37,7 +37,9 @@ public class PlaceTrip {
     @Column(name = "end_time")
     private Date endTime;
 
-    private String state;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="state_id")
+    private State state;
 
     private String transportation;
 
@@ -48,7 +50,7 @@ public class PlaceTrip {
         this.placeId = dto.getPlaceId();
         this.startTime = dto.getStartTime();
         this.endTime = dto.getEndTime();
-        this.state = dto.placeTripState();
+        this.state = dto.getState();
         this.transportation = dto.getTransportation();
         this.title = dto.getTitle();
     }

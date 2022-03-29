@@ -39,9 +39,14 @@ public class PlaceTripController {
 
     // Get
     @GetMapping("/placetrip/{id}")
-    public PlaceTrip getPlaceTrip(@PathVariable("id") UUID id) {
-        PlaceTrip placeTrip = placeTripService.getPlaceTrip(id);
-        return placeTrip;
+    public ResponseEntity getPlaceTrip(@PathVariable("id") UUID id) {
+        PlaceTrip placeTrip;
+        try {
+            placeTrip = placeTripService.getPlaceTrip(id);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(placeTrip, HttpStatus.OK);
     }
 
     // Update
@@ -57,8 +62,12 @@ public class PlaceTripController {
 
     // Delete
     @DeleteMapping("/placetrip/{id}")
-    public String deletePlaceTrip(@PathVariable("id") UUID id){
-        placeTripService.deletePlaceTrip(id);
-        return "Place Trip 삭제";
+    public ResponseEntity deletePlaceTrip(@PathVariable("id") UUID id){
+        try {
+            placeTripService.deletePlaceTrip(id);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity("Place Trip 삭제", HttpStatus.OK);
     }
 }
