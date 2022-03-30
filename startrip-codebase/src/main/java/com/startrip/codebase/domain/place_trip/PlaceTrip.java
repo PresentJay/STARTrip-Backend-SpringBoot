@@ -1,7 +1,7 @@
 package com.startrip.codebase.domain.place_trip;
 
 import com.startrip.codebase.domain.state.State;
-import com.startrip.codebase.domain.state.StateRepository;
+import com.startrip.codebase.dto.place_trip.CreatePlaceTripDto;
 import com.startrip.codebase.dto.place_trip.UpdatePlaceTripDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +37,7 @@ public class PlaceTrip {
     @Column(name = "end_time")
     private Date endTime;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL) // fetch = FetchType.LAZY를 하면 오류 발생
     @JoinColumn(name="state_id")
     private State state;
 

@@ -13,13 +13,9 @@ import java.util.UUID;
 public class UpdatePlaceTripDto {
     private String userPartner;
     private UUID placeId;
-    private java.util.Date startTime;
+    private Date startTime;
     private Date endTime;
     private State state;
     private String transportation;
     private String title;
-
-//    public String placeTripState() {
-//
-//    }
 }
