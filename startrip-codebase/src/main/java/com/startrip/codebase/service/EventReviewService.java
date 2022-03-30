@@ -25,9 +25,9 @@ public class EventReviewService {
 
     public void createEventReview(CreateEventReviewDto dto) {
         EventReview eventReview = EventReview.builder()
-                .reviewTitle((dto.getEventTitle()))
+                .eventReviewTitle(dto.getEventReviewTitle())
                 .text((dto.getText()))
-                .review_rate((dto.getReview_rate()))
+                .reviewRate((dto.getReviewRate()))
                 .build();
         eventReviewRepository.save((eventReview));
         log.info(eventReview.toString());
@@ -39,9 +39,9 @@ public class EventReviewService {
 
         for (EventReview eventReview : eventReviews) {
             ResponseEventReviewDto dto = new ResponseEventReviewDto();
-            dto.setEventReviewTitle(eventReview.getReviewTitle());
+            dto.setEventReviewTitle(eventReview.getEventReviewTitle());
             dto.setText(dto.getText());
-            dto.setReview_rate(eventReview.getReview_rate());
+            dto.setReviewRate(dto.getReviewRate());
             dtos.add(dto);
         }
         return dtos;

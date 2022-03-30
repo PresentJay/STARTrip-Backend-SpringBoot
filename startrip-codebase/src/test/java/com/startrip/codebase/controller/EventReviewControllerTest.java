@@ -1,8 +1,9 @@
 package com.startrip.codebase.controller;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.startrip.codebase.domain.event.EventRepository;
-import com.startrip.codebase.domain.event.dto.CreateEventDto;
+import com.startrip.codebase.domain.event_review.EventReviewRepository;
+import com.startrip.codebase.domain.event_review.dto.CreateEventReviewDto;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +20,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class EventControllerTest {
+public class EventReviewControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private EventRepository eventRepository;
+    private EventReviewRepository eventReviewRepository;
 
     @Autowired
     private WebApplicationContext wac;
@@ -43,68 +43,65 @@ public class EventControllerTest {
                 .build();
     }
 
-    @DisplayName("Event Create TEST")
+    @DisplayName("EventReview Create TEST")
     @Order(1)
     @Test
-    void event_create() throws Exception {
-        CreateEventDto dto = new CreateEventDto();
-        dto.setEventTitle("진해 구낭제");
-        dto.setDescription("벗꼿페슽히벌");
-        dto.setContact("010-1234-1234");
+    void eventReview_create() throws Exception {
+        CreateEventReviewDto dto = new CreateEventReviewDto();
+        dto.setEventReviewTitle("진해 군항제");
+        dto.setText("벚꽃이 굉장히 이쁘네요~");
+        dto.setReviewRate(4.5);
 
         mockMvc.perform(
-                        post("/api/event")
+                        post("/api/eventReview")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
 
-    @DisplayName("Event Read TEST")
+    @DisplayName("EventReview Read TEST")
     @Order(2)
     @Test
-    void event_read() throws Exception {
+    void eventReview_read() throws Exception {
 
-        mockMvc.perform(get("/api/event")).andExpect(status().isOk()).andDo(print());
+        mockMvc.perform(get("/api/eventReview")).andExpect(status().isOk()).andDo(print());
     }
 
-    @DisplayName("Event Update TEST")
+    @DisplayName("EvenReview Update TEST")
     @Order(3)
     @Test
-    void event_update() throws Exception {
+    void eventReview_Update() throws Exception {
 
-        CreateEventDto dto = new CreateEventDto();
-        dto.setEventTitle("진해 구낭제");
-        dto.setDescription("룰루랄라~");
-        dto.setContact("010-1234-1234");
+        CreateEventReviewDto dto = new CreateEventReviewDto();
+        dto.setEventReviewTitle("진해 군항제");
+        dto.setText("벚꽃이 만개 되지 않았어요");
+        dto.setReviewRate(1.5);
 
         mockMvc.perform(
-                        post("/api/event/1") // 수정하기 위해서는 생성했던 id와 같은 내용이어야 조회 후 수정 가능
+                        post("/api/eventReview/1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(dto))
-                )
+                                .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
 
-    @DisplayName("Event Detail Read TEST")
+    @DisplayName("EventReview Detail Read TEST")
     @Order(4)
     @Test
-    void event_detail_read() throws Exception {
-        mockMvc.perform(get("/api/event/1"))
+    void eventReview_detail_read() throws Exception {
+        mockMvc.perform(get("/api/eventReview/1"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
 
-    @DisplayName("Event Delete TEST" )
+    @DisplayName("EventReview Delete TEST" )
     @Order(5)
     @Test
-    void event_delete() throws Exception {
-        mockMvc.perform(delete("/api/event/1"))
+    void eventReview_delete() throws Exception {
+        mockMvc.perform(delete("/api/eventReview/1"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
 
 }
-
-

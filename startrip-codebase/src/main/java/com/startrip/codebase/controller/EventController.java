@@ -23,12 +23,14 @@ public class EventController {
         this.eventService = eventService;
     }
 
+    //전체 조회
     @GetMapping("/event")
     public List<ResponseEventDto> getEvents() {
         List<ResponseEventDto> events = eventService.allEvent();
         return events;
     }
 
+    //생성
     @PostMapping("/event")
     public ResponseEntity
     createEvent(@RequestBody CreateEventDto dto) {
@@ -36,13 +38,15 @@ public class EventController {
         return new ResponseEntity("이벤트 생성", HttpStatus.OK);
     }
 
+    //상세 조회
     @GetMapping("/event/{id}")
     public Event getEvent(@PathVariable("id") Long id) {
         Event event = eventService.getEvent(id);
         return event;
     }
 
-    @PostMapping("/event/{id}") // 수
+    //수정
+    @PostMapping("/event/{id}")
     public ResponseEntity updateEvent(@PathVariable("id") Long id, @RequestBody UpdateEventDto dto) {
         try{
             eventService.updateEvent(id, dto);
@@ -52,7 +56,7 @@ public class EventController {
         return new ResponseEntity("", HttpStatus.OK);
     }
 
-
+    //삭제
     @DeleteMapping("/event/{id}")
     public String deleteEvent(@PathVariable("id") Long id){
         eventService.deleteEvent(id);

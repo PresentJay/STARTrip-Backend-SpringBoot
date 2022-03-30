@@ -6,11 +6,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateEventReviewDto {
-    private String reviewTitle;
+    private String eventReviewTitle;
 
     private String text;
 
-    private String review_picture;
-
-    private Double review_rate;
+    private Double reviewRate;
 }

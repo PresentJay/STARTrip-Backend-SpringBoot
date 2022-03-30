@@ -10,5 +10,5 @@ public class ResponseEventReviewDto {
 
     private String text;
 
-    private Double review_rate;
+    private Double reviewRate;
 }
