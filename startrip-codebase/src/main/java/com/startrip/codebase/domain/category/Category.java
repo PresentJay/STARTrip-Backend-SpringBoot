@@ -21,12 +21,12 @@ public class Category {
     private Long id; // PK
 
     @Setter
-    @ManyToOne(fetch = FetchType.EAGER, cascade= CascadeType.REMOVE) // TODO : 삭제 시 에러 발생함
+    @ManyToOne(fetch = FetchType.EAGER, cascade= CascadeType.REMOVE)
     @JoinColumn(name = "category_parent_id", nullable = true)
     private Category categoryParent;
 
     @Setter
-    @Column(name = "category_name", unique = true) // TODO:undefined할 때 unique를 삭제 할지 고려할 것.
+    @Column(name = "category_name", unique = true) 
     private String categoryName;
 
     @Setter

@@ -24,8 +24,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new RuntimeException("존재하지 않는 유저입니다.");
         }
 
-
-
         // 스프링 시큐리티가 제공하는 user 반환
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.get().getEmail())
