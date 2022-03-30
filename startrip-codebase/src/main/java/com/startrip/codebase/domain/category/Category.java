@@ -22,7 +22,7 @@ public class Category {
 
     @Setter
     @ManyToOne(fetch = FetchType.EAGER, cascade= CascadeType.REMOVE) // TODO : 삭제 시 에러 발생함
-    @JoinColumn(name = "category_parent_id")
+    @JoinColumn(name = "category_parent_id", nullable = true)
     private Category categoryParent;
 
     @Setter
