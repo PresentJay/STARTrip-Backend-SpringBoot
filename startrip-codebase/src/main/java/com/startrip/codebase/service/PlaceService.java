@@ -27,7 +27,7 @@ public class PlaceService {
         return placeRepository.findAll();
     }
 
-    public List<Place> categoryPlace(Integer category_id) {
+    public List<Place> categoryPlace(Long category_id) {
         List<Place> placeList = placeRepository.findByCategoryId(category_id);
         if (placeList.isEmpty()) {
             throw new RuntimeException("해당 카테고리의 장소가 없습니다");
@@ -35,7 +35,7 @@ public class PlaceService {
         return placeList;
     }
 
-    public Place getPlace(UUID id) {
+    public Place getPlace(Long id) {
         Optional<Place> place = placeRepository.findById(id);
         if (place.isEmpty()) {
             throw new RuntimeException("해당 장소가 없습니다");
@@ -48,13 +48,13 @@ public class PlaceService {
         placeRepository.save(place);
     }
 
-    public void updatePlace(UUID id, PlaceDto dto){
+    public void updatePlace(Long id, PlaceDto dto){
         Place place = getPlace(id);
         place.update(dto);
         placeRepository.save(place);
     }
 
-    public void deletePlace(UUID id) {
+    public void deletePlace(Long id) {
         placeRepository.deleteById(id);
     }
 

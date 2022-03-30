@@ -14,7 +14,7 @@ public class PlaceDto {
     @NotNull
     private String address;
 
-    private Integer categoryId;
+    private Long categoryId;
     private String placeDescription;
     private String placePhoto;
     private String phoneNumber;

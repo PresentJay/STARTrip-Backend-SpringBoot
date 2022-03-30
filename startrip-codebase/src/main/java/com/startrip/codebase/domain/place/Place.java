@@ -18,9 +18,10 @@ public class Place {
 
     @Id
     @Column(name = "place_id")
-    private UUID id = UUID.randomUUID();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; // PK
 
-    private Integer categoryId;
+    private Long categoryId;
 
     @NotNull
     private Double latitude;

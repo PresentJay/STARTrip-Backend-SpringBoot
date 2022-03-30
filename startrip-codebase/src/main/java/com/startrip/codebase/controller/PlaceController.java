@@ -41,26 +41,26 @@ public class PlaceController {
 
     @GetMapping("/place/list/{categoryId}")
     public @ResponseBody
-    ResponseEntity showPlaceByCategory(@PathVariable("categoryId") Integer category_id) {
+    ResponseEntity showPlaceByCategory(@PathVariable("categoryId") Long category_id) {
         return new ResponseEntity(placeService.categoryPlace(category_id), HttpStatus.OK);
     }
 
     @GetMapping("/place/{id}")
     public @ResponseBody
-    ResponseEntity getPlace(@PathVariable("id") UUID id) {
+    ResponseEntity getPlace(@PathVariable("id") Long id) {
         return new ResponseEntity(placeService.getPlace(id), HttpStatus.OK);
     }
 
     @PostMapping("/place/{id}")
     public @ResponseBody
-    ResponseEntity updatePlace(@PathVariable("id") UUID id, PlaceDto dto) {
+    ResponseEntity updatePlace(@PathVariable("id") Long id, PlaceDto dto) {
         placeService.updatePlace(id, dto);
         return new ResponseEntity("수정되었습니다", HttpStatus.OK);
     }
 
     @DeleteMapping("/place/{id}")
     public @ResponseBody
-    ResponseEntity deleteNotice(@PathVariable("id") UUID id) {
+    ResponseEntity deleteNotice(@PathVariable("id") Long id) {
         placeService.deletePlace(id);
         return new ResponseEntity("삭제되었습니다", HttpStatus.OK);
     }
