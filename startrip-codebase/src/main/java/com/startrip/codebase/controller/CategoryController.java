@@ -23,20 +23,22 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @PostMapping("/category") // N 개 이상의 카테고리 생성
+    // CREATE
+    @PostMapping("/category")
     public ResponseEntity<String> createCategory(@RequestBody CreateCategoryDto dto) {
         categoryService.createCategory(dto);
         return new ResponseEntity<>("카테고리 생성", HttpStatus.OK);
     }
 
 
+    // GET All
     @GetMapping("/category")
     public ResponseEntity<List<Category>> getCategory() {
         List<Category> categories = categoryService.getCategoryList();
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
-    // 단일 보기
+    // GET Only
     @GetMapping("/category/{id}")
     public ResponseEntity getCategory(@PathVariable("id") Long id) {
         Category category;
@@ -49,7 +51,7 @@ public class CategoryController {
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
-    // 수정
+    // UPDATE
     @PutMapping("/category/{id}")
     public ResponseEntity updateEvent(@PathVariable("id") Long id, @RequestBody UpdateCategoryDto dto) {
         try {
@@ -60,11 +62,11 @@ public class CategoryController {
         return new ResponseEntity<>("수정", HttpStatus.OK);
     }
 
-    // 삭제
-    @DeleteMapping("/category/{categoryName}")
-    public ResponseEntity deleteCategory(@PathVariable(name = "categoryName") @NotBlank String name) {
+    // DELETE
+    @DeleteMapping("/category/{id}")
+    public ResponseEntity deleteCategory(@PathVariable("id") @NotBlank Long id) {
         try {
-            categoryService.deleteCategory(name);
+            categoryService.deleteCategory(id);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -72,13 +74,13 @@ public class CategoryController {
     }
 
 
-    // api/categories/child/{id}
-    @GetMapping("category/child/{categoryName}")
-    public ResponseEntity getCategoryChildren1Depth(@PathVariable("categoryName") String name) {
+    // GET depth+1 child
+    @GetMapping("category/child/{id}")
+    public ResponseEntity getCategoryChildren1Depth(@PathVariable("id") Long id) {
 
         List<Category> children = null;
         try {
-            children = categoryService.getDepthPlus1Children(name);
+            children = categoryService.getDepthPlus1Children(id);
             } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -86,12 +88,12 @@ public class CategoryController {
     }
 
 
-
-    @GetMapping("/category/child-full/{categoryName}")
-    public ResponseEntity getCategoryChildren(@PathVariable("categoryName") String name) {
+    // GET All child
+    @GetMapping("/category/child-full/{id}")
+    public ResponseEntity getCategoryChildren(@PathVariable("id") Long id) {
         List<Category> children = null;
         try {
-            children = categoryService.getChildren(name);
+            children = categoryService.getChildren(id);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
