@@ -15,31 +15,32 @@ import java.util.List;
 public class Category {
 
     @Id
+    @Setter
     @Column(name = "category_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
 
-    @ManyToOne(fetch = FetchType.EAGER) // TODO : 삭제 시 에러 발생함
-    @JoinColumn(name = "category_parent_id", nullable = true) // category parent 가 없을 때 어떻게 할지?
+    @Setter
+    @ManyToOne(fetch = FetchType.EAGER, cascade= CascadeType.REMOVE)
+    @JoinColumn(name = "category_parent_id", nullable = true)
     private Category categoryParent;
 
-    @Column(name = "category_name", unique = true)
+    @Setter
+    @Column(name = "category_name", unique = true) 
     private String categoryName;
 
+    @Setter
     @Column(nullable = false)
     private Integer depth;
-
 
     //dto -> Entity
     public static Category createCategory(CreateCategoryDto dto) {
         // createDto에 있던 categoryParentId는 여기서 Entity로 바꾸지 않는다.
         Category category = Category.builder()
                 .categoryName(dto.getCategoryName())
-                .depth(dto.getDepth())
                 .build();
         return category;
     }
-
 
     @Builder // id를 제외하여 builder를 적용시킬 것이므로 따로 생성자 위에 builder 패턴을 적용하였음.
     public Category (Category categoryParent, String categoryName, Integer depth){
@@ -47,18 +48,4 @@ public class Category {
         this.categoryName = categoryName;
         this.depth = depth;
     }
-
-
-    public void setDepth(Integer depth){
-        this.depth = depth;
-    }
-
-    public void setCategoryName(String categoryName){
-        this.categoryName = categoryName;
-    }
-
-    public void setCategoryParent(Category categoryParent){
-        this.categoryParent = categoryParent;
-    }
-
 }

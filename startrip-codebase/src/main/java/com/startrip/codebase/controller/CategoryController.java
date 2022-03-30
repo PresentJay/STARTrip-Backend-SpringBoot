@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @RestController
@@ -22,47 +23,81 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @PostMapping("/categories")
+    // CREATE
+    @PostMapping("/category")
     public ResponseEntity<String> createCategory(@RequestBody CreateCategoryDto dto) {
         categoryService.createCategory(dto);
         return new ResponseEntity<>("카테고리 생성", HttpStatus.OK);
     }
 
 
-    @GetMapping("/categories")
+    // GET All
+    @GetMapping("/category")
     public ResponseEntity<List<Category>> getCategory() {
         List<Category> categories = categoryService.getCategoryList();
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
-    // 단일 보기
-    @GetMapping("/categories/{id}")
+    // GET Only
+    @GetMapping("/category/{id}")
     public ResponseEntity getCategory(@PathVariable("id") Long id) {
         Category category;
-        try{
+        try {
             category = categoryService.getCategory(id);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
-    // 수정
-    @PostMapping("/categories/{id}")
-    public ResponseEntity<String> updateEvent(@PathVariable("id") Long id, @RequestBody UpdateCategoryDto dto) {
-        try{
+    // UPDATE
+    @PutMapping("/category/{id}")
+    public ResponseEntity updateEvent(@PathVariable("id") Long id, @RequestBody UpdateCategoryDto dto) {
+        try {
             categoryService.updateCategory(id, dto);
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("수정", HttpStatus.OK);
     }
 
-    // 삭제
-    @DeleteMapping("/categories/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable("id") Long id){
-        categoryService.deleteCategory(id);
+    // DELETE
+    @DeleteMapping("/category/{id}")
+    public ResponseEntity deleteCategory(@PathVariable("id") @NotBlank Long id) {
+        try {
+            categoryService.deleteCategory(id);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>("삭제", HttpStatus.OK);
     }
 
+
+    // GET depth+1 child
+    @GetMapping("category/child/{id}")
+    public ResponseEntity getCategoryChildren1Depth(@PathVariable("id") Long id) {
+
+        List<Category> children = null;
+        try {
+            children = categoryService.getDepthPlus1Children(id);
+            } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(children, HttpStatus.OK);
+    }
+
+
+    // GET All child
+    @GetMapping("/category/child-full/{id}")
+    public ResponseEntity getCategoryChildren(@PathVariable("id") Long id) {
+        List<Category> children = null;
+        try {
+            children = categoryService.getChildren(id);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(children, HttpStatus.OK);
+    }
 }
