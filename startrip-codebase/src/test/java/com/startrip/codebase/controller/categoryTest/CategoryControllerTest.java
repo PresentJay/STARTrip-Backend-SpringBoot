@@ -2,6 +2,7 @@ package com.startrip.codebase.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.startrip.codebase.domain.category.CategoryRepository;
+import com.startrip.codebase.domain.category.dto.CreateCategoryDto;
 import com.startrip.codebase.service.CategoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -45,7 +47,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  public void before() {
   mockMvc = MockMvcBuilders.standaloneSetup(new CategoryController(categoryService))
           .addFilters(new CharacterEncodingFilter("UTF-8", true))
-          .alwaysExpect(status().isOk())
           .build();
  }
 
@@ -53,14 +54,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  @Order(1)
  @Test
  void test1() throws Exception {
-  String jsonData = "{\"categoryName\" : \"맛집\", "
-          + "\"categoryParentId\" : null }";
+
+  CreateCategoryDto dto = new CreateCategoryDto();
+  dto.setCategoryName("맛집");
+  dto.setCategoryParentId((long)1);
 
 
-  mockMvc.perform(post("/api/categories")
+  mockMvc.perform(post("/api/category")
           .contentType(MediaType.APPLICATION_JSON) // JSON 타입으로 지정
-          .content(jsonData)
-  ).andExpect(status().isOk()).andDo(print());
+          .content(objectMapper.writeValueAsString(dto))
+          )
+          .andExpect(status().isOk()).andDo(print());
  }
 
 
@@ -68,7 +72,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  @Order(2)
  @Test
  void test2() throws Exception {
-  mockMvc.perform(get("/api/categories")
+  mockMvc.perform(get("/api/category")
           .accept(MediaType.APPLICATION_JSON)
   ).andExpect(status().isOk()).andDo(print());
  }
@@ -78,7 +82,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  @Order(3)
  @Test
  void test3() throws Exception {
-  mockMvc.perform(get("/api/categoreis/1"))
+  mockMvc.perform(get("/api/category/1"))
           .andExpect(status().isOk())
           .andDo(print());
  }
@@ -101,7 +105,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  @Order(5)
  @Test
  void test5() throws Exception {
-  mockMvc.perform(get("/api/categories/{1}")
+  mockMvc.perform(get("/api/category/{1}")
           .accept(MediaType.APPLICATION_JSON)
   ).andExpect(status().isOk()).andDo(print());
  }
@@ -110,7 +114,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  @Order(6)
  @Test
  void test6() throws Exception {
-  mockMvc.perform(delete("/api/categories/{1}")
+  mockMvc.perform(delete("/api/category/{1}")
           .accept(MediaType.APPLICATION_JSON)
   ).andExpect(status().isOk()).andDo(print());
  }
@@ -119,9 +123,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  @Order(7)
  @Test
  void test7() throws Exception {
-  mockMvc.perform(get("/api/categories/{1}")
+  mockMvc.perform(get("/api/category/{1}")
           .accept(MediaType.APPLICATION_JSON)
-  ).andExpect(status().isOk()).andDo(print());
+  ).andExpect(status().isBadRequest()).andDo(print());
  }
 
 

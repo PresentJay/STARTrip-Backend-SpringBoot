@@ -10,17 +10,17 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreateCategoryDto {
 
-    private String categoryParentName;
+    private Long categoryParentId;
     private String categoryName;
 
     public CreateCategoryDto (Category entity) {
         this.categoryName = entity.getCategoryName();
 
-        //parent가 최초의 대분류일 경우를 처리하기 위함
+        //parent가 최초의 대분류일 경우를 처리하기 위함 (depth=2)
         if (entity.getCategoryParent() == null) {
-            this.categoryParentName = "ROOT";
+            this.categoryParentId = (long)1;  // id가 1인 것은 root다.
         } else {
-            this.categoryParentName = entity.getCategoryParent().getCategoryName();
+            this.categoryParentId = entity.getCategoryParent().getId();
         }
     }
 }
