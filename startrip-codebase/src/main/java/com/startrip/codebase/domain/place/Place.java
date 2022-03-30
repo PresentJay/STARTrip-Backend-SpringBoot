@@ -18,10 +18,9 @@ public class Place {
 
     @Id
     @Column(name = "place_id")
-    private UUID placeId = UUID.randomUUID();
+    private UUID id = UUID.randomUUID();
 
-    @Column(name = "category_id")
-    private UUID eventId = UUID.randomUUID();
+    private Integer categoryId;
 
     @NotNull
     private Double latitude;
@@ -46,6 +45,7 @@ public class Place {
                 .placeName(dto.getPlaceName())
                 .address(dto.getAddress())
                 .placePhoto(dto.getPlacePhoto())
+                .categoryId(dto.getCategoryId())
                 .placeDescription(dto.getPlaceDescription())
                 .phoneNumber(dto.getPhoneNumber())
                 // 임시 광화문 좌표값

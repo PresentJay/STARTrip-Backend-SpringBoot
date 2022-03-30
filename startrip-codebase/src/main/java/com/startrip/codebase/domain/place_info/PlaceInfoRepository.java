@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface PlaceInfoRepository extends JpaRepository<PlaceInfo, UUID> {
+
 }

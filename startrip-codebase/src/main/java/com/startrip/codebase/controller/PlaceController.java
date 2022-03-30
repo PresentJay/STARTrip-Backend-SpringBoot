@@ -26,17 +26,29 @@ public class PlaceController {
         this.placeService = placeService;
     }
 
-    @GetMapping("/place")
-    public @ResponseBody
-    ResponseEntity showPlace(PlaceDto dto) {
-        return new ResponseEntity(placeService.allPlace(), HttpStatus.OK);
-    }
-
     @PostMapping("/place")
     public @ResponseBody
     ResponseEntity addPlace(PlaceDto dto) {
         placeService.createPlace(dto);
         return new ResponseEntity("생성되었습니다", HttpStatus.OK);
+    }
+
+    @GetMapping("/place/list")
+    public @ResponseBody
+    ResponseEntity showPlace() {
+        return new ResponseEntity(placeService.allPlace(), HttpStatus.OK);
+    }
+
+    @GetMapping("/place/list/{categoryId}")
+    public @ResponseBody
+    ResponseEntity showPlaceByCategory(@PathVariable("categoryId") Integer category_id) {
+        return new ResponseEntity(placeService.categoryPlace(category_id), HttpStatus.OK);
+    }
+
+    @GetMapping("/place/{id}")
+    public @ResponseBody
+    ResponseEntity getPlace(@PathVariable("id") UUID id) {
+        return new ResponseEntity(placeService.getPlace(id), HttpStatus.OK);
     }
 
     @PostMapping("/place/{id}")
