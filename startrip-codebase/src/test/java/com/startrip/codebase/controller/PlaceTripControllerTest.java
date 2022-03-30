@@ -79,10 +79,11 @@ public class PlaceTripControllerTest {
     @DisplayName("Create 테스트 2번")
     @Test
     public void test2() throws Exception {
-//        State stateBuilder = State.builder()
-//                .stateId(UUID.fromString("c1203d31-9473-4c06-9d52-464cc2f59429"))
-//                .stateNum(0)
-//                .build();
+        State state = State.builder()
+                .stateId(UUID.fromString("c12e938d-9473-4c06-9d52-464cc2f59429"))
+                .stateNum(0)
+                .build();
+        stateRepository.save(state);
 
         CreatePlaceTripDto dto = new CreatePlaceTripDto();
         dto.setTripId(UUID.fromString("a3661498-9473-4c06-9d52-464cc2f59429"));
@@ -91,7 +92,7 @@ public class PlaceTripControllerTest {
         dto.setPlaceId(UUID.fromString("1f1e5a75-f3f4-4dbe-b739-e428e511e0e8"));
         dto.setStartTime(Date.valueOf("2022-03-29"));
         dto.setEndTime(Date.valueOf("2022-03-30"));
-        //dto.setState(stateBuilder);
+        dto.setState(state);
         dto.setTransportation("기차");
         dto.setTitle("김해 여행");
 
