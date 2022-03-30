@@ -5,9 +5,10 @@ import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Builder
@@ -17,7 +18,8 @@ import java.util.UUID;
 @ToString
 public class EventReview {
     @Id
-    private UUID review_id;
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    private Long review_id ;
 
     @NotNull
     private Long creator_id;

@@ -27,8 +27,8 @@ public class EventService {
     public void createEvent(CreateEventDto dto) {
         Event event = Event.builder()
                 .eventTitle(dto.getEventTitle())
-                .startDate(dto.getStartDate())
-                .endDate(dto.getEndDate())
+                .description(dto.getDescription())
+                .contact(dto.getContact())
                 .build();
         eventRepository.save(event);
         log.info(event.toString());

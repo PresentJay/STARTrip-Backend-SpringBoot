@@ -42,7 +42,7 @@ public class EventController {
         return event;
     }
 
-    @PostMapping("/event/{id}")
+    @PostMapping("/event/{id}") // 수
     public ResponseEntity updateEvent(@PathVariable("id") Long id, @RequestBody UpdateEventDto dto) {
         try{
             eventService.updateEvent(id, dto);
