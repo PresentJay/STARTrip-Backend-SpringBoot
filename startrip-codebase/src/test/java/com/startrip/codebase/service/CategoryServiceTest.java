@@ -4,13 +4,16 @@ import com.startrip.codebase.domain.category.Category;
 import com.startrip.codebase.domain.category.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigInteger;
 import java.util.List;
 
+import static org.aspectj.runtime.internal.Conversions.longValue;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 
@@ -31,80 +34,148 @@ class CategoryServiceTest {
                 .build();
         categoryRepository.save(root);
 
-        Category category1 = Category.builder()
+        // left-branch
+        Category category2 = Category.builder()
                 .categoryName("맛집")
                 .categoryParent(root)
                 .depth(1)
                 .build();
-        categoryRepository.save(category1);
-
-        Category category2 = Category.builder()
-                .categoryName("식당")
-                .categoryParent(category1)
-                .depth(2)
-                .build();
         categoryRepository.save(category2);
 
         Category category3 = Category.builder()
-                .categoryName("초밥집")
+                .categoryName("한식")
                 .categoryParent(category2)
-                .depth(3)
+                .depth(2)
                 .build();
         categoryRepository.save(category3);
 
         Category category4 = Category.builder()
-                .categoryName("경관")
-                .categoryParent(root)
-                .depth(1)
+                .categoryName("중식")
+                .categoryParent(category2)
+                .depth(2)
                 .build();
         categoryRepository.save(category4);
 
         Category category5 = Category.builder()
-                .categoryName("자연")
-                .categoryParent(category4)
+                .categoryName("일식")
+                .categoryParent(category2)
                 .depth(2)
                 .build();
         categoryRepository.save(category5);
 
         Category category6 = Category.builder()
-                .categoryName("인조물")
-                .categoryParent(category4)
-                .depth(2)
+                .categoryName("오마카세")
+                .categoryParent(category5)
+                .depth(3)
                 .build();
         categoryRepository.save(category6);
+
+        // right-branch
+        Category category7 = Category.builder()
+                .categoryName("관광")
+                .categoryParent(root)
+                .depth(1)
+                .build();
+        categoryRepository.save(category7);
+
+        Category category8 = Category.builder()
+                .categoryName("자연")
+                .categoryParent(category7)
+                .depth(2)
+                .build();
+        categoryRepository.save(category8);
+
+        Category category9 = Category.builder()
+                .categoryName("강")
+                .categoryParent(category8)
+                .depth(3)
+                .build();
+        categoryRepository.save(category9);
+
+        Category category10 = Category.builder()
+                .categoryName("바다")
+                .categoryParent(category8)
+                .depth(3)
+                .build();
+        categoryRepository.save(category10);
+
+        Category category11 = Category.builder()
+                .categoryName("산")
+                .categoryParent(category8)
+                .depth(3)
+                .build();
+        categoryRepository.save(category11);
+
+        Category category12 = Category.builder()
+                .categoryName("인조")
+                .categoryParent(category7)
+                .depth(2)
+                .build();
+        categoryRepository.save(category12);
+
+        Category category13 = Category.builder()
+                .categoryName("랜드마크")
+                .categoryParent(category12)
+                .depth(3)
+                .build();
+        categoryRepository.save(category13);
+
+        Category category14 = Category.builder()
+                .categoryName("UndefinedParent")
+                .categoryParent(root)
+                .depth(1)
+                .build();
+        categoryRepository.save(category14);
+
     }
 
-    @DisplayName("경관 카테고리의 자식들을 조회한다")
+    // 얘네 왜 한꺼번에 실행하면 안되고 단일로 실행하면 통과하는 거지?
+    @DisplayName("step1: 맛집 카테고리의 자식들을 조회")
+    @Order(1)
     @Test
-    void get_childrens () {
+    void test1 () {
         setup1();
+        List<Category> children = categoryService.getChildren((long)2);
 
-        List<Category> childrens = categoryService.getChildren("경관");
-
-        assertThat(childrens.get(0).getCategoryName()).isEqualTo("자연");
-        assertThat(childrens.get(1).getCategoryName()).isEqualTo("인조물");
+        assertThat(children.get(0).getCategoryName()).isEqualTo("한식");
+        assertThat(children.get(1).getCategoryName()).isEqualTo("중식");
     }
 
 
-    @DisplayName("ROOT 카테고리의 자식들을 조회한다")
+    @DisplayName("step2: ROOT 카테고리의 자식들을 조회한다")
+    @Order(2)
     @Test
-    void get_childrens_2 () {
-        setup1();
+    void test2 () {
 
-        List<Category> childrens = categoryService.getChildren("ROOT");
 
-        assertThat(childrens).hasSize(6);
+        List<Category> children = categoryService.getChildren((long)1);
+
+        assertThat(children).hasSize(13);
     }
 
-    @DisplayName("경관 카테고리를 삭제환다")
+
+    @DisplayName("step3: ROOT 카테고리의 자식(depth+1)들을 조회한다")
+    @Order(3)
     @Test
-    void 경관_삭제 () {
-        setup1();
+    void test3 () {
 
-        categoryService.deleteCategory("경관");
-        List<Category> childrens = categoryService.getChildren("UndefinedParent");
 
-        assertThat(childrens.get(0).getCategoryParent().getCategoryName()).isEqualTo("UndefinedParent");
-        assertThat(childrens.get(1).getCategoryParent().getCategoryName()).isEqualTo("UndefinedParent");
+        List<Category> children = categoryService.getDepthPlus1Children((long)1);
+
+        // 맛집, 관광, undefinedParent
+        assertThat(children).hasSize(3);
+    }
+
+
+    @DisplayName("step4: 맛집 카테고리를 삭제 후 자식을 조회한다")
+    @Order(4)
+    @Test
+    void test4 () {
+
+        categoryService.deleteCategory((long)2 );
+        List<Category> children = categoryService.getChildren((long)14);
+
+        assertThat(children.get(0).getCategoryName()).isEqualTo("한식");
+        assertThat(children.get(1).getCategoryName()).isEqualTo("중식");
     }
 }
