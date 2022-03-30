@@ -126,12 +126,10 @@ class CategoryServiceTest {
                 .depth(1)
                 .build();
         categoryRepository.save(category14);
-
     }
 
     // 얘네 왜 한꺼번에 실행하면 안되고 단일로 실행하면 통과하는 거지?
     @DisplayName("step1: 맛집 카테고리의 자식들을 조회")
-    @Order(1)
     @Test
     void test1 () {
         setup1();
@@ -141,37 +139,25 @@ class CategoryServiceTest {
         assertThat(children.get(1).getCategoryName()).isEqualTo("중식");
     }
 
-
-    @DisplayName("step2: ROOT 카테고리의 자식들을 조회한다")
-    @Order(2)
+    @DisplayName("Step2: Category-Service GET-children Test")
     @Test
     void test2 () {
-
-
         List<Category> children = categoryService.getChildren((long)1);
 
         assertThat(children).hasSize(13);
     }
 
-
-    @DisplayName("step3: ROOT 카테고리의 자식(depth+1)들을 조회한다")
-    @Order(3)
+    @DisplayName("Step3: Category-Service GET-children(Depth+1) Test")
     @Test
     void test3 () {
-
-
         List<Category> children = categoryService.getDepthPlus1Children((long)1);
 
-        // 맛집, 관광, undefinedParent
-        assertThat(children).hasSize(3);
+        assertThat(children).hasSize(3);   // 맛집, 관광, undefinedParent
     }
 
-
-    @DisplayName("step4: 맛집 카테고리를 삭제 후 자식을 조회한다")
-    @Order(4)
+    @DisplayName("Step4: Category-Service GET-removedItem Test")
     @Test
     void test4 () {
-
         categoryService.deleteCategory((long)2 );
         List<Category> children = categoryService.getChildren((long)14);
 
