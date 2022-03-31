@@ -46,7 +46,7 @@ public class EventReviewControllerTest {
     @DisplayName("EventReview Create TEST")
     @Order(1)
     @Test
-    void eventReview_create() throws Exception {
+    void eventReview_create_1() throws Exception {
         CreateEventReviewDto dto = new CreateEventReviewDto();
         dto.setEventReviewTitle("진해 군항제");
         dto.setText("벚꽃이 굉장히 이쁘네요~");
@@ -60,8 +60,25 @@ public class EventReviewControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("EventReview Read TEST")
+    @DisplayName("EventReview Create TEST")
     @Order(2)
+    @Test
+    void eventReview_create_2() throws Exception {
+        CreateEventReviewDto dto = new CreateEventReviewDto();
+        dto.setEventReviewTitle("B1A4 진영 단감축제 ㅋㅋ");
+        dto.setText("단감은 싫어요 홍시가 좋아요");
+        dto.setReviewRate(3.0);
+
+        mockMvc.perform(
+                        post("/api/eventReview")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @DisplayName("EventReview Read TEST")
+    @Order(3)
     @Test
     void eventReview_read() throws Exception {
 
@@ -69,7 +86,7 @@ public class EventReviewControllerTest {
     }
 
     @DisplayName("EvenReview Update TEST")
-    @Order(3)
+    @Order(4)
     @Test
     void eventReview_Update() throws Exception {
 
@@ -87,7 +104,7 @@ public class EventReviewControllerTest {
     }
 
     @DisplayName("EventReview Detail Read TEST")
-    @Order(4)
+    @Order(5)
     @Test
     void eventReview_detail_read() throws Exception {
         mockMvc.perform(get("/api/eventReview/1"))
@@ -96,7 +113,7 @@ public class EventReviewControllerTest {
     }
 
     @DisplayName("EventReview Delete TEST" )
-    @Order(5)
+    @Order(6)
     @Test
     void eventReview_delete() throws Exception {
         mockMvc.perform(delete("/api/eventReview/1"))
@@ -104,4 +121,10 @@ public class EventReviewControllerTest {
                 .andDo(print());
     }
 
+    @DisplayName("EventReview  Read After Delete TEST")
+    @Order(7)
+    @Test
+    void evnetReview_Read_After_Delete() throws Exception {
+        mockMvc.perform(get("/api/eventReview")).andExpect(status().isOk()).andDo(print());
+    }
 }

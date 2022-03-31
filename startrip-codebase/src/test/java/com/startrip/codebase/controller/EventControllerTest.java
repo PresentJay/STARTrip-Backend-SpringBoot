@@ -43,10 +43,10 @@ public class EventControllerTest {
                 .build();
     }
 
-    @DisplayName("Event Create TEST")
+    @DisplayName("Event Create TEST1")
     @Order(1)
     @Test
-    void event_create() throws Exception {
+    void event_create_1() throws Exception {
         CreateEventDto dto = new CreateEventDto();
         dto.setEventTitle("진해 구낭제");
         dto.setDescription("벗꼿페슽히벌");
@@ -60,22 +60,37 @@ public class EventControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("Event Read TEST")
+    @DisplayName("Event Create TEST2")
     @Order(2)
     @Test
-    void event_read() throws Exception {
+    void event_create_2() throws Exception {
+        CreateEventDto dto = new CreateEventDto();
+        dto.setEventTitle("진영 단감축제");
+        dto.setDescription("가을 축제");
+        dto.setContact("test2@gmail.com");
 
+        mockMvc.perform(
+                        post("/api/event")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @DisplayName("Event Read TEST")
+    @Order(3)
+    @Test
+    void event_read() throws Exception {
         mockMvc.perform(get("/api/event")).andExpect(status().isOk()).andDo(print());
     }
 
     @DisplayName("Event Update TEST")
-    @Order(3)
+    @Order(4)
     @Test
     void event_update() throws Exception {
-
         CreateEventDto dto = new CreateEventDto();
-        dto.setEventTitle("진해 구낭제");
-        dto.setDescription("룰루랄라~");
+        dto.setEventTitle("진영 단감축제");
+        dto.setDescription("가을 축제");
         dto.setContact("010-1234-1234");
 
         mockMvc.perform(
@@ -88,7 +103,7 @@ public class EventControllerTest {
     }
 
     @DisplayName("Event Detail Read TEST")
-    @Order(4)
+    @Order(5)
     @Test
     void event_detail_read() throws Exception {
         mockMvc.perform(get("/api/event/1"))
@@ -97,7 +112,7 @@ public class EventControllerTest {
     }
 
     @DisplayName("Event Delete TEST" )
-    @Order(5)
+    @Order(6)
     @Test
     void event_delete() throws Exception {
         mockMvc.perform(delete("/api/event/1"))
@@ -105,6 +120,21 @@ public class EventControllerTest {
                 .andDo(print());
     }
 
+    @DisplayName("Event Detail Read TEST")
+    @Order(7)
+    @Test
+    void event_detail_read_1() throws Exception {
+        mockMvc.perform(get("/api/event/1"))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @DisplayName("Event Read TEST")
+    @Order(8)
+    @Test
+    void event_read_2() throws Exception {
+        mockMvc.perform(get("/api/event")).andExpect(status().isOk()).andDo(print());
+    }
 }
 
 

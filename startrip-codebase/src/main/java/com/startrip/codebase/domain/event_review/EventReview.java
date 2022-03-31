@@ -19,14 +19,14 @@ public class EventReview {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long reviewId ;
 
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "event_id")
+    private Event event;
+
     @Column(name = "creator_id")
     private Long creatorId;
 
     private String eventReviewTitle;
-
-    @OneToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "event_id")
-    private Event event;
 
     private String text;
 

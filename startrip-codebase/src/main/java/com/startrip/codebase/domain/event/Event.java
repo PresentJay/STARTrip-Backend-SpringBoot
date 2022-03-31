@@ -44,7 +44,7 @@ public class Event {
     @Column(name = "event_cycleUnit")
     private String eventCycleUnit; //반복 단위
 
-    private String eventOwnew; //이벤트 주최자
+    private String eventOwner; //이벤트 주최자
 
     private String contact;
 

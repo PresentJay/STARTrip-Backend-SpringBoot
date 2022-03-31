@@ -39,7 +39,7 @@ public class EventController {
     }
 
     //상세 조회
-    @GetMapping("/event/{id}")
+    @GetMapping(value ={"/event/{id}"})
     public Event getEvent(@PathVariable("id") Long id) {
         Event event = eventService.getEvent(id);
         return event;
