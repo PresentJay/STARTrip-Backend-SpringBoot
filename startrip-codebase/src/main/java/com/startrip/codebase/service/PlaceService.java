@@ -3,6 +3,9 @@ package com.startrip.codebase.service;
 import com.startrip.codebase.domain.place.Place;
 import com.startrip.codebase.domain.place.PlaceRepository;
 
+import com.startrip.codebase.domain.place_info.PlaceInfo;
+import com.startrip.codebase.domain.place_info.PlaceInfoRepository;
+import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.dto.PlaceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +20,7 @@ import java.util.*;
 public class PlaceService {
 
     private PlaceRepository placeRepository;
+    private PlaceInfoRepository placeInfoRepository;
 
     @Autowired
     public PlaceService(PlaceRepository placeRepository){
@@ -58,7 +62,9 @@ public class PlaceService {
         placeRepository.deleteById(id);
     }
 
-
+    public void createPlaceInfo(PlaceInfo palceInfo) {
+        placeInfoRepository.save(palceInfo);
+    }
 
 }
 

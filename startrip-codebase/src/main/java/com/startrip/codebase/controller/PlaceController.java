@@ -1,6 +1,7 @@
 package com.startrip.codebase.controller;
 
 import com.startrip.codebase.domain.place.Place;
+import com.startrip.codebase.domain.place_info.PlaceInfo;
 import com.startrip.codebase.dto.PlaceDto;
 import com.startrip.codebase.service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,5 +64,12 @@ public class PlaceController {
     ResponseEntity deleteNotice(@PathVariable("id") Long id) {
         placeService.deletePlace(id);
         return new ResponseEntity("삭제되었습니다", HttpStatus.OK);
+    }
+
+    @PostMapping("/place/info")
+    public @ResponseBody
+    ResponseEntity addPlaceInfo(PlaceInfo placeInfo) {
+        placeService.createPlaceInfo(placeInfo);
+        return new ResponseEntity("생성되었습니다", HttpStatus.OK);
     }
 }
