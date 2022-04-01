@@ -27,7 +27,7 @@ public class EventTripController {
     @PostMapping("/eventtrip")
     public ResponseEntity createEventTrip(@RequestBody CreateEventTripDto dto) {
         eventTripService.createEventTrip(dto);
-        return new ResponseEntity("Place Trip 생성", HttpStatus.OK);
+        return new ResponseEntity("Event Trip 생성", HttpStatus.OK);
     }
 
     // All
@@ -39,9 +39,14 @@ public class EventTripController {
 
     // Get
     @GetMapping("/eventtrip/{id}")
-    public EventTrip getEventTrip(@PathVariable("id") UUID id) {
-        EventTrip placeTrip = eventTripService.getEventTrip(id);
-        return placeTrip;
+    public ResponseEntity getEventTrip(@PathVariable("id") UUID id) {
+        EventTrip eventTrip;
+        try {
+            eventTrip = eventTripService.getEventTrip(id);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(eventTrip, HttpStatus.OK);
     }
 
     // Update
@@ -57,8 +62,12 @@ public class EventTripController {
 
     // Delete
     @DeleteMapping("/eventtrip/{id}")
-    public String deleteEventTrip(@PathVariable("id") UUID id){
-        eventTripService.deleteEventTrip(id);
-        return "Event Trip 삭제";
+    public ResponseEntity deleteEventTrip(@PathVariable("id") UUID id){
+        try {
+            eventTripService.deleteEventTrip(id);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity("Event Trip 삭제", HttpStatus.OK);
     }
 }

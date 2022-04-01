@@ -1,16 +1,15 @@
 package com.startrip.codebase.domain.event_trip;
 
+import com.startrip.codebase.domain.state.State;
+import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.dto.event_trip.UpdateEventTripDto;
-import com.startrip.codebase.dto.place_trip.UpdatePlaceTripDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.sql.Date;
+import javax.persistence.*;
+import java.util.Date;
 import java.util.UUID;
 
 @Getter
@@ -23,8 +22,9 @@ public class EventTrip {
     @Column(name = "trip_id")
     private UUID tripId;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User userId;
 
     @Column(name = "user_partner")
     private String userPartner;
@@ -38,15 +38,15 @@ public class EventTrip {
     @Column(name = "end_time")
     private Date endTime;
 
-    private String state;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="state_id")
+    private State state;
 
     private String transportation;
 
     private String title;
 
     public void update(UpdateEventTripDto dto) {
-        this.tripId = dto.getTripId();
-        this.userId = dto.getUserId();
         this.userPartner = dto.getUserPartner();
         this.eventId = dto.getEventId();
         this.startTime = dto.getStartTime();

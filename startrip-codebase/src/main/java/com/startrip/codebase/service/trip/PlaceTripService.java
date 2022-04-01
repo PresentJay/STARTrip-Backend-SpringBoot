@@ -2,7 +2,6 @@ package com.startrip.codebase.service.trip;
 
 import com.startrip.codebase.domain.place_trip.PlaceTrip;
 import com.startrip.codebase.domain.place_trip.PlaceTripRepository;
-import com.startrip.codebase.domain.state.StateRepository;
 import com.startrip.codebase.dto.place_trip.CreatePlaceTripDto;
 import com.startrip.codebase.dto.place_trip.ResponsePlaceTripDto;
 import com.startrip.codebase.dto.place_trip.UpdatePlaceTripDto;
@@ -16,12 +15,10 @@ import java.util.*;
 @Slf4j
 public class PlaceTripService {
     private final PlaceTripRepository placeTripRepository;
-    private final StateRepository stateRepository;
 
     @Autowired
-    public PlaceTripService(PlaceTripRepository placeTripRepository, StateRepository stateRepository) {
+    public PlaceTripService(PlaceTripRepository placeTripRepository) {
         this.placeTripRepository = placeTripRepository;
-        this.stateRepository = stateRepository;
     }
 
     // Create
@@ -68,15 +65,11 @@ public class PlaceTripService {
 
     // Update
     public void updatePlaceTrip(UUID id, UpdatePlaceTripDto dto){
-        Optional<PlaceTrip> placeTrip = placeTripRepository.findById(id);
-        if (placeTrip.isEmpty()){
+        PlaceTrip placeTrip = placeTripRepository.findById(id).orElseThrow(() -> {
             throw new RuntimeException("존재하지 않는 Place Trip 입니다.");
-        }
-        PlaceTrip use = placeTrip.get();
-
-        use.update(dto);
-
-        placeTripRepository.save(use);
+        });
+        placeTrip.update(dto);
+        placeTripRepository.save(placeTrip);
     }
 
     // Delete

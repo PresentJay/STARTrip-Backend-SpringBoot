@@ -1,7 +1,7 @@
 package com.startrip.codebase.domain.place_trip;
 
 import com.startrip.codebase.domain.state.State;
-import com.startrip.codebase.dto.place_trip.CreatePlaceTripDto;
+import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.dto.place_trip.UpdatePlaceTripDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,8 +22,9 @@ public class PlaceTrip {
     @Column(name = "trip_id")
     private UUID tripId;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User userId;
 
     @Column(name = "user_partner")
     private String userPartner;

@@ -4,6 +4,8 @@ import com.startrip.codebase.domain.place_trip.PlaceTrip;
 import com.startrip.codebase.domain.place_trip.PlaceTripRepository;
 import com.startrip.codebase.domain.state.State;
 import com.startrip.codebase.domain.state.StateRepository;
+import com.startrip.codebase.domain.user.User;
+import com.startrip.codebase.domain.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +27,13 @@ public class PlaceTripServiceTest {
     @Autowired
     private StateRepository stateRepository;
 
-    private void createPlaceTrip(State state) {
+    @Autowired
+    private UserRepository userRepository;
+
+    private void createPlaceTrip(State state, User user) {
         PlaceTrip placeTrip = PlaceTrip.builder()
                 .tripId(UUID.fromString("e3661498-9473-4c06-9d52-464cc2f59429"))
-                .userId(Long.valueOf("123"))
+                .userId(user)
                 .userPartner("a")
                 .placeId(UUID.randomUUID())
                 .startTime(Date.valueOf("2022-03-23"))
@@ -47,9 +52,16 @@ public class PlaceTripServiceTest {
                 .stateId(UUID.randomUUID())
                 .stateNum(0)
                 .build();
-        stateRepository.save(state);
 
-        createPlaceTrip(state);
+        User user = User.builder()
+                .name("a")
+                .email("1@1.com")
+                .build();
+
+        stateRepository.save(state);
+        userRepository.save(user);
+
+        createPlaceTrip(state, user);
 
         PlaceTrip find = placeTripService.getPlaceTrip(UUID.fromString("e3661498-9473-4c06-9d52-464cc2f59429"));
 

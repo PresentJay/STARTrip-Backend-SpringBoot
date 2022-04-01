@@ -38,15 +38,11 @@ public class StateService {
 
     // Update
     public void updateState(UUID id, UpdateStateDto dto){
-        Optional<State> state = stateRepository.findById(id);
-        if (state.isEmpty()){
+        State state = stateRepository.findById(id).orElseThrow(() -> {
             throw new RuntimeException("존재하지 않는 State 입니다.");
-        }
-        State use = state.get();
-
-        use.update(dto);
-
-        stateRepository.save(use);
+        });
+        state.update(dto);
+        stateRepository.save(state);
     }
 
     public void deleteState(UUID id) { stateRepository.deleteById(id); }

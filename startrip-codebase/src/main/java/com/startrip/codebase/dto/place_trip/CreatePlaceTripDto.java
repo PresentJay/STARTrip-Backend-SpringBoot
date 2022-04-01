@@ -1,6 +1,7 @@
 package com.startrip.codebase.dto.place_trip;
 
 import com.startrip.codebase.domain.state.State;
+import com.startrip.codebase.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
 @Setter
 public class CreatePlaceTripDto {
     private UUID tripId;
-    private Long userId;
+    private User userId;
     private String userPartner;
     private UUID placeId;
     private Date startTime;

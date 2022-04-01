@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -37,6 +34,7 @@ public class EventTripService {
                 .transportation(dto.getTransportation())
                 .title(dto.getTitle())
                 .build();
+
         eventTripRepository.save(eventTrip);
         log.info(eventTrip.toString());
     }
@@ -59,20 +57,18 @@ public class EventTripService {
 
     // Get
     public EventTrip getEventTrip(UUID id){
-        return eventTripRepository.findById(id).get();
+        return eventTripRepository.findById(id).orElseThrow(() -> {
+            throw new NoSuchElementException("없는 데이터입니다.");
+        });
     }
 
     // Update
     public void updateEventTrip(UUID id, UpdateEventTripDto dto){
-        Optional<EventTrip> eventTrip = eventTripRepository.findById(id);
-        if (eventTrip.isEmpty()){
-            throw new RuntimeException("존재하지 않는 Place Trip 입니다.");
-        }
-        EventTrip use = eventTrip.get();
-
-        use.update(dto);
-
-        eventTripRepository.save(use);
+        EventTrip eventTrip = eventTripRepository.findById(id).orElseThrow(() -> {
+            throw new RuntimeException("존재하지 않는 Event Trip 입니다.");
+        });
+        eventTrip.update(dto);
+        eventTripRepository.save(eventTrip);
     }
 
     // Delete
