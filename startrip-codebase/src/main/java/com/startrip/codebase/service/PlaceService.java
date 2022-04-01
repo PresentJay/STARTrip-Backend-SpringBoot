@@ -5,13 +5,9 @@ import com.startrip.codebase.domain.place.PlaceRepository;
 
 import com.startrip.codebase.domain.place_info.PlaceInfo;
 import com.startrip.codebase.domain.place_info.PlaceInfoRepository;
-import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.dto.PlaceDto;
+import com.startrip.codebase.dto.PlaceInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,7 +16,6 @@ import java.util.*;
 public class PlaceService {
 
     private PlaceRepository placeRepository;
-    private PlaceInfoRepository placeInfoRepository;
 
     @Autowired
     public PlaceService(PlaceRepository placeRepository){
@@ -60,10 +55,6 @@ public class PlaceService {
 
     public void deletePlace(Long id) {
         placeRepository.deleteById(id);
-    }
-
-    public void createPlaceInfo(PlaceInfo palceInfo) {
-        placeInfoRepository.save(palceInfo);
     }
 
 }

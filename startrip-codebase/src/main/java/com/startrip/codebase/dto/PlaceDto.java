@@ -18,5 +18,7 @@ public class PlaceDto {
     private String placeDescription;
     private String placePhoto;
     private String phoneNumber;
+    private Double latitude;
+    private Double longitude;
 
 }

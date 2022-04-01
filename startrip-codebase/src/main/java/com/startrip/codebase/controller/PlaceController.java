@@ -3,17 +3,15 @@ package com.startrip.codebase.controller;
 import com.startrip.codebase.domain.place.Place;
 import com.startrip.codebase.domain.place_info.PlaceInfo;
 import com.startrip.codebase.dto.PlaceDto;
+import com.startrip.codebase.dto.PlaceInfoDto;
 import com.startrip.codebase.service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.UUID;
 
 
 @RestController
@@ -30,7 +28,11 @@ public class PlaceController {
     @PostMapping("/place")
     public @ResponseBody
     ResponseEntity addPlace(PlaceDto dto) {
-        placeService.createPlace(dto);
+        try{
+            placeService.createPlace(dto);
+        } catch (Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity("생성되었습니다", HttpStatus.OK);
     }
 
@@ -43,33 +45,47 @@ public class PlaceController {
     @GetMapping("/place/list/{categoryId}")
     public @ResponseBody
     ResponseEntity showPlaceByCategory(@PathVariable("categoryId") Long category_id) {
-        return new ResponseEntity(placeService.categoryPlace(category_id), HttpStatus.OK);
+        List<Place> placeList;
+        try{
+            placeList = placeService.categoryPlace(category_id);
+        } catch (Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(placeList, HttpStatus.OK);
     }
 
     @GetMapping("/place/{id}")
     public @ResponseBody
     ResponseEntity getPlace(@PathVariable("id") Long id) {
-        return new ResponseEntity(placeService.getPlace(id), HttpStatus.OK);
+        Place place;
+        try{
+            place = placeService.getPlace(id);
+        } catch (Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(place, HttpStatus.OK);
     }
 
     @PostMapping("/place/{id}")
     public @ResponseBody
     ResponseEntity updatePlace(@PathVariable("id") Long id, PlaceDto dto) {
-        placeService.updatePlace(id, dto);
+        try{
+            placeService.updatePlace(id, dto);
+        } catch (Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity("수정되었습니다", HttpStatus.OK);
     }
 
     @DeleteMapping("/place/{id}")
     public @ResponseBody
-    ResponseEntity deleteNotice(@PathVariable("id") Long id) {
-        placeService.deletePlace(id);
+    ResponseEntity deletePlace(@PathVariable("id") Long id) {
+        try{
+            placeService.deletePlace(id);
+        } catch (Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity("삭제되었습니다", HttpStatus.OK);
     }
 
-    @PostMapping("/place/info")
-    public @ResponseBody
-    ResponseEntity addPlaceInfo(PlaceInfo placeInfo) {
-        placeService.createPlaceInfo(placeInfo);
-        return new ResponseEntity("생성되었습니다", HttpStatus.OK);
-    }
 }

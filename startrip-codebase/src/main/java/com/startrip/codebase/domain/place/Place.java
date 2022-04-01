@@ -42,21 +42,20 @@ public class Place {
     private String phoneNumber;
 
     public static Place of (PlaceDto dto){
-        Place place = Place.builder()
+        return Place.builder()
                 .placeName(dto.getPlaceName())
                 .address(dto.getAddress())
                 .placePhoto(dto.getPlacePhoto())
                 .categoryId(dto.getCategoryId())
                 .placeDescription(dto.getPlaceDescription())
                 .phoneNumber(dto.getPhoneNumber())
-                // 임시 광화문 좌표값
-                .latitude(37.576022)
-                .longitude(126.9769)
+                .latitude(dto.getLatitude())
+                .longitude(dto.getLongitude())
                 .build();
-        return place;
     }
 
     public void update(PlaceDto dto) {
+        this.categoryId = dto.getCategoryId();
         this.placeName = dto.getPlaceName();
         this.address = dto.getAddress();
         this.placePhoto = dto.getPlacePhoto();
