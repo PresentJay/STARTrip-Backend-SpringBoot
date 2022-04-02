@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OperatingTimeService {
@@ -40,15 +41,20 @@ public class OperatingTimeService {
 
     // for Get All
     public List<OperatingTime> getOpTimeAll(){
-        return operatingTimeRepository.findAll(); // TODO: 이거는 NPE가 나타나지 않을까?
+        return operatingTimeRepository.findAll(); // TODO: Controller에서 예외처리 해야 한다.
     }
 
-    /*
+
     // for Get All
-    private List<OperatingTime> (Long placeId ){
+    public List<OperatingTime> getOptimeAll_inSpecificPlace(Long placeId ){
+        placeRepository.findById(placeId)
+                .orElseThrow(()-> new RuntimeException("해당 장소가 존재하지 않습니다."));
 
+        List<OperatingTime> operatingTimes = operatingTimeRepository.findAllByPlaceId(placeId);
+
+        return operatingTimes; // TODO: Controller에서 예외처리 해야 한다.
     }
-    */
+
 
 
 

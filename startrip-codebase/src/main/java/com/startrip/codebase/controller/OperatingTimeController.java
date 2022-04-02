@@ -29,7 +29,6 @@ public class OperatingTimeController {
     @PostMapping("/optime")
     public ResponseEntity createOpTime(@RequestParam Long placeId, ResponseOpTimeDto dto){
          operatingTimeService.createOpTime(placeId, dto);
-            // service
             return  new ResponseEntity<>("운영시간 생성",HttpStatus.OK);
     }
 
@@ -38,14 +37,20 @@ public class OperatingTimeController {
     public ResponseEntity getOpTimeAll(){
         List<OperatingTime> operatingTimes = operatingTimeService.getOpTimeAll();
         return new ResponseEntity(operatingTimes, HttpStatus.OK);
-
     }
 
     // GET All in specific place
     @GetMapping ("/optime/{placeId}")
-    public void geOpTimeAll_inSpecificPlace(@PathVariable("placeId") Long placeId){
+    public ResponseEntity geOpTimeAll_inSpecificPlace(@PathVariable("placeId") Long placeId){
+         List<OperatingTime> operatingTimes;
 
+         try {
+             operatingTimes = operatingTimeService.getOptimeAll_inSpecificPlace(placeId);
+         } catch(Exception e) {
+             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+         }
 
+        return new ResponseEntity(operatingTimes, HttpStatus.OK);
     }
 
     // GET All in specific place in specific timestamp
