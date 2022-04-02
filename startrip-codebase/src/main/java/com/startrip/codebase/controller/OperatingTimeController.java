@@ -1,5 +1,7 @@
 package com.startrip.codebase.controller;
 
+import com.startrip.codebase.domain.Operating_time.OperatingTime;
+import com.startrip.codebase.domain.notice.Notice;
 import com.startrip.codebase.dto.operatingTime.ResponseOpTimeDto;
 import com.startrip.codebase.service.OperatingTimeService;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 
 @Slf4j
@@ -31,13 +34,18 @@ public class OperatingTimeController {
     }
 
     // GET All
-    @GetMapping ("/optime/{placeId}")
-    public void getOpTimeAll(@PathVariable("placeId") Long placeId){
+    @GetMapping ("/optime")
+    public ResponseEntity getOpTimeAll(){
+        List<OperatingTime> operatingTimes = operatingTimeService.getOpTimeAll();
+        return new ResponseEntity(operatingTimes, HttpStatus.OK);
+
     }
 
     // GET All in specific place
     @GetMapping ("/optime/{placeId}")
     public void geOpTimeAll_inSpecificPlace(@PathVariable("placeId") Long placeId){
+
+
     }
 
     // GET All in specific place in specific timestamp

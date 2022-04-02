@@ -10,6 +10,8 @@ import com.startrip.codebase.dto.operatingTime.ResponseOpTimeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OperatingTimeService {
 
@@ -24,6 +26,7 @@ public class OperatingTimeService {
         this.placeRepository = placeRepository;
     }
 
+    // for Create
     public void createOpTime (Long placeId , ResponseOpTimeDto dto) {
         //해당 placeId가 존재하는지 확인한 후,
         placeRepository.findById(placeId)
@@ -34,4 +37,20 @@ public class OperatingTimeService {
 
         operatingTimeRepository.save(operatingTime);
     }
+
+    // for Get All
+    public List<OperatingTime> getOpTimeAll(){
+        return operatingTimeRepository.findAll(); // TODO: 이거는 NPE가 나타나지 않을까?
+    }
+
+    /*
+    // for Get All
+    private List<OperatingTime> (Long placeId ){
+
+    }
+    */
+
+
+
+
 }
