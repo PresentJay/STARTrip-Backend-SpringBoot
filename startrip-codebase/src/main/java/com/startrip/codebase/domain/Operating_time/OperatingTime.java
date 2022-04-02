@@ -1,9 +1,11 @@
 package com.startrip.codebase.domain.Operating_time;
 
+import com.startrip.codebase.dto.operatingTime.ResponseOpTimeDto;
 import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.util.Date;
 
@@ -15,57 +17,60 @@ public class OperatingTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // 총 운영 시간, 브레이크 운영 시간, 주말 운영 등등 여러 엔티티가 생겨날 테니 자체 아이디가 있어야 함
 
     @NotNull
     @Setter
     @Column(name = "place_id")
     private Long placeId; // 얘는 이런 플레이스 꺼예요
 
+    @Setter
+    @Column(name = "start_date")
+    private Date startDate;
+    @Setter
+    @Column(name = "end_date")
+    private Date  endDate;
 
     @Setter
-    @Column(name = "stattime_WeekDay")
-    private OffsetDateTime starttimeWeekday; // 평일 start Time
-
+    @Column(name = "start_time")
+    private Timestamp startTime;
+    @Setter
+    @Column(name = "end_time")
+    private Timestamp  endTime;
 
     @Setter
-    @Column(name = "endtime_Weekday")
-    private OffsetDateTime endtimeWeekday; // 평일 end Time
-
-
-    @Setter
-    @Column(name = "starttime_weekend")
-    private OffsetDateTime starttimeWeekend; // 주말 start Time
-    @Setter
-    @Column(name = "endtime_weekend")
-    private OffsetDateTime endtimeWeekend; // 주말 end Time
-
+    @Column(name = "is_breaktime")
+    private Boolean isBreakTime;
 
     @Setter
-    private Integer closedayofweek; // 0-6 : 일-토
-    @Setter
-    private Integer closeDayscheduled; // 날짜(일)
-    @Setter
-    private Date closedaytemporary; // 년중 날짜 받기
+    @Column(name = "cycle")
+    private Integer cycle; // 1년 = 31,356,000 ... Integer = 2,147,483,648 ~ 2,147,483,647
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long placeId) {
+        this.placeId = placeId;
     }
 
+
+    public static OperatingTime createOperatingTime(Long placeId, ResponseOpTimeDto dto){
+        OperatingTime operatingTime = OperatingTime.builder()
+                .placeId(placeId)
+
+                .build();
+
+        return operatingTime;
+    }
     @Builder
-    public OperatingTime (Long placeId, OffsetDateTime starttimeWeekday, OffsetDateTime endtimeWeekday,
-                          OffsetDateTime starttimeWeekend, OffsetDateTime endtimeWeekend,
-                          Integer closeayofweek, Integer closeDayscheduled, Date closedaytemporary){
+    public OperatingTime (Long placeId, Date startDate, Date endDate, Timestamp startTime, Timestamp endTime, Boolean isBreakTime, Integer cycle){
 
         this.placeId = placeId;
-        this.starttimeWeekday = starttimeWeekday;
-        this.endtimeWeekday = endtimeWeekday;
 
-        this.starttimeWeekend = starttimeWeekend;
-        this.endtimeWeekend = endtimeWeekend;
+        this.startDate = startDate;
+        this.endDate = endDate;
 
-        this.closedayofweek = closeayofweek;
-        this.closeDayscheduled = closeDayscheduled;
-        this.closedaytemporary = closedaytemporary;
+        this.startTime = startTime;
+        this.endTime = endTime;
+
+        this.isBreakTime = isBreakTime;
+        this.cycle = cycle;
     }
 }
