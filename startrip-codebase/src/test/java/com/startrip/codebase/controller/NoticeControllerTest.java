@@ -23,6 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -94,34 +95,6 @@ class NoticeControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("게시글에 코멘트 생성 API가 작동한다")
-    @Order(2)
-    @Test
-    void notice_comment() throws Exception {
-        // given
-        User temp = User.builder()
-                .name("성훈")
-                .email("hoon@h.com")
-                .nickname("hoon")
-                .password("1234")
-                .build();
-        userRepository.save(temp);
-
-        NewCommentDto dto = new NewCommentDto();
-        dto.setNoticeId(1L);
-        dto.setCommentText("댓글내용");
-        dto.setUserEmail(temp.getEmail());
-
-        // when
-        mockMvc.perform(post("/api/notice/1/comment")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto))
-                )
-                .andExpect(status().isOk())
-                .andExpect(content().string("댓글 생성되었습니다."))
-                .andDo(print());
-    }
-
     @DisplayName("게시글 조회 API 가 작동한다")
     @Order(3)
     @Test
@@ -169,6 +142,18 @@ class NoticeControllerTest {
     void notice_delete() throws Exception {
         mockMvc.perform(delete("/api/notice/1"))
                 .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @DisplayName("게시글 삭제후 조회 시 테스트")
+    @Order(7)
+    @Test
+    void notice_get_and_delete() throws Exception {
+
+        mockMvc.perform(
+                        get("/api/notice/1")
+                )
+                .andExpect(status().isBadRequest())
                 .andDo(print());
     }
 

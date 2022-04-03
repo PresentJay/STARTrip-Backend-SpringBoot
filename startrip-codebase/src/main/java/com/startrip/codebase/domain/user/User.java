@@ -51,7 +51,8 @@ public class User {
         User user = User.builder()
                 .email(signUpDto.getEmail())
                 .password(signUpDto.getPassword())
-                .nickname("test")
+                .nickname(signUpDto.getNickname())
+                .name(signUpDto.getName())
                 .authorities(Role.USER)
                 .build();
         return user;

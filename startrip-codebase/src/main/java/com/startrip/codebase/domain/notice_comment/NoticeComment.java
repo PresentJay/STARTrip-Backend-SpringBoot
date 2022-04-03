@@ -27,11 +27,11 @@ public class NoticeComment {
     @NotNull
     private Integer commentUpId; // TODO : 로직 고민
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "notice_id")
     private Notice notice;
 
@@ -44,13 +44,18 @@ public class NoticeComment {
     private Boolean isUpdated;
 
     public static NoticeComment of(NewCommentDto dto, User user, Notice notice) {
+
         NoticeComment comment = NoticeComment.builder()
                 .user(user)
+                .notice(notice)
                 .commentText(dto.getCommentText())
                 .createdTime(LocalDateTime.now())
-                .notice(notice)
                 .build();
 
         return comment;
+    }
+
+    public void updateCommentText(String commentText) {
+        this.commentText = commentText;
     }
 }
