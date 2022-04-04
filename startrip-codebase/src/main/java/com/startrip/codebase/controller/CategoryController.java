@@ -81,7 +81,7 @@ public class CategoryController {
         List<Category> children = null;
         try {
             children = categoryService.getDepthPlus1Children(id);
-            } catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(children, HttpStatus.OK);

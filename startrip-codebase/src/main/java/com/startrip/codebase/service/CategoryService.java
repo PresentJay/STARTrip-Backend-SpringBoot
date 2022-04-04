@@ -40,11 +40,11 @@ public class CategoryService {
             /* 대분류의 생성일 경우 */
             // 진짜 Root가 없는지 확인하고.
             Category rootCategory = categoryRepository.findById((long)1)
-                .orElseGet( ()-> Category.builder()
-                    .depth(0)
-                    .categoryName("ROOT")
-                    .build()
-                );
+                    .orElseGet( ()-> Category.builder()
+                            .depth(0)
+                            .categoryName("ROOT")
+                            .build()
+                    );
             categoryRepository.save(rootCategory);
 
             category.setDepth(1);
@@ -84,7 +84,7 @@ public class CategoryService {
     public void updateCategory(Long id, UpdateCategoryDto dto){
         // 조회
         Category category = categoryRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("수정하려는 카테고리가 존재하지 않음"));
+                .orElseThrow(() -> new IllegalArgumentException("수정하려는 카테고리가 존재하지 않음"));
         // 상위 카테고리를 변경할 수 있도록 해야하는가?
         //우선, 이름만 변경할 수 있도록
         category.setCategoryName(dto.getCategoryName());
@@ -139,16 +139,16 @@ public class CategoryService {
 
     // Get : api/category/{id}
     public List<Category> getDepthPlus1Children (Long id ) {
-            Category category = categoryRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("해당 ID의 카테고리가 없습니다."));
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 ID의 카테고리가 없습니다."));
 
-            // 현재 카테고리의 depth를 얻자
-            Integer depth = category.getDepth() +1;
+        // 현재 카테고리의 depth를 얻자
+        Integer depth = category.getDepth() +1;
 
-            // Depth + 1인 아이를 찾자
-            List<Category> depthPlus1Categories = categoryRepository.findAllByDepthAndCategoryParent(depth, category);
+        // Depth + 1인 아이를 찾자
+        List<Category> depthPlus1Categories = categoryRepository.findAllByDepthAndCategoryParent(depth, category);
 
-            return depthPlus1Categories;
+        return depthPlus1Categories;
     }
 
     private void recursionFindChildren(Category parent, List<Category> result) {
