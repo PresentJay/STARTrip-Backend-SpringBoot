@@ -6,6 +6,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Date;
 
@@ -26,17 +28,17 @@ public class OperatingTime {
 
     @Setter
     @Column(name = "start_date")
-    private Date startDate;
+    private LocalDate startDate;
     @Setter
     @Column(name = "end_date")
-    private Date  endDate;
+    private LocalDate  endDate;
 
     @Setter
     @Column(name = "start_time")
-    private Timestamp startTime;
+    private LocalDateTime startTime;
     @Setter
     @Column(name = "end_time")
-    private Timestamp  endTime;
+    private LocalDateTime  endTime;
 
     @Setter
     @Column(name = "is_breaktime")
@@ -51,16 +53,21 @@ public class OperatingTime {
     }
 
 
-    public static OperatingTime createOperatingTime(Long placeId, ResponseOpTimeDto dto){
+    public static OperatingTime of (Long placeId, ResponseOpTimeDto dto){
         OperatingTime operatingTime = OperatingTime.builder()
                 .placeId(placeId)
-
+                .startDate(dto.getStartDate())
+                .endDate(dto.getEndDate())
+                .startTime(dto.getStartTime())
+                .endTime(dto.getEndTime())
+                .isBreakTime(dto.getIsBreakTime())
+                .cycle(dto.getCycle())
                 .build();
 
         return operatingTime;
     }
     @Builder
-    public OperatingTime (Long placeId, Date startDate, Date endDate, Timestamp startTime, Timestamp endTime, Boolean isBreakTime, Integer cycle){
+    public OperatingTime (Long placeId, LocalDate startDate, LocalDate endDate, LocalDateTime startTime, LocalDateTime endTime, Boolean isBreakTime, Integer cycle){
 
         this.placeId = placeId;
 
