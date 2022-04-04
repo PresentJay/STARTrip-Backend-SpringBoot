@@ -9,3 +9,4 @@ public class StarTripCodeBaseApplication {
         SpringApplication.run(StarTripCodeBaseApplication.class, args);
     }
 }
+

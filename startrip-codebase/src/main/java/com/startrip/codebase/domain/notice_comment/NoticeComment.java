@@ -1,35 +1,56 @@
 package com.startrip.codebase.domain.notice_comment;
 
+import com.startrip.codebase.domain.notice.Notice;
+import com.startrip.codebase.domain.user.User;
+import com.startrip.codebase.dto.noticecomment.NewCommentDto;
 import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.security.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Builder
 public class NoticeComment {
     @Id
-    private Integer comment_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long commentId;
 
     @NotNull
-    private Integer comment_up_id;
+    private Integer commentUpId; // TODO : 로직 고민
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "notice_id")
+    private Notice notice;
 
     @NotNull
-    private Long user_id;
+    private String commentText;
 
     @NotNull
-    private UUID notice_id;
+    private LocalDateTime createdTime;
 
-    @NotNull
-    private String comment_text;
+    private Boolean isUpdated;
 
-    @NotNull
-    private Timestamp created_time;
+    public static NoticeComment of(NewCommentDto dto, User user, Notice notice) {
+        NoticeComment comment = NoticeComment.builder()
+                .user(user)
+                .commentText(dto.getCommentText())
+                .createdTime(LocalDateTime.now())
+                .notice(notice)
+                .build();
 
-    private Boolean is_updated;
+        return comment;
+    }
 }
