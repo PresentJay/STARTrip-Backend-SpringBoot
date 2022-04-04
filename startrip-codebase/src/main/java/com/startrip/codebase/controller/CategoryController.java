@@ -1,11 +1,16 @@
 package com.startrip.codebase.controller;
 
 import com.startrip.codebase.domain.category.Category;
-import com.startrip.codebase.domain.category.Dto.NewCategoryDto;
+import com.startrip.codebase.domain.category.CategoryRepository;
+import com.startrip.codebase.domain.category.dto.CreateCategoryDto;
+import com.startrip.codebase.domain.category.dto.UpdateCategoryDto;
 import com.startrip.codebase.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @RestController
@@ -14,37 +19,85 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @Autowired
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
-    // 카테고리 생성 API /api/category (POST)  Update, Delete (CRUD)
+    // CREATE
     @PostMapping("/category")
-    public String newCategory(@RequestBody NewCategoryDto dto) {
-        categoryService.newCategory(dto);
-        return dto.getName() + " 생성됐습니다";
+    public ResponseEntity<String> createCategory(@RequestBody CreateCategoryDto dto) {
+        categoryService.createCategory(dto);
+        return new ResponseEntity<>("카테고리 생성", HttpStatus.OK);
     }
 
+
+    // GET All
     @GetMapping("/category")
-    public List<Category> getCategory() {
-        List<Category> categories = categoryService.getCategory();
-        return categories;
+    public ResponseEntity<List<Category>> getCategory() {
+        List<Category> categories = categoryService.getCategoryList();
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
-    @PostMapping("/category/{id}")
-    public String updateCategory(@PathVariable("id") Long id, @RequestBody Category.UpdateCategoryDto dto) {
+    // GET Only
+    @GetMapping("/category/{id}")
+    public ResponseEntity getCategory(@PathVariable("id") Long id) {
+        Category category;
+        try {
+            category = categoryService.getCategory(id);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(category, HttpStatus.OK);
+    }
+
+    // UPDATE
+    @PutMapping("/category/{id}")
+    public ResponseEntity updateEvent(@PathVariable("id") Long id, @RequestBody UpdateCategoryDto dto) {
         try {
             categoryService.updateCategory(id, dto);
         } catch (Exception e) {
-            return e.getMessage();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return "수정됐습니다.";
+        return new ResponseEntity<>("수정", HttpStatus.OK);
     }
 
+    // DELETE
     @DeleteMapping("/category/{id}")
-    public String deleteCategory(@PathVariable("id") Long id) {
-        categoryService.deleteCategory(id);
-        return id + " 삭제됐습니다.";
+    public ResponseEntity deleteCategory(@PathVariable("id") @NotBlank Long id) {
+        try {
+            categoryService.deleteCategory(id);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("삭제", HttpStatus.OK);
+    }
+
+
+    // GET depth+1 child
+    @GetMapping("category/child/{id}")
+    public ResponseEntity getCategoryChildren1Depth(@PathVariable("id") Long id) {
+
+        List<Category> children = null;
+        try {
+            children = categoryService.getDepthPlus1Children(id);
+            } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(children, HttpStatus.OK);
+    }
+
+
+    // GET All child
+    @GetMapping("/category/child-full/{id}")
+    public ResponseEntity getCategoryChildren(@PathVariable("id") Long id) {
+        List<Category> children = null;
+        try {
+            children = categoryService.getChildren(id);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(children, HttpStatus.OK);
     }
 }

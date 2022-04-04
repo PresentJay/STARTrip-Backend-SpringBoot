@@ -1,47 +1,51 @@
 package com.startrip.codebase.domain.category;
 
-import com.sun.istack.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.startrip.codebase.domain.category.dto.CreateCategoryDto;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 public class Category {
 
     @Id
+    @Setter
     @Column(name = "category_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // PK
 
-    @NotNull
-    private String name;
+    @Setter
+    @ManyToOne(fetch = FetchType.EAGER, cascade= CascadeType.REMOVE)
+    @JoinColumn(name = "category_parent_id", nullable = true)
+    private Category categoryParent;
 
-    @NotNull
+    @Setter
+    @Column(name = "category_name", unique = true) 
+    private String categoryName;
+
+    @Setter
+    @Column(nullable = false)
     private Integer depth;
 
-    // 순환 참조
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "category_id", insertable=false, updatable=false)
-//    private Category category_up_id; // 부모
-//
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category_up_id")
-//    private List<Category> children; // 자식
-
-    public void update(UpdateCategoryDto dto) {
-        this.name = dto.getName();
-        this.depth = dto.getDepth();
+    //dto -> Entity
+    public static Category createCategory(CreateCategoryDto dto) {
+        // createDto에 있던 categoryParentId는 여기서 Entity로 바꾸지 않는다.
+        Category category = Category.builder()
+                .categoryName(dto.getCategoryName())
+                .build();
+        return category;
     }
 
-    @Getter
-    @Setter
-    public static class UpdateCategoryDto {
-        private String name;
-
-        private Integer depth;
-
+    @Builder // id를 제외하여 builder를 적용시킬 것이므로 따로 생성자 위에 builder 패턴을 적용하였음.
+    public Category (Category categoryParent, String categoryName, Integer depth){
+        this.categoryParent = categoryParent;
+        this.categoryName = categoryName;
+        this.depth = depth;
     }
 }

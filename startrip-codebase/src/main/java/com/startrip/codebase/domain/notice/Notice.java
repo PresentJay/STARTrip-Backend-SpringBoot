@@ -1,42 +1,77 @@
 package com.startrip.codebase.domain.notice;
 
+import com.startrip.codebase.domain.category.Category;
+import com.startrip.codebase.domain.user.User;
+import com.startrip.codebase.dto.notice.NewNoticeDto;
 import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Builder
 public class Notice {
+
     @Id
-    private UUID notice_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long noticeId;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @NotNull
-    private Long creator_id;
+    private String title;
 
     @NotNull
-    @ElementCollection(targetClass = Integer.class)
-    private List<Integer> category_list;
+    private String text;
 
-    @NotNull
-    private String notice_title;
+    private String attachment; // file url
 
-    private String notice_text;
+    private LocalDateTime createdTime;
 
-    private String notice_attachment;
+    private LocalDateTime updatedTime;
 
-    private Date created_date;
+    private Integer likeCount;
 
-    private Date updated_date;
+    private Integer viewCount;
 
-    private Integer like_count;
+    public static Notice of (NewNoticeDto dto, User user, Category category){
+        Notice notice = Notice.builder()
+                .user(user)
+                .category(category)
+                .title(dto.getTitle())
+                .text(dto.getText())
+                .attachment(dto.getAttachment())
+                .createdTime(LocalDateTime.now())
+                .likeCount(0)
+                .viewCount(0)
+                .build();
+        return notice;
+    }
 
-    private Integer view_count;
+    public void update(NewNoticeDto dto) {
+        this.title = dto.getTitle();
+        this.text = dto.getText();
+        this.attachment = dto.getAttachment();
+        this.updatedTime = LocalDateTime.now();
+    }
+
+    public void increaseViewCount(){
+        this.viewCount++;  // Deadlock?
+    }
 }
