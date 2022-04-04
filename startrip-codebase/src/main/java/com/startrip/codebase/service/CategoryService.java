@@ -3,20 +3,17 @@ package com.startrip.codebase.service;
 
 import com.startrip.codebase.domain.category.Category;
 import com.startrip.codebase.domain.category.CategoryRepository;
-import com.startrip.codebase.domain.category.dto.CreateCategoryDto;
-import com.startrip.codebase.domain.category.dto.UpdateCategoryDto;
-import com.startrip.codebase.domain.event.Event;
+import com.startrip.codebase.dto.category.CreateCategoryDto;
+import com.startrip.codebase.dto.category.UpdateCategoryDto;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.apache.bcel.classfile.annotation.RuntimeInvisAnnos;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.aspectj.runtime.internal.Conversions.longValue;
+import static com.mongodb.assertions.Assertions.assertTrue;
 
 @Service
 @Slf4j
@@ -33,13 +30,14 @@ public class CategoryService {
     // POST: api/categories
     public void createCategory(CreateCategoryDto dto) {
 
-        Category category = Category.createCategory(dto);
+        Category category = Category.createCategory(dto); // 이름만 설ㅈ어
+        Optional<Long> parentId = Optional.ofNullable(dto.getCategoryParentId());
 
         // 상위 카테고리 넣어주기
-        if(dto.getCategoryParentId() == null){
+        if(parentId.isEmpty()){
             /* 대분류의 생성일 경우 */
             // 진짜 Root가 없는지 확인하고.
-            Category rootCategory = categoryRepository.findById((long)1)
+            Category rootCategory = categoryRepository.findCategoryByCategoryName("ROOT")
                 .orElseGet( ()-> Category.builder()
                     .depth(0)
                     .categoryName("ROOT")
@@ -51,18 +49,14 @@ public class CategoryService {
             category.setCategoryParent(rootCategory);
         } else {
             /* 하위분류의 생성일 경우 */
-
             // 해당 부모카테고리가 있는지 찾아본다, Optional이므로 없으면 예외발생
-            Long id = dto.getCategoryParentId();
-            Category parentCategory = categoryRepository.findById(id)
+            Category parentCategory = categoryRepository.findById(parentId.get())
                     .orElseThrow(() -> new IllegalArgumentException("부모 카테고리 부재"));
 
             category.setDepth(parentCategory.getDepth() +1);
             category.setCategoryParent(parentCategory);
         }
-
         categoryRepository.save(category); //저장
-        log.info(category.getCategoryName());
     }
 
     // GET: api/categories,
