@@ -5,6 +5,7 @@ import com.startrip.codebase.dto.PlaceInfoDto;
 import com.startrip.codebase.service.PlaceInfoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,6 +18,7 @@ public class PlaceInfoController {
         this.placeInfoService = placeInfoService;
     }
 
+    @Secured("ROLE_ADMIN")
     @PostMapping("/place/info")
     public @ResponseBody
     ResponseEntity addPlaceInfo(PlaceInfoDto dto) {
@@ -40,6 +42,7 @@ public class PlaceInfoController {
         return new ResponseEntity(placeInfo, HttpStatus.OK);
     }
 
+    @Secured("ROLE_ADMIN")
     @PostMapping("/place/info/{id}")
     public @ResponseBody
     ResponseEntity updatePlaceInfo(@PathVariable("id") Long id, PlaceInfoDto dto) {
@@ -51,6 +54,7 @@ public class PlaceInfoController {
         return new ResponseEntity("수정되었습니다", HttpStatus.OK);
     }
 
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/place/info/{id}")
     public @ResponseBody
     ResponseEntity deletePlaceInfo(@PathVariable("id") Long id) {
