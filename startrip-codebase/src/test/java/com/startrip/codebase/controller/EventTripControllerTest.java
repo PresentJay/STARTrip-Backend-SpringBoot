@@ -5,9 +5,9 @@ import com.startrip.codebase.domain.state.State;
 import com.startrip.codebase.domain.state.StateRepository;
 import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.domain.user.UserRepository;
-import com.startrip.codebase.dto.place_trip.CreatePlaceTripDto;
-import com.startrip.codebase.dto.place_trip.UpdatePlaceTripDto;
-import com.startrip.codebase.service.trip.PlaceTripService;
+import com.startrip.codebase.dto.event_trip.CreateEventTripDto;
+import com.startrip.codebase.dto.event_trip.UpdateEventTripDto;
+import com.startrip.codebase.service.trip.EventTripService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,10 +29,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class PlaceTripControllerTest {
+public class EventTripControllerTest {
     public MockMvc mockMvc;
 
-    private final PlaceTripService placeTripService;
+    private final EventTripService eventTripService;
 
     @Autowired
     private StateRepository stateRepository;
@@ -41,13 +41,13 @@ public class PlaceTripControllerTest {
     private UserRepository userRepository;
 
     @Autowired
-    public PlaceTripControllerTest(PlaceTripService placeTripService) {
-        this.placeTripService = placeTripService;
+    public EventTripControllerTest(EventTripService eventTripService) {
+        this.eventTripService = eventTripService;
     }
 
     @BeforeEach
     public void before() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new PlaceTripController(placeTripService))
+        mockMvc = MockMvcBuilders.standaloneSetup(new EventTripController(eventTripService))
                 .addFilters(new CharacterEncodingFilter("UTF-8", true)) // 한글 깨짐 해결
                 .build();
     }
@@ -74,11 +74,11 @@ public class PlaceTripControllerTest {
         stateRepository.save(state);
         userRepository.save(user);
 
-        CreatePlaceTripDto dto = new CreatePlaceTripDto();
+        CreateEventTripDto dto = new CreateEventTripDto();
         dto.setTripId(UUID.fromString("e3661498-9473-4c06-9d52-464cc2f59429"));
         dto.setUserId(user);
         dto.setUserPartner("a");
-        dto.setPlaceId(UUID.fromString("0f1e5a75-f3f4-4dbe-b739-e428e511e0e8"));
+        dto.setEventId(UUID.fromString("0f1e5a75-f3f4-4dbe-b739-e428e511e0e8"));
         dto.setStartTime(Date.valueOf("2022-03-23"));
         dto.setEndTime(Date.valueOf("2022-03-25"));
         dto.setState(state);
@@ -86,7 +86,7 @@ public class PlaceTripControllerTest {
         dto.setTitle("울산 여행");
 
         String objectMapper = new ObjectMapper().writeValueAsString(dto); // json 형식의 string 타입으로 변환
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/placetrip")
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/eventtrip")
                 .contentType("application/json;charset=utf-8")
                 .content(objectMapper)
                 .accept(MediaType.APPLICATION_JSON)
@@ -109,11 +109,11 @@ public class PlaceTripControllerTest {
         stateRepository.save(state);
         userRepository.save(user);
 
-        CreatePlaceTripDto dto = new CreatePlaceTripDto();
+        CreateEventTripDto dto = new CreateEventTripDto();
         dto.setTripId(UUID.fromString("a3661498-9473-4c06-9d52-464cc2f59429"));
         dto.setUserId(user);
         dto.setUserPartner("c");
-        dto.setPlaceId(UUID.fromString("1f1e5a75-f3f4-4dbe-b739-e428e511e0e8"));
+        dto.setEventId(UUID.fromString("1f1e5a75-f3f4-4dbe-b739-e428e511e0e8"));
         dto.setStartTime(Date.valueOf("2022-03-29"));
         dto.setEndTime(Date.valueOf("2022-03-30"));
         dto.setState(state);
@@ -121,7 +121,7 @@ public class PlaceTripControllerTest {
         dto.setTitle("김해 여행");
 
         String objectMapper = new ObjectMapper().writeValueAsString(dto); // json 형식의 string 타입으로 변환
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/placetrip")
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/eventtrip")
                 .contentType("application/json;charset=utf-8")
                 .content(objectMapper)
                 .accept(MediaType.APPLICATION_JSON)
@@ -131,7 +131,7 @@ public class PlaceTripControllerTest {
     @DisplayName("All 테스트")
     @Test
     public void test3() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/placetrip")
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/eventtrip")
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print());
     }
@@ -139,7 +139,7 @@ public class PlaceTripControllerTest {
     @DisplayName("Get 테스트")
     @Test
     public void test4() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/placetrip/e3661498-9473-4c06-9d52-464cc2f59429")
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/eventtrip/e3661498-9473-4c06-9d52-464cc2f59429")
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print());
     }
@@ -147,16 +147,16 @@ public class PlaceTripControllerTest {
     @DisplayName("Update 테스트")
     @Test
     public void test5() throws Exception {
-        UpdatePlaceTripDto dto = new UpdatePlaceTripDto();
+        UpdateEventTripDto dto = new UpdateEventTripDto();
         dto.setUserPartner("b");
-        dto.setPlaceId(UUID.fromString("0f1e5a75-f3f4-4dbe-b739-e428e511e0e8"));
+        dto.setEventId(UUID.fromString("0f1e5a75-f3f4-4dbe-b739-e428e511e0e8"));
         dto.setStartTime(Date.valueOf("2022-03-25"));
         dto.setEndTime(Date.valueOf("2022-03-26"));
         dto.setTransportation("택시");
         dto.setTitle("울산 여행");
 
         String objectMapper = new ObjectMapper().writeValueAsString(dto); // json 형식의 string 타입으로 변환
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/placetrip/e3661498-9473-4c06-9d52-464cc2f59429")
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/eventtrip/e3661498-9473-4c06-9d52-464cc2f59429")
                 .contentType("application/json;charset=utf-8")
                 .content("e3661498-9473-4c06-9d52-464cc2f59429")
                 .content(objectMapper)
@@ -167,7 +167,7 @@ public class PlaceTripControllerTest {
     @DisplayName("Update 후 Get 테스트")
     @Test
     public void test6() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/placetrip/e3661498-9473-4c06-9d52-464cc2f59429")
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/eventtrip/e3661498-9473-4c06-9d52-464cc2f59429")
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print());
     }
@@ -175,7 +175,7 @@ public class PlaceTripControllerTest {
     @DisplayName("Delete 테스트")
     @Test
     public void test7() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/placetrip/e3661498-9473-4c06-9d52-464cc2f59429")
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/eventtrip/e3661498-9473-4c06-9d52-464cc2f59429")
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print());
     }
@@ -183,17 +183,17 @@ public class PlaceTripControllerTest {
     @DisplayName("Delete 후 없는 데이터를 조회한다") //  지운 데이터 조회
     @Test
     public void test8() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/placetrip/e3661498-9473-4c06-9d52-464cc2f59429")
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
-            .andExpect(content().string("없는 데이터입니다."))
-            .andDo(print());
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/eventtrip/e3661498-9473-4c06-9d52-464cc2f59429")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("없는 데이터입니다."))
+                .andDo(print());
     }
 
     @DisplayName("Delete 후 있는 데이터를 조회한다") // 지우지 않은 데이터 조회
     @Test
     public void test9() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/placetrip/a3661498-9473-4c06-9d52-464cc2f59429")
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/eventtrip/a3661498-9473-4c06-9d52-464cc2f59429")
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print());
         //cleanUp();
