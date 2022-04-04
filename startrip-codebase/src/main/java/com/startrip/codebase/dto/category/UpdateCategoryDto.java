@@ -1,4 +1,4 @@
-package com.startrip.codebase.domain.category.dto;
+package com.startrip.codebase.dto.category;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
