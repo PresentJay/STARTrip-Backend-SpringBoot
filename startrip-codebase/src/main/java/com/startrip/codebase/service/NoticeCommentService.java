@@ -39,7 +39,7 @@ public class NoticeCommentService {
 //            throw new IllegalStateException("존재하지 않는 게시글입니다.");
 //        });
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> {
-            throw new IllegalStateException("조재하지 않는 게시글입니다.");
+            throw new IllegalStateException("존재하지 않는 게시글입니다.");
         });
         List<NoticeComment> comments = notice.getComments();
         List<ResponseCommentDto> dtos = new ArrayList<>();
