@@ -23,7 +23,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column( nullable = false)
+    @Column(nullable = false)
     private String name;
 
     @Column(unique = true) // 중복 이메일이 안되도록 설정
