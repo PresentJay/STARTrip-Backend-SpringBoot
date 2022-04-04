@@ -8,6 +8,7 @@ import com.startrip.codebase.domain.notice_comment.NoticeCommentRepository;
 import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.domain.user.UserRepository;
 import com.startrip.codebase.dto.noticecomment.NewCommentDto;
+import com.startrip.codebase.dto.noticecomment.ResponseCommentDto;
 import com.startrip.codebase.dto.noticecomment.UpdateCommentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,14 +34,19 @@ public class NoticeCommentService {
     }
 
     @Transactional
-    public List<NoticeComment> getComment(Long noticeId) {
+    public List<ResponseCommentDto> getComment(Long noticeId) {
 //        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> {
 //            throw new IllegalStateException("존재하지 않는 게시글입니다.");
 //        });
         Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> {
             throw new IllegalStateException("조재하지 않는 게시글입니다.");
         });
-        return notice.getComments();
+        List<NoticeComment> comments = notice.getComments();
+        List<ResponseCommentDto> dtos = new ArrayList<>();
+        for (NoticeComment comment : comments) {
+            dtos.add(ResponseCommentDto.of(comment));
+        }
+        return dtos;
     }
 
     @Transactional
@@ -51,7 +57,6 @@ public class NoticeCommentService {
         Notice notice = noticeRepository.findById(dto.getNoticeId()).orElseThrow(() -> {
             throw new IllegalStateException("존재하지 않는 게시글입니다.");
         });
-
         NoticeComment comment = NoticeComment.of(dto, writer, notice);
 
         noticeCommentRepository.save(comment);

@@ -3,6 +3,7 @@ package com.startrip.codebase.controller;
 import com.startrip.codebase.domain.notice.Notice;
 import com.startrip.codebase.domain.notice_comment.NoticeComment;
 import com.startrip.codebase.dto.noticecomment.NewCommentDto;
+import com.startrip.codebase.dto.noticecomment.ResponseCommentDto;
 import com.startrip.codebase.dto.noticecomment.UpdateCommentDto;
 import com.startrip.codebase.service.NoticeCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class NoticeCommentController {
 
     @GetMapping("/notice/{id}/comment")
     public @ResponseBody ResponseEntity getComment(@PathVariable("id") Long noticeId) {
-        List<NoticeComment> comments;
+        List<ResponseCommentDto> comments;
         try {
             comments = noticeCommentService.getComment(noticeId);
         } catch (RuntimeException e) {

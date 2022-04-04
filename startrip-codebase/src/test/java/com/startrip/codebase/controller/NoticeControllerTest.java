@@ -67,6 +67,8 @@ class NoticeControllerTest {
         User user = User.builder()
                 .name("테스트이름")
                 .email("test@test.com")
+                .password("1234")
+                .nickname("nickname")
                 .build();
 
         Category category = Category.builder()

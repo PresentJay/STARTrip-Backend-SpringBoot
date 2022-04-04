@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,6 +80,9 @@ class NoticeCommentControllerTest {
                 .category(category)
                 .attachment("URL")
                 .text("본문")
+                .viewCount(0)
+                .likeCount(0)
+                .createdTime(LocalDateTime.now())
                 .build();
 
         userRepository.save(user);

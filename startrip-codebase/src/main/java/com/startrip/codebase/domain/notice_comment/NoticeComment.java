@@ -27,11 +27,11 @@ public class NoticeComment {
     @NotNull
     private Integer commentUpId; // TODO : 로직 고민
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "notice_id")
     private Notice notice;
 
