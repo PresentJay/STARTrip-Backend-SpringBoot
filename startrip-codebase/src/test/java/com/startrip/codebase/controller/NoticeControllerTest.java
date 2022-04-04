@@ -9,6 +9,7 @@ import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.domain.user.UserRepository;
 import com.startrip.codebase.dto.notice.NewNoticeDto;
 import com.startrip.codebase.dto.noticecomment.NewCommentDto;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +27,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -49,9 +52,19 @@ class NoticeControllerTest {
     private CategoryRepository categoryRepository;
 
     @Autowired
+    NoticeRepository noticeRepository;
+
+
+    @Autowired
     private WebApplicationContext wac;
 
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    private void cleanUp() {
+        noticeRepository.deleteAll();
+        categoryRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @BeforeEach
     public void setup() {
@@ -64,6 +77,7 @@ class NoticeControllerTest {
     @Order(1)
     @Test
     void notice_save() throws Exception {
+        cleanUp();
         User user = User.builder()
                 .name("테스트이름")
                 .email("test@test.com")
@@ -80,9 +94,11 @@ class NoticeControllerTest {
         userRepository.save(user);
         categoryRepository.save(category);
 
+        Category find =categoryRepository.findCategoryByCategoryName("공지사항").get();
+
         NewNoticeDto dto = new NewNoticeDto();
         dto.setUserEmail("test@test.com");
-        dto.setCategoryId(1L);
+        dto.setCategoryId(find.getId());
         dto.setAttachment("파일URL");
         dto.setText("본문");
         dto.setTitle("테스트제목");
@@ -115,13 +131,15 @@ class NoticeControllerTest {
     @Test
     void notice_put() throws Exception {
 
+        Notice notice = noticeRepository.findByTitle("테스트제목").get();
+
         NewNoticeDto dto = new NewNoticeDto();
         dto.setTitle("수정된제목");
         dto.setText("수정된내용");
         dto.setAttachment("수정된파일URL");
 
         mockMvc.perform(
-                    put("/api/notice/1")
+                    put(String.format("/api/notice/%d", notice.getNoticeId()))
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(dto))
                 )
@@ -129,11 +147,13 @@ class NoticeControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("게시글 상세 조회 API 가 작동한다")
+    @DisplayName("게시글 수정 후, 상세 조회 API 가 작동한다")
     @Order(5)
     @Test
     void notice_detail_get() throws Exception {
-        mockMvc.perform(get("/api/notice/1"))
+        Notice notice = noticeRepository.findByTitle("수정된제목").get();
+
+        mockMvc.perform(get(String.format("/api/notice/%d", notice.getNoticeId())))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -142,7 +162,9 @@ class NoticeControllerTest {
     @Order(6)
     @Test
     void notice_delete() throws Exception {
-        mockMvc.perform(delete("/api/notice/1"))
+        Notice notice = noticeRepository.findByTitle("수정된제목").get();
+
+        mockMvc.perform(delete(String.format("/api/notice/%d", notice.getNoticeId())))
                 .andExpect(status().isOk())
                 .andDo(print());
     }

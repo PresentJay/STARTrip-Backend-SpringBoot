@@ -53,7 +53,11 @@ public class NoticeController {
     @PostMapping("/notice")
     public @ResponseBody
     ResponseEntity addNotice(@RequestBody NewNoticeDto dto) {
-        noticeService.createNotice(dto);
+        try {
+            noticeService.createNotice(dto);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity("생성되었습니다", HttpStatus.OK);
     }
 

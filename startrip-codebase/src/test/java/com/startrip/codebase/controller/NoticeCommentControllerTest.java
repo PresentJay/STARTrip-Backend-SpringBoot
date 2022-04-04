@@ -20,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -61,8 +62,17 @@ class NoticeCommentControllerTest {
     private WebApplicationContext wac;
 
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    private Notice target = null;
+
+    public void cleanUp() {
+        noticeRepository.deleteAll();
+        categoryRepository.deleteAll();
+        userRepository.deleteAll();
+        noticeCommentRepository.deleteAll();
+    }
     
-    private void createNotice() {
+    private Notice createNotice() {
         User user = User.builder()
                 .name("테스트")
                 .email("test@test.com")
@@ -87,23 +97,25 @@ class NoticeCommentControllerTest {
 
         userRepository.save(user);
         categoryRepository.save(category);
-        noticeRepository.save(notice);
+        return noticeRepository.save(notice);
     }
 
 
     @DisplayName("게시글에 코멘트 생성 API가 작동한다")
     @Test
     void test1() throws Exception {
+        cleanUp();
         // given
         createNotice();
+        target = noticeRepository.findByTitle("게시글").get();
 
         NewCommentDto dto = new NewCommentDto();
-        dto.setNoticeId(1L);
+        dto.setNoticeId(target.getNoticeId());
         dto.setCommentText("댓글내용");
         dto.setUserEmail("test@test.com");
 
         // when
-        mockMvc.perform(post("/api/notice/1/comment")
+        mockMvc.perform(post(String.format("/api/notice/%d/comment", dto.getNoticeId()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto))
                 )
@@ -115,9 +127,11 @@ class NoticeCommentControllerTest {
     @DisplayName("게시글에 코멘트 조회 API가 작동한다")
     @Test
     void test3() throws Exception {
+        target = noticeRepository.findByTitle("게시글").get();
+
         // when
         mockMvc.perform(
-                        get("/api/notice/1/comment")
+                        get(String.format("/api/notice/%d/comment", target.getNoticeId()))
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -126,12 +140,13 @@ class NoticeCommentControllerTest {
     @DisplayName("게시글에 코멘트 수정 API가 작동한다")
     @Test
     void test4() throws Exception {
+        target = noticeRepository.findByTitle("게시글").get();
 
         UpdateCommentDto dto = new UpdateCommentDto();
         dto.setCommentText("댓글수정");
         // when
         mockMvc.perform(
-                        put("/api/notice/1/comment/1")
+                        put(String.format("/api/notice/%d/comment/1", target.getNoticeId()))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(dto))
                 )
@@ -143,12 +158,15 @@ class NoticeCommentControllerTest {
     @DisplayName("게시글에 코멘트 삭제 API가 작동한다")
     @Test
     void test5() throws Exception {
+        target = noticeRepository.findByTitle("게시글").get();
+
         // when
         mockMvc.perform(
-                        delete("/api/notice/1/comment/1")
+                        delete(String.format("/api/notice/%d/comment/1",target.getNoticeId( )))
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
+        cleanUp();
     }
 
 }
