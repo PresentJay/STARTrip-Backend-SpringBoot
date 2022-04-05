@@ -1,37 +1,47 @@
 package com.startrip.codebase.domain.event_review;
 
-import com.sun.istack.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.startrip.codebase.domain.event.Event;
+import com.startrip.codebase.domain.event_review.dto.UpdateEventReviewDto;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.util.Date;
-import java.util.UUID;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
+@Entity
+@Builder
 @Getter
 @NoArgsConstructor
-@Entity
+@AllArgsConstructor
+@ToString
 public class EventReview {
     @Id
-    private UUID review_id;
+    @Column(name = "review_id")
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    private Long reviewId ;
 
-    @NotNull
-    private Long creator_id;
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "event_id")
+    private Event event;
 
-    @NotNull
-    private UUID event_id;
+    @Column(name = "creator_id")
+    private Long creatorId;
 
-    @NotNull
-    private String review_text;
+    private String eventReviewTitle;
 
-    private String review_photo;
+    private String text;
 
-    @NotNull
-    private Double review_star;
+    private String reviewPicture;
 
-    @NotNull
-    private Date created_date;
+    private Double reviewRate; //별점
 
-    private Date updated_date;
+    private LocalDateTime createdDate;
+
+    private LocalDateTime updatedDate;
+
+
+    public void update(UpdateEventReviewDto dto) {
+        this.eventReviewTitle = dto.getEventReviewTitle();
+        this.text = dto.getText();
+        this.reviewRate =  dto.getReviewRate();
+    }
 }
