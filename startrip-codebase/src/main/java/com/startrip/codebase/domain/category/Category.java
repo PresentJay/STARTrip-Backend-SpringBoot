@@ -1,12 +1,10 @@
 package com.startrip.codebase.domain.category;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.startrip.codebase.domain.category.dto.CreateCategoryDto;
+import com.startrip.codebase.dto.category.CreateCategoryDto;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Entity
 @Getter

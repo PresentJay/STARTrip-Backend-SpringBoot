@@ -30,7 +30,7 @@ public class CategoryService {
     // POST: api/categories
     public void createCategory(CreateCategoryDto dto) {
 
-        Category category = Category.createCategory(dto); // 이름만 설ㅈ어
+        Category category = Category.createCategory(dto); // 이름만 설정
         Optional<Long> parentId = Optional.ofNullable(dto.getCategoryParentId());
 
         // 상위 카테고리 넣어주기
