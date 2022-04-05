@@ -1,47 +1,71 @@
 package com.startrip.codebase.domain.event;
 
-import com.sun.istack.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.startrip.codebase.domain.category.Category;
+import com.startrip.codebase.domain.event.dto.UpdateEventDto;
+import com.startrip.codebase.domain.place.Place;
+import lombok.*;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import javax.persistence.*;
+import java.sql.Time;
+import java.time.LocalDateTime;
 
+@Entity
+@Builder
 @Getter
 @NoArgsConstructor
-@Entity
+@AllArgsConstructor
+@ToString
 public class Event {
+
     @Id
-    private UUID event_id;
+    @Column(name = "event_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long eventId;
 
-    @NotNull
-    private Long creator_id;
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    @NotNull
-    private UUID place_id;
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "place_id")
+    private Place place;
 
-    @NotNull
-    @ElementCollection(targetClass = Integer.class)
-    private List<Integer> category_list;
+    private String eventTitle;
 
-    @NotNull
-    private String event_title;
+    private String description;
 
-    private String event_text;
+    private LocalDateTime startDate; // 시작 날짜
 
-    private String event_photo;
+    private LocalDateTime endDate; // 끝 날짜
 
-    private Date start_date;
+    @Column(name = "event_cycle")
+    private Integer eventCycle; //반복 주기
 
-    private Date end_date;
+    @Column(name = "event_cycleUnit")
+    private String eventCycleUnit; //반복 단위
 
-    private Date updated_date;
+    private String eventOwner; //이벤트 주최자
 
-    private Boolean repeat;
+    private String contact;
 
-    private String repeat_cycle;
+    private LocalDateTime updatedDate;
+
+    private LocalDateTime createdDate;
+
+    private Time spendTime; //소요 시간
+
+    private String spendTimeUnit; //소요 시간 단위
+
+    private String eventPicture;
+
+    public void update(UpdateEventDto dto) {
+        this.eventTitle = dto.getEventTitle();
+        this.startDate = dto.getStartDate();
+        this.endDate = dto.getEndDate();
+        this.description = dto.getDescription();
+        this.eventCycle = dto.getEventCycle();
+        this.eventCycleUnit = dto.getEventCycleUnit();
+        this.contact = dto.getContact();
+        this.eventPicture = dto.getEventPicture();
+    }
 }

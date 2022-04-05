@@ -4,7 +4,6 @@ import com.startrip.codebase.constant.Role;
 import com.startrip.codebase.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
-import springfox.documentation.service.OAuth;
 
 import java.util.Map;
 

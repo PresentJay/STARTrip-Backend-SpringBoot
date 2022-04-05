@@ -76,8 +76,8 @@ public class TokenProvider implements InitializingBean {
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
         return Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
+                .setSubject(authentication.getName()) // 현재 이름 (ID)
+                .claim(AUTHORITIES_KEY, authorities)  // auth : ADMIN, GUEST
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
