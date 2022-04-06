@@ -5,12 +5,15 @@ import com.startrip.codebase.domain.notice.Notice;
 import com.startrip.codebase.dto.operatingTime.ResponseOpTimeDto;
 import com.startrip.codebase.service.OperatingTimeService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 
 @Slf4j
@@ -27,47 +30,34 @@ public class OperatingTimeController {
 
     // CREATE
     @PostMapping("/optime")
-    public ResponseEntity createOpTime(@RequestParam Long placeId, ResponseOpTimeDto dto){
-         operatingTimeService.createOpTime(placeId, dto);
-            return  new ResponseEntity<>("운영시간 생성",HttpStatus.OK);
+    public void createOpTime(ResponseOpTimeDto dto){
+        // operatingTimeService.createOpTime(placeId, dto);
+        //    return  new ResponseEntity<>("운영시간 생성",HttpStatus.OK);
     }
 
-    // GET All
+    // GET : api/place/optime?palceId={placeId}  // 특정 장소의 모든 op_time 보기
     @GetMapping ("/optime")
-    public ResponseEntity getOpTimeAll(){
-        List<OperatingTime> operatingTimes = operatingTimeService.getOpTimeAll();
-        return new ResponseEntity(operatingTimes, HttpStatus.OK);
-    }
-
-    // GET All in specific place
-    @GetMapping ("/optime/{placeId}")
-    public ResponseEntity geOpTimeAll_inSpecificPlace(@PathVariable("placeId") Long placeId){
-         List<OperatingTime> operatingTimes;
-
+    public void geOpTimeAll_inSpecificPlace(@RequestParam UUID placeId ){
+       /*  List<OperatingTime> operatingTimes;
          try {
              operatingTimes = operatingTimeService.getOptimeAll_inSpecificPlace(placeId);
          } catch(Exception e) {
              return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
          }
 
-        return new ResponseEntity(operatingTimes, HttpStatus.OK);
+        return new ResponseEntity(operatingTimes, HttpStatus.OK); */
     }
 
-    // GET All in specific place in specific timestamp
-    @GetMapping ("/optime/{placeId}/{timestamp}")
-    public void getOpTime_inCurrentTimestamp(@PathVariable("placeId") Long placeId, @PathVariable Timestamp timestamp){
-        // TODO: 타임스탬프 형태로 파라미터가 들어올 수 있는 건지, 변혀앻야하는 건지 확인해보자
-
-
+    // GET api/place/optime?placeId={placeId}&datetime={datetime} // 특정 시간의 특정장소 op_time 보기
+    @GetMapping ("/optime")
+    public void getOpTime_inCurrentTimestamp(@RequestParam UUID placeId,
+                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+        log.info(String.valueOf(date));
     }
 
-    // Get specific opTime
-    @GetMapping ("/optime/{placeId}/{optimeId}")
-    public void getOptime_only(@PathVariable("placeId") Long placeId, @PathVariable("optimeId") Long optimeId){
-    }
 
     // UPDATE opTime
-    @PutMapping ("/optime/{placeId}/{optimeId}")
+    @PutMapping ("/optime/{optimeId}")
     public void updateOpTime(@PathVariable("placeId") Long placeId, @PathVariable("optimeId") Long optimeId){
     }
 
