@@ -7,7 +7,6 @@ spring:
       - oauth2
       - mongoDB
       - postgres
-      - test
   application:
     name: secret
 
