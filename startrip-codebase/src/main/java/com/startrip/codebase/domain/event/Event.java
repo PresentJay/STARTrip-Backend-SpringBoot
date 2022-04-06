@@ -2,6 +2,7 @@ package com.startrip.codebase.domain.event;
 
 import com.startrip.codebase.domain.category.Category;
 import com.startrip.codebase.domain.event.dto.UpdateEventDto;
+import com.startrip.codebase.domain.event_review.EventReview;
 import com.startrip.codebase.domain.place.Place;
 import lombok.*;
 
@@ -21,6 +22,10 @@ public class Event {
     @Column(name = "event_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eventId;
+
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "eventReview_id")
+    private EventReview eventReview;
 
     @OneToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "category_id")

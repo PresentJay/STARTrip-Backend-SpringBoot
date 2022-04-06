@@ -28,6 +28,7 @@ public class EventController {
     public List<ResponseEventDto> getEvents() {
         List<ResponseEventDto> events = eventService.allEvent();
         return events;
+        //ToDo: try-catch로 예외처리하기
     }
 
     //생성

@@ -1,6 +1,5 @@
 package com.startrip.codebase.domain.event_review;
 
-import com.startrip.codebase.domain.event.Event;
 import com.startrip.codebase.domain.event_review.dto.UpdateEventReviewDto;
 import lombok.*;
 
@@ -18,10 +17,6 @@ public class EventReview {
     @Column(name = "review_id")
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long reviewId ;
-
-    @OneToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "event_id")
-    private Event event;
 
     @Column(name = "creator_id")
     private Long creatorId;
