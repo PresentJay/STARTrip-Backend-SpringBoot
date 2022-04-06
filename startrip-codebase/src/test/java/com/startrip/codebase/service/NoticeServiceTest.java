@@ -7,13 +7,16 @@ import com.startrip.codebase.domain.notice.NoticeRepository;
 import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.domain.user.UserRepository;
 import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,6 +24,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 class NoticeServiceTest {
 
     @Autowired
@@ -64,8 +68,8 @@ class NoticeServiceTest {
     @Test
     void notice_view_counting() {
         createNotice();
-
-        Notice find = noticeService.getNotice(1L); // 게시글 조회 로직
+        Notice notice = noticeRepository.findAll().get(0);
+        Notice find = noticeService.getNotice(notice.getNoticeId()); // 게시글 조회 로직
 
         assertThat(find.getViewCount()).isEqualTo(1);
     }
@@ -75,11 +79,13 @@ class NoticeServiceTest {
     void notifce_view_100() {
         createNotice();
 
+        List<Notice> notices = noticeRepository.findAll();
+        Notice firstNotice = notices.get(0);
         for (int i = 0; i < 100; i++) {
-            noticeService.getNotice(1L); // 게시글 조회 로직
+            noticeService.getNotice(firstNotice.getNoticeId()); // 게시글 조회 로직
         }
 
-        Notice find = noticeRepository.findById(1L).get();
+        Notice find = noticeRepository.findById(firstNotice.getNoticeId()).get();
         assertThat(find.getViewCount()).isEqualTo(100);
     }
 
@@ -92,7 +98,6 @@ class NoticeServiceTest {
                 .build();
 
         Category category = Category.builder()
-                .categoryParent(null)
                 .categoryName("공지사항")
                 .depth(0)
                 .build();
@@ -102,7 +107,10 @@ class NoticeServiceTest {
 
         createNotice(user, category);
 
-        Notice find = noticeService.getNotice(1L);
+        List<Notice> notices = noticeRepository.findAll();
+        Notice firstNotice = notices.get(0);
+
+        Notice find = noticeService.getNotice(firstNotice.getNoticeId());
 
         assertThat(find.getUser().getEmail()).isEqualTo("test@test.com");
         assertThat(find.getCategory().getCategoryName()).isEqualTo("공지사항");
