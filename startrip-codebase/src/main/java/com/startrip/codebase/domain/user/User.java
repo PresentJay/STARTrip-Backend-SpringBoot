@@ -23,7 +23,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column( nullable = false)
+    @Column(nullable = false)
     private String name;
 
     @Column(unique = true) // 중복 이메일이 안되도록 설정
@@ -51,7 +51,8 @@ public class User {
         User user = User.builder()
                 .email(signUpDto.getEmail())
                 .password(signUpDto.getPassword())
-                .nickname("test")
+                .nickname(signUpDto.getNickname())
+                .name(signUpDto.getName())
                 .authorities(Role.USER)
                 .build();
         return user;

@@ -1,6 +1,7 @@
 package com.startrip.codebase.domain.notice;
 
 import com.startrip.codebase.domain.category.Category;
+import com.startrip.codebase.domain.notice_comment.NoticeComment;
 import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.dto.notice.NewNoticeDto;
 import com.sun.istack.NotNull;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -23,16 +25,20 @@ import java.util.UUID;
 public class Notice {
 
     @Id
+    @Column(name = "notice_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long noticeId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToMany(mappedBy = "notice", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private List<NoticeComment> comments;
 
     @NotNull
     private String title;
@@ -72,6 +78,11 @@ public class Notice {
     }
 
     public void increaseViewCount(){
-        this.viewCount++;  // Deadlock?
+        this.viewCount++;
     }
+
+    public void addComment(NoticeComment comment) {
+        this.comments.add(comment);
+    }
+
 }

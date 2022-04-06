@@ -41,14 +41,23 @@ public class NoticeController {
     @GetMapping("/notice/{id}")
     public @ResponseBody
     ResponseEntity getNotice(@PathVariable("id") Long id) {
-        Notice notice = noticeService.getNotice(id);
+        Notice notice;
+        try {
+            notice = noticeService.getNotice(id);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity(notice, HttpStatus.OK);
     }
 
     @PostMapping("/notice")
     public @ResponseBody
     ResponseEntity addNotice(@RequestBody NewNoticeDto dto) {
-        noticeService.createNotice(dto);
+        try {
+            noticeService.createNotice(dto);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity("생성되었습니다", HttpStatus.OK);
     }
 
@@ -62,30 +71,11 @@ public class NoticeController {
     @DeleteMapping("/notice/{id}")
     public @ResponseBody
     ResponseEntity deleteNotice(@PathVariable("id") Long id) {
-        noticeService.deleteNotice(id);
-        return new ResponseEntity("삭제되었습니다", HttpStatus.OK);
-    }
-
-    // Notice Comment Controller
-    @GetMapping("/notice/{id}/comment") // TODO : comment, 페이지네이션
-    public ResponseEntity getComments(@PathVariable("id") Long noticeId) {
-        List<NoticeComment> comments;
         try {
-            comments = noticeCommentService.getComments(noticeId);
-        } catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity(comments, HttpStatus.OK);
-    }
-
-    @PostMapping("/notice/{id}/comment")
-    public ResponseEntity addComment(@PathVariable("id") Long noticeId, @RequestBody NewCommentDto dto) {
-        try {
-            dto.setNoticeId(noticeId);
-            noticeCommentService.newComment(dto);
+            noticeService.deleteNotice(id);
         } catch (IllegalStateException e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity("댓글 생성되었습니다.", HttpStatus.OK);
+        return new ResponseEntity("삭제되었습니다", HttpStatus.OK);
     }
 }
