@@ -5,3 +5,4 @@ spring:
     url: ${db.postgres-addr}
     username: ${db.postgres-username}
     password: ${db.postgres-password}
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
