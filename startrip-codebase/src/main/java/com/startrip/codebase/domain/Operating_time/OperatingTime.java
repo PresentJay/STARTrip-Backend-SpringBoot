@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -19,12 +20,12 @@ public class OperatingTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 총 운영 시간, 브레이크 운영 시간, 주말 운영 등등 여러 엔티티가 생겨날 테니 자체 아이디가 있어야 함
+    private UUID id; // 총 운영 시간, 브레이크 운영 시간, 주말 운영 등등 여러 엔티티가 생겨날 테니 자체 아이디가 있어야 함
 
     @NotNull
     @Setter
     @Column(name = "place_id")
-    private Long placeId; // 얘는 이런 플레이스 꺼예요
+    private UUID placeId; // 얘는 이런 플레이스 꺼예요
 
     @Setter
     @Column(name = "start_date")
@@ -48,12 +49,12 @@ public class OperatingTime {
     @Column(name = "cycle")
     private Integer cycle; // 1년 = 31,356,000 ... Integer = 2,147,483,648 ~ 2,147,483,647
 
-    public void setId(Long placeId) {
+    public void setId(UUID placeId) {
         this.placeId = placeId;
     }
 
 
-    public static OperatingTime of (Long placeId, ResponseOpTimeDto dto){
+    public static OperatingTime of (UUID placeId, ResponseOpTimeDto dto){
         OperatingTime operatingTime = OperatingTime.builder()
                 .placeId(placeId)
                 .startDate(dto.getStartDate())
@@ -67,7 +68,7 @@ public class OperatingTime {
         return operatingTime;
     }
     @Builder
-    public OperatingTime (Long placeId, LocalDate startDate, LocalDate endDate, LocalDateTime startTime, LocalDateTime endTime, Boolean isBreakTime, Integer cycle){
+    public OperatingTime (UUID placeId, LocalDate startDate, LocalDate endDate, LocalDateTime startTime, LocalDateTime endTime, Boolean isBreakTime, Integer cycle){
 
         this.placeId = placeId;
 
