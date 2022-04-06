@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -31,11 +32,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
  private final CategoryService categoryService;
 
+
  @Autowired
  public CategoryControllerTest(CategoryService categoryService) {
   this.categoryService = categoryService;
  }
 
+ @BeforeTestClass
+ public void cleanUp() {
+
+ }
  //한글 깨짐 해결
  @BeforeEach
  public void before() {
@@ -71,7 +77,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  @DisplayName("Step3: Category-Controller GET(Detail View)")
  @Test
  void test3() throws Exception {
-
   String root = "ROOT";
   String market = "맛집";
 

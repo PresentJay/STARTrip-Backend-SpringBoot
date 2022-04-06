@@ -7,7 +7,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface NoticeCommentRepository extends JpaRepository<NoticeComment, Long> {
-
-    @Query("select nc from NoticeComment nc where nc.notice.noticeId = :notice_id")
+    @Query("select nc from NoticeComment nc where nc.notice.noticeId = :notice_id ")
     List<NoticeComment> findByNoticeId(@Param(value = "notice_id") Long noticeId);
+
+    List<NoticeComment> findByNotice_NoticeId(Long noticeId);
 }
