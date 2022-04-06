@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 4
+    url: ${db.postgres-addr}
+    username: ${db.postgres-username}
+    password: ${db.postgres-password}
