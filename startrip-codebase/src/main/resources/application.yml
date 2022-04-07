@@ -6,6 +6,7 @@ spring:
     include:
       - oauth2
       - mongoDB
+      - postgres
   application:
     name: secret
 
@@ -29,10 +30,6 @@ spring:
     mongodb:
       url: mongodb://127.0.0.1:27017
       database: mongostartrip
-  h2:
-    console:
-      enabled: true
-
 
 logging:
   config: classpath:log4j2.yml
