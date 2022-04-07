@@ -5,8 +5,10 @@ import com.startrip.codebase.domain.Operating_time.OperatingTimeRepository;
 import com.startrip.codebase.domain.place.PlaceRepository;
 import com.startrip.codebase.dto.operatingTime.ResponseOptimeDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,7 +48,8 @@ public class OperatingTimeService {
         }
         return optimes.get();
     }
-/*
+
+    /*
     //for Get Specific optime (about dateTime)
     public OperatingTime getOpTimeDatetime(Long placeId, @DateTimeFormat(iso=DateTimeFormat.ISO.DATE) LocalDate date) {
         FindPlace(placeId);
@@ -54,12 +57,17 @@ public class OperatingTimeService {
         //해당 date가, 어떤 optime이 가진 시간 내에 가지고 있는 것인지 구현해야 함
 
         Optional<List<OperatingTime>> optimes = Optional.ofNullable(operatingTimeRepository.findAllByPlaceId(placeId));
-        for ( OperatingTime optime : optimes.get()){
 
+        UUID test = UUID.randomUUID();
+        OperatingTime optimeInDate = operatingTimeRepository.getById(test);
+
+        for ( OperatingTime optime : optimes.get()){
+        /*
             // 아니, 어떻게 비교해?
             if(optime.getStartTime() < date < optime.getEndTime())
 
-        }
+        } }
+        return optimeInDate;
 
     } */
 
@@ -83,16 +91,5 @@ public class OperatingTimeService {
         placeRepository.findById(placeId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 장소가 존재하지 않습니다."));
     }
-
-    /*
-    // for Get All
-    public List<OperatingTime> getOptimeAll_inSpecificPlace(Long placeId ){
-        placeRepository.findById(placeId)
-                .orElseThrow(()-> new RuntimeException("해당 장소가 존재하지 않습니다."));
-
-        List<OperatingTime> operatingTimes = operatingTimeRepository.findAllByPlaceId(placeId);
-
-        return operatingTimes; // TODO: Controller에서 예외처리 해야 한다.
-    } */
 
 }

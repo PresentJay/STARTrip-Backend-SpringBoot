@@ -4,10 +4,12 @@ import com.startrip.codebase.domain.Operating_time.OperatingTime;
 import com.startrip.codebase.dto.operatingTime.ResponseOptimeDto;
 import com.startrip.codebase.service.OperatingTimeService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,22 +45,22 @@ public class OperatingTimeController {
     }
 
 
+    /*
     // GET api/place/optime?placeId={placeId}&datetime={datetime} // 특정 시간의 특정장소 op_time 보기
-    /* @GetMapping ("/optime")
-    public ResponseEntity getOpTime_inCurrentTimestamp(@RequestParam UUID placeId,
+    @GetMapping ("/optime")
+    public ResponseEntity getOpTime_inCurrentTimestamp(@RequestParam Long placeId,
                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
         //log.info(String.valueOf(date));
 
         OperatingTime optime;
         try{
-            optime = operatingTimeService.getOpTimeDatetime(date);
+            optime = operatingTimeService.getOpTimeDatetime(placeId, date);
 
         }catch(Exception e){
-            return new ResponseEntity(e.getMessage(). HttpStatus.BAD_REUEST);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
 
         }
         return new ResponseEntity(optime, HttpStatus.OK);
-
     } */
 
 
@@ -81,10 +83,8 @@ public class OperatingTimeController {
         try {
             operatingTimeService.deleteOptime(optimeId);
         }catch (Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQEST);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity("운영시간 삭제완료", HttpStatus.OK);
-
     }
-
 }
