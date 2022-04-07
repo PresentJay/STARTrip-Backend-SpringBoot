@@ -30,23 +30,24 @@ public class OperatingTimeController {
 
     // CREATE
     @PostMapping("/optime")
-    public void createOpTime(ResponseOpTimeDto dto){
-        // operatingTimeService.createOpTime(placeId, dto);
-        //    return  new ResponseEntity<>("운영시간 생성",HttpStatus.OK);
+    public ResponseEntity createOpTime(ResponseOpTimeDto dto){
+        operatingTimeService.createOpTime(dto);
+         return  new ResponseEntity<>("운영시간 생성",HttpStatus.OK);
     }
 
     // GET : api/place/optime?palceId={placeId}  // 특정 장소의 모든 op_time 보기
     @GetMapping ("/optime")
-    public void geOpTimeAll_inSpecificPlace(@RequestParam UUID placeId ){
-       /*  List<OperatingTime> operatingTimes;
-         try {
-             operatingTimes = operatingTimeService.getOptimeAll_inSpecificPlace(placeId);
-         } catch(Exception e) {
-             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-         }
-
-        return new ResponseEntity(operatingTimes, HttpStatus.OK); */
+    public ResponseEntity geOpTimeAll_inSpecificPlace(@RequestParam Long placeId ){
+       List<OperatingTime> operatingTimes;
+        try {
+            operatingTimes = operatingTimeService.getOptimeAll(placeId);
+        }catch(Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(operatingTimes, HttpStatus.OK);
     }
+
+
 
     // GET api/place/optime?placeId={placeId}&datetime={datetime} // 특정 시간의 특정장소 op_time 보기
     @GetMapping ("/optime")

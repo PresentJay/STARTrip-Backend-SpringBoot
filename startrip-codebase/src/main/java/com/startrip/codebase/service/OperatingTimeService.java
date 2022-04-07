@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class OperatingTimeService {
@@ -28,23 +29,35 @@ public class OperatingTimeService {
     }
 
     // for Create
-    public void createOpTime (Long placeId , ResponseOpTimeDto dto) {
+    public void createOpTime (ResponseOpTimeDto dto) {
         //해당 placeId가 존재하는지 확인한 후,
-        placeRepository.findById(placeId)
-                .orElseThrow(() -> new RuntimeException("해당 장소가 존재하지 않습니다."));
+        placeRepository.findById(dto.getPlaceId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 장소가 존재하지 않습니다."));
 
         // 존재하는 경우 해당 optime을 dto내용에 맞추어 생성시키자.
-        OperatingTime operatingTime = OperatingTime.of(placeId, dto);
-
+        OperatingTime operatingTime = OperatingTime.of(dto);
         operatingTimeRepository.save(operatingTime);
     }
 
     // for Get All
-    public List<OperatingTime> getOpTimeAll(){
-        return operatingTimeRepository.findAll(); // TODO: Controller에서 예외처리 해야 한다.
+    public List<OperatingTime> getOptimeAll(Long id){
+        placeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 장소가 존재하지 않습니다."));
+
+        Optional<List<OperatingTime>> optimes = Optional.ofNullable(operatingTimeRepository.findAllByPlaceId(id));
+        if(optimes.isEmpty()) {
+            throw new IllegalArgumentException("해당 장소의 운영시간은 등록되지 않았습니다.");
+        }
+        return optimes.get();
     }
+    /*
+    //for Get Specific optime (about dateTime)
+    public OperatingTime getOpTimeDatetime()
+*/
 
 
+
+    /*
     // for Get All
     public List<OperatingTime> getOptimeAll_inSpecificPlace(Long placeId ){
         placeRepository.findById(placeId)
@@ -53,7 +66,7 @@ public class OperatingTimeService {
         List<OperatingTime> operatingTimes = operatingTimeRepository.findAllByPlaceId(placeId);
 
         return operatingTimes; // TODO: Controller에서 예외처리 해야 한다.
-    }
+    } */
 
 
 
