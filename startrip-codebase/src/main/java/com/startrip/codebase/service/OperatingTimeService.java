@@ -71,7 +71,12 @@ public class OperatingTimeService {
         operatingTimeRepository.save(optime);
     }
 
+    public void deleteOptime(UUID optimeId){
+        operatingTimeRepository.findById(optimeId)
+                .orElseThrow( () -> new IllegalArgumentException("해당 운영시간은 존재하지 않습니다."));
 
+        operatingTimeRepository.deleteById(optimeId);
+    }
 
 
     public void FindPlace(Long placeId) {
@@ -89,9 +94,5 @@ public class OperatingTimeService {
 
         return operatingTimes; // TODO: Controller에서 예외처리 해야 한다.
     } */
-
-
-
-
 
 }

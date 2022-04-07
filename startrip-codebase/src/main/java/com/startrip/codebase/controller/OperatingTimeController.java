@@ -74,11 +74,17 @@ public class OperatingTimeController {
         return new ResponseEntity("운영시간 수정완료", HttpStatus.OK);
     }
 
-    /*
+
     // DELETE opTime
     @DeleteMapping("/optime/{placeId}/{optimeId}")
     public ResponseEntity deleteOpTime(@PathVariable("optimeId") UUID optimeId){
+        try {
+            operatingTimeService.deleteOptime(optimeId);
+        }catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQEST);
+        }
+        return new ResponseEntity("운영시간 삭제완료", HttpStatus.OK);
 
-    } */
+    }
 
 }
