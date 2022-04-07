@@ -1,15 +1,12 @@
 package com.startrip.codebase.domain.Operating_time;
 
-import com.startrip.codebase.dto.operatingTime.ResponseOpTimeDto;
+import com.startrip.codebase.dto.operatingTime.ResponseOptimeDto;
 import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -25,7 +22,7 @@ public class OperatingTime {
     @NotNull
     @Setter
     @Column(name = "place_id")
-    private UUID placeId; // 얘는 이런 플레이스 꺼예요
+    private Long placeId; // 얘는 이런 플레이스 꺼예요
 
     @Setter
     @Column(name = "start_date")
@@ -49,14 +46,13 @@ public class OperatingTime {
     @Column(name = "cycle")
     private Integer cycle; // 1년 = 31,356,000 ... Integer = 2,147,483,648 ~ 2,147,483,647
 
-    public void setId(UUID placeId) {
+    public void setId(Long placeId) {
         this.placeId = placeId;
     }
 
-
-    public static OperatingTime of (UUID placeId, ResponseOpTimeDto dto){
+    public static OperatingTime of ( ResponseOptimeDto dto){ // List.of 같은 느낌
         OperatingTime operatingTime = OperatingTime.builder()
-                .placeId(placeId)
+                .placeId(dto.getPlaceId())
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
                 .startTime(dto.getStartTime())
@@ -64,11 +60,18 @@ public class OperatingTime {
                 .isBreakTime(dto.getIsBreakTime())
                 .cycle(dto.getCycle())
                 .build();
-
         return operatingTime;
     }
+
+    public void updateTime(ResponseOptimeDto dto){
+        this.startTime = dto.getStartTime();
+        this.endTime = dto.getEndTime();
+        this.startDate = dto.getStartDate();
+        this.endDate = dto.getStartDate();
+    }
+
     @Builder
-    public OperatingTime (UUID placeId, LocalDate startDate, LocalDate endDate, LocalDateTime startTime, LocalDateTime endTime, Boolean isBreakTime, Integer cycle){
+    public OperatingTime (Long placeId, LocalDate startDate, LocalDate endDate, LocalDateTime startTime, LocalDateTime endTime, Boolean isBreakTime, Integer cycle){
 
         this.placeId = placeId;
 
@@ -81,4 +84,6 @@ public class OperatingTime {
         this.isBreakTime = isBreakTime;
         this.cycle = cycle;
     }
+
+
 }
