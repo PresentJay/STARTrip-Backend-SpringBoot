@@ -10,6 +10,7 @@ public interface OperatingTimeRepository extends JpaRepository<OperatingTime, UU
 
 
     List<OperatingTime> findAllByPlaceId(Long placeId);
+    OperatingTime findOperatingTimeByPlaceId(Long placeId);
 
 
 }

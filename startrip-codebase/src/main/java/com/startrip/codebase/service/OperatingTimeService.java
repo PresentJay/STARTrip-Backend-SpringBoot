@@ -3,12 +3,15 @@ package com.startrip.codebase.service;
 import com.startrip.codebase.domain.Operating_time.OperatingTime;
 import com.startrip.codebase.domain.Operating_time.OperatingTimeRepository;
 import com.startrip.codebase.domain.place.PlaceRepository;
+import com.startrip.codebase.dto.operatingTime.RequestOptimeDto;
 import com.startrip.codebase.dto.operatingTime.ResponseOptimeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,7 +31,8 @@ public class OperatingTimeService {
     }
 
     // for Create
-    public void createOpTime (ResponseOptimeDto dto) {
+    public void createOpTime (RequestOptimeDto dto) {
+
         //해당 placeId가 존재하는지 확인한 후,
         FindPlace(dto.getPlaceId());
 
@@ -49,7 +53,7 @@ public class OperatingTimeService {
         return optimes.get();
     }
 
-    /*
+
     //for Get Specific optime (about dateTime)
     public OperatingTime getOpTimeDatetime(Long placeId, @DateTimeFormat(iso=DateTimeFormat.ISO.DATE) LocalDate date) {
         FindPlace(placeId);
@@ -64,14 +68,14 @@ public class OperatingTimeService {
         for ( OperatingTime optime : optimes.get()){
         /*
             // 아니, 어떻게 비교해?
-            if(optime.getStartTime() < date < optime.getEndTime())
+            if(optime.getStartTime() < date < optime.getEndTime()) */
 
-        } }
+        }
         return optimeInDate;
 
-    } */
+    }
 
-    public void updateOptime(UUID optimeId, ResponseOptimeDto dto){
+    public void updateOptime(UUID optimeId, RequestOptimeDto dto){
         OperatingTime optime = operatingTimeRepository.findById(optimeId)
                 .orElseThrow( () -> new IllegalArgumentException("해당 운영시간은 존재하지 않습니다."));
 

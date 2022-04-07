@@ -1,6 +1,7 @@
 package com.startrip.codebase.controller;
 
 import com.startrip.codebase.domain.Operating_time.OperatingTime;
+import com.startrip.codebase.dto.operatingTime.RequestOptimeDto;
 import com.startrip.codebase.dto.operatingTime.ResponseOptimeDto;
 import com.startrip.codebase.service.OperatingTimeService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,14 +29,14 @@ public class OperatingTimeController {
 
     // CREATE
     @PostMapping("/optime")
-    public ResponseEntity createOpTime(ResponseOptimeDto dto){
+    public ResponseEntity createOpTime(RequestOptimeDto dto){
         operatingTimeService.createOpTime(dto);
          return  new ResponseEntity<>("운영시간 생성",HttpStatus.OK);
     }
 
     // GET : api/place/optime?palceId={placeId}  // 특정 장소의 모든 op_time 보기
-    @GetMapping ("/optime")
-    public ResponseEntity geOpTimeAll_inSpecificPlace(@RequestParam Long placeId ){
+    @GetMapping (path = "/optime/list", params="placeid")
+    public ResponseEntity getOpTimeAll_inSpecificPlace(@RequestParam(value="placeid") Long placeId ){
        List<OperatingTime> operatingTimes;
         try {
             operatingTimes = operatingTimeService.getOptimeAll(placeId);
@@ -45,11 +47,10 @@ public class OperatingTimeController {
     }
 
 
-    /*
     // GET api/place/optime?placeId={placeId}&datetime={datetime} // 특정 시간의 특정장소 op_time 보기
-    @GetMapping ("/optime")
-    public ResponseEntity getOpTime_inCurrentTimestamp(@RequestParam Long placeId,
-                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+    @GetMapping (path= "/optime", params = {"placeId", "date"})
+    public ResponseEntity getOpTimeAll_inSpecificTime(@RequestParam(value = "placeid") Long placeId,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
         //log.info(String.valueOf(date));
 
         OperatingTime optime;
@@ -61,13 +62,11 @@ public class OperatingTimeController {
 
         }
         return new ResponseEntity(optime, HttpStatus.OK);
-    } */
-
-
+    }
 
     // UPDATE opTime
     @PutMapping ("/optime/{optimeId}")
-    public ResponseEntity updateOpTime( @PathVariable("optimeId") UUID optimeId, ResponseOptimeDto dto){
+    public ResponseEntity updateOpTime( @PathVariable("optimeId") UUID optimeId, RequestOptimeDto dto){
         try {
             operatingTimeService.updateOptime(optimeId, dto);
         }catch (Exception e) {
@@ -78,7 +77,7 @@ public class OperatingTimeController {
 
 
     // DELETE opTime
-    @DeleteMapping("/optime/{placeId}/{optimeId}")
+    @DeleteMapping("/optime/{optimeId}")
     public ResponseEntity deleteOpTime(@PathVariable("optimeId") UUID optimeId){
         try {
             operatingTimeService.deleteOptime(optimeId);

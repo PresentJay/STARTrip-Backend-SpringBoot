@@ -1,5 +1,6 @@
 package com.startrip.codebase.domain.Operating_time;
 
+import com.startrip.codebase.dto.operatingTime.RequestOptimeDto;
 import com.startrip.codebase.dto.operatingTime.ResponseOptimeDto;
 import com.sun.istack.NotNull;
 import lombok.*;
@@ -7,6 +8,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Entity
@@ -16,7 +18,7 @@ import java.util.UUID;
 public class OperatingTime {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "UUID")
     private UUID id; // 총 운영 시간, 브레이크 운영 시간, 주말 운영 등등 여러 엔티티가 생겨날 테니 자체 아이디가 있어야 함
 
     @NotNull
@@ -50,24 +52,31 @@ public class OperatingTime {
         this.placeId = placeId;
     }
 
-    public static OperatingTime of ( ResponseOptimeDto dto){ // List.of 같은 느낌
+    public static OperatingTime of ( RequestOptimeDto dto){ // List.of 같은 느낌
+
+        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:m:ss");
+
         OperatingTime operatingTime = OperatingTime.builder()
                 .placeId(dto.getPlaceId())
-                .startDate(dto.getStartDate())
-                .endDate(dto.getEndDate())
-                .startTime(dto.getStartTime())
-                .endTime(dto.getEndTime())
+                .startDate(LocalDate.parse(dto.getStartDate(), formatterDate))
+                .endDate(LocalDate.parse(dto.getEndDate(), formatterDate))
+                .startTime(LocalDateTime.parse(dto.getStartTime(), formatterTime))
+                .endTime(LocalDateTime.parse(dto.getEndTime(), formatterTime))
                 .isBreakTime(dto.getIsBreakTime())
                 .cycle(dto.getCycle())
                 .build();
         return operatingTime;
     }
 
-    public void updateTime(ResponseOptimeDto dto){
-        this.startTime = dto.getStartTime();
-        this.endTime = dto.getEndTime();
-        this.startDate = dto.getStartDate();
-        this.endDate = dto.getStartDate();
+    public void updateTime(RequestOptimeDto dto){
+        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:m:ss");
+
+        this.startDate = LocalDate.parse(dto.getStartDate(), formatterDate);
+        this.endDate = LocalDate.parse(dto.getEndDate(), formatterDate);
+        this.startTime = LocalDateTime.parse(dto.getStartTime(), formatterTime);
+        this.endTime = LocalDateTime.parse(dto.getEndTime(), formatterTime);
     }
 
     @Builder
