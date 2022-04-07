@@ -1,18 +1,17 @@
-# application-oauth2.yml
 spring:
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id: 982019794850-cmau68sr7ec1e0kkvcqvriokgr5jct1n.apps.googleusercontent.com
-            client-secret: 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
+            client-id: ${google.client-id}
+            client-secret: ${google.client-secret}
             scope:
               - profile
               - email
           naver:
-            client-id: 7uxxKcNthLVvi5ApNLkO
-            client-secret: VqZ8uL0vej
+            client-id: ${naver.client-id}
+            client-secret: ${naver.client-secret}
             redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
             authorization-grant-type: authorization_code
             scope:

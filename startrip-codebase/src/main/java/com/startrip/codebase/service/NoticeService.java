@@ -38,7 +38,7 @@ public class NoticeService {
     @Transactional
     public Notice getNotice(Long id) {
         Notice notice = noticeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("해당 게시글이 없습니다"));
+                .orElseThrow(() -> new IllegalStateException("해당 게시글이 없습니다"));
 
         viewCounting(notice);
 

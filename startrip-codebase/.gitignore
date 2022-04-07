@@ -36,7 +36,3 @@ out/
 ### VS Code ###
 .vscode/
 .DS_Store
-
-application-jwt.yml
-application-api.yml
-application-oauth2.yml
