@@ -106,4 +106,29 @@ class UserControllerTest {
         assertThat(authentication.getName()).isEqualTo(dto.getEmail());
     }
 
+    @DisplayName("일반 유저의 JWT 토큰을 통해 인증 객체를 추출하고, 권한을 확인할 수 있다")
+    @Test
+    void test4() throws Exception {
+        LoginDto dto = new LoginDto();
+        dto.setEmail("test@test.com");
+        dto.setPassword("1234");
+
+        MvcResult mvcResult = mockMvc.perform(
+                        post("/api/user/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto))
+                )
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+        jwtToken = mvcResult.getResponse().getContentAsString();
+
+        Authentication authentication = tokenProvider.getAuthentication(jwtToken);
+        // 권한은 여러개를 가질 수 있으므로, stream 을 통해 추출한다
+        assertThat(authentication.getAuthorities()
+                .stream()
+                .findFirst()
+                .get()
+                .toString()).isEqualTo(Role.USER.getKey());
+    }
 }
