@@ -8,6 +8,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
@@ -35,10 +36,10 @@ public class OperatingTime {
 
     @Setter
     @Column(name = "start_time")
-    private LocalDateTime startTime;
+    private LocalTime startTime;
     @Setter
     @Column(name = "end_time")
-    private LocalDateTime  endTime;
+    private LocalTime  endTime;
 
     @Setter
     @Column(name = "is_breaktime")
@@ -55,14 +56,14 @@ public class OperatingTime {
     public static OperatingTime of ( RequestOptimeDto dto){ // List.of 같은 느낌
 
         DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:m:ss");
+        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
 
         OperatingTime operatingTime = OperatingTime.builder()
                 .placeId(dto.getPlaceId())
                 .startDate(LocalDate.parse(dto.getStartDate(), formatterDate))
                 .endDate(LocalDate.parse(dto.getEndDate(), formatterDate))
-                .startTime(LocalDateTime.parse(dto.getStartTime(), formatterTime))
-                .endTime(LocalDateTime.parse(dto.getEndTime(), formatterTime))
+                .startTime(LocalTime.parse(dto.getStartTime(), formatterTime))
+                .endTime(LocalTime.parse(dto.getEndTime(), formatterTime))
                 .isBreakTime(dto.getIsBreakTime())
                 .cycle(dto.getCycle())
                 .build();
@@ -71,16 +72,16 @@ public class OperatingTime {
 
     public void updateTime(RequestOptimeDto dto){
         DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:m:ss");
+        DateTimeFormatter formatterTime = DateTimeFormatter.ISO_LOCAL_TIME;
 
         this.startDate = LocalDate.parse(dto.getStartDate(), formatterDate);
         this.endDate = LocalDate.parse(dto.getEndDate(), formatterDate);
-        this.startTime = LocalDateTime.parse(dto.getStartTime(), formatterTime);
-        this.endTime = LocalDateTime.parse(dto.getEndTime(), formatterTime);
+        this.startTime = LocalTime.parse(dto.getStartTime(), formatterTime);
+        this.endTime = LocalTime.parse(dto.getEndTime(), formatterTime);
     }
 
     @Builder
-    public OperatingTime (Long placeId, LocalDate startDate, LocalDate endDate, LocalDateTime startTime, LocalDateTime endTime, Boolean isBreakTime, Integer cycle){
+    public OperatingTime (Long placeId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, Boolean isBreakTime, Integer cycle){
 
         this.placeId = placeId;
 
