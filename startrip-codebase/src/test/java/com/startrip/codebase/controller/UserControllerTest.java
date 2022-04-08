@@ -131,4 +131,29 @@ class UserControllerTest {
                 .get()
                 .toString()).isEqualTo(Role.USER.getKey());
     }
+
+    @DisplayName("아무 인증 없이 API 권한 검증 401 테스트")
+    @Test
+    void test5() throws Exception {
+
+        mockMvc.perform(
+                        get("/api/user/test")
+                )
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
+
+    @DisplayName("JWT 토큰을 헤더에 넣고 API 권한 검증 200 테스트")
+    @Test
+    void test6() throws Exception {
+        jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTY0OTQ4NjgxMH0.vI21YO2ihncH28xxXMnttQMtZWTHhmlLcUYXZse85K6_wEicHeVblYGsS64qmf-kKw7QgvmG_Ahlj9KV6Pa-TQ";
+
+        mockMvc.perform(
+                        get("/api/user/test")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", "Bearer " + jwtToken)
+                )
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 }
