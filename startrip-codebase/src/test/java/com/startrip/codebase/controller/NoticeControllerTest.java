@@ -9,6 +9,7 @@ import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.domain.user.UserRepository;
 import com.startrip.codebase.dto.notice.NewNoticeDto;
 import com.startrip.codebase.dto.noticecomment.NewCommentDto;
+import com.startrip.codebase.jwt.TokenProvider;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;
@@ -56,6 +57,11 @@ class NoticeControllerTest {
     @Autowired
     NoticeRepository noticeRepository;
 
+    @Autowired
+    private TokenProvider tokenProvider;
+
+    private String userJWT = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTY0OTQ4NjgxMH0.vI21YO2ihncH28xxXMnttQMtZWTHhmlLcUYXZse85K6_wEicHeVblYGsS64qmf-kKw7QgvmG_Ahlj9KV6Pa-TQ";
+    private String adminJWT = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiYXV0aCI6IlJPTEVfQURNSU4iLCJleHAiOjE2NDk0ODc4NjR9.R6945nNqOzy83FQaJ2bfzhMCRRHyP4TiL_imlPQG0TDMY4219lI0LbeXfeqaYZd-R5WQiR8A8814QWlKHHt40A";
 
     @Autowired
     private WebApplicationContext wac;
@@ -96,7 +102,8 @@ class NoticeControllerTest {
         userRepository.save(user);
         categoryRepository.save(category);
 
-        Category find =categoryRepository.findCategoryByCategoryName("공지사항").get();
+
+        Category find = categoryRepository.findCategoryByCategoryName("공지사항").get();
 
         NewNoticeDto dto = new NewNoticeDto();
         dto.setUserEmail("test@test.com");
@@ -109,11 +116,35 @@ class NoticeControllerTest {
                         post("/api/notice")
                                 .contentType(MediaType.APPLICATION_JSON) // JSON 타입으로 지정
                                 .content(objectMapper.writeValueAsString(dto))
+                                .header("Authorization", "Bearer " + adminJWT)
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().string("생성되었습니다"))
                 .andDo(print());
     }
+
+    @DisplayName("일반 유저가 게시글 생성 API를 할시, 401")
+    @Test
+    void test0() throws Exception {
+        Category find = categoryRepository.findCategoryByCategoryName("공지사항").get();
+
+        NewNoticeDto dto = new NewNoticeDto();
+        dto.setUserEmail("test@test.com");
+        dto.setCategoryId(find.getId());
+        dto.setAttachment("파일URL");
+        dto.setText("본문");
+        dto.setTitle("테스트제목");
+
+        mockMvc.perform(
+                        post("/api/notice")
+                                .contentType(MediaType.APPLICATION_JSON) // JSON 타입으로 지정
+                                .content(objectMapper.writeValueAsString(dto))
+                                .header("Authorization", "Bearer " + userJWT)
+                )
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
+
 
     @DisplayName("게시글 조회 API 가 작동한다")
     @Order(3)
@@ -141,9 +172,9 @@ class NoticeControllerTest {
         dto.setAttachment("수정된파일URL");
 
         mockMvc.perform(
-                    put(String.format("/api/notice/%d", notice.getNoticeId()))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(dto))
+                        put(String.format("/api/notice/%d", notice.getNoticeId()))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto))
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
