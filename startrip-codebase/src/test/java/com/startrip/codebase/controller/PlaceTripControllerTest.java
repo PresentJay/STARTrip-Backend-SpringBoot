@@ -1,8 +1,6 @@
 package com.startrip.codebase.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.startrip.codebase.domain.state.State;
-import com.startrip.codebase.domain.state.StateRepository;
 import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.domain.user.UserRepository;
 import com.startrip.codebase.dto.place_trip.CreatePlaceTripDto;
@@ -37,9 +35,6 @@ public class PlaceTripControllerTest {
     private final PlaceTripService placeTripService;
 
     @Autowired
-    private StateRepository stateRepository;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -54,26 +49,19 @@ public class PlaceTripControllerTest {
                 .build();
     }
 
-//    public void cleanUp() {
-//        stateRepository.deleteAllInBatch();
-//        userRepository.deleteAllInBatch();
-//    }
+    public void cleanUp() {
+        userRepository.deleteAllInBatch();
+    }
 
     @DisplayName("Create 테스트 1번")
     @Test
     public void test1() throws Exception {
-        //cleanUp();
-        State state = State.builder()
-                .stateId(UUID.fromString("b12e938d-9473-4c06-9d52-464cc2f59429"))
-                .stateNum(0)
-                .build();
+        cleanUp();
 
         User user = User.builder()
                 .name("b")
                 .email("1@1.com")
                 .build();
-
-        stateRepository.save(state);
         userRepository.save(user);
 
         CreatePlaceTripDto dto = new CreatePlaceTripDto();
@@ -83,7 +71,7 @@ public class PlaceTripControllerTest {
         dto.setPlaceId(UUID.fromString("0f1e5a75-f3f4-4dbe-b739-e428e511e0e8"));
         dto.setStartTime(Date.valueOf("2022-03-23"));
         dto.setEndTime(Date.valueOf("2022-03-25"));
-        dto.setState(state);
+        dto.setState(1);
         dto.setTransportation("버스");
         dto.setTitle("울산 여행");
 
@@ -98,17 +86,10 @@ public class PlaceTripControllerTest {
     @DisplayName("Create 테스트 2번")
     @Test
     public void test2() throws Exception {
-        State state = State.builder()
-                .stateId(UUID.fromString("c12e938d-9473-4c06-9d52-464cc2f59429"))
-                .stateNum(0)
-                .build();
-
         User user = User.builder()
                 .name("b")
                 .email("2@2.com")
                 .build();
-
-        stateRepository.save(state);
         userRepository.save(user);
 
         CreatePlaceTripDto dto = new CreatePlaceTripDto();
@@ -118,7 +99,7 @@ public class PlaceTripControllerTest {
         dto.setPlaceId(UUID.fromString("1f1e5a75-f3f4-4dbe-b739-e428e511e0e8"));
         dto.setStartTime(Date.valueOf("2022-03-29"));
         dto.setEndTime(Date.valueOf("2022-03-30"));
-        dto.setState(state);
+        dto.setState(1);
         dto.setTransportation("기차");
         dto.setTitle("김해 여행");
 
@@ -198,6 +179,6 @@ public class PlaceTripControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/placetrip/a3661498-9473-4c06-9d52-464cc2f59429")
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print());
-        //cleanUp();
+        cleanUp();
     }
 }
