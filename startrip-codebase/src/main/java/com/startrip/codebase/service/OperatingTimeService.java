@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -55,24 +56,25 @@ public class OperatingTimeService {
 
 
     //for Get Specific optime (about dateTime)
-    public OperatingTime getOpTimeDatetime(Long placeId, @DateTimeFormat(iso=DateTimeFormat.ISO.DATE) LocalDate date) {
+    public Optional<OperatingTime> getOpTimeDatetime(Long placeId, LocalTime requestTime) {
         FindPlace(placeId);
 
-        //해당 date가, 어떤 optime이 가진 시간 내에 가지고 있는 것인지 구현해야 함
-
+        //해당 place에 존재하는 opTime들을 가져오기
         Optional<List<OperatingTime>> optimes = Optional.ofNullable(operatingTimeRepository.findAllByPlaceId(placeId));
 
-        UUID test = UUID.randomUUID();
-        OperatingTime optimeInDate = operatingTimeRepository.getById(test);
+        Boolean isInTime = false;
+        OperatingTime optimeInTime=null;
 
-        for ( OperatingTime optime : optimes.get()){
-        /*
-            // 아니, 어떻게 비교해?
-            if(optime.getStartTime() < date < optime.getEndTime()) */
-
+        // 각 opTime에 대하여 탐색
+        for ( OperatingTime optime : optimes.get()) {
+            isInTime = requestTime.isAfter(optime.getStartTime()) && requestTime.isBefore(optime.getEndTime());
+            if (isInTime) {
+                optimeInTime = optime;
+                break;
+            }
         }
-        return optimeInDate;
 
+        return Optional.ofNullable(optimeInTime);
     }
 
     public void updateOptime(UUID optimeId, RequestOptimeDto dto){

@@ -11,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -36,7 +38,7 @@ public class OperatingTimeController {
 
     // GET : api/place/optime?palceId={placeId}  // 특정 장소의 모든 op_time 보기
     @GetMapping (path = "/optime/list", params="placeid")
-    public ResponseEntity getOpTimeAll_inSpecificPlace(@RequestParam(value="placeid") Long placeId ){
+    public ResponseEntity getOpTimeAll_inSpecificPlace(@RequestParam(value="placeid") Long placeId){
        List<OperatingTime> operatingTimes;
         try {
             operatingTimes = operatingTimeService.getOptimeAll(placeId);
@@ -48,15 +50,19 @@ public class OperatingTimeController {
 
 
     // GET api/place/optime?placeId={placeId}&datetime={datetime} // 특정 시간의 특정장소 op_time 보기
-    @GetMapping (path= "/optime", params = {"placeId", "date"})
+    @GetMapping (path= "/optime", params = {"placeid", "requestTime"})
     public ResponseEntity getOpTimeAll_inSpecificTime(@RequestParam(value = "placeid") Long placeId,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
-        //log.info(String.valueOf(date));
+            String requestTime){
 
-        OperatingTime optime;
+         // string to LocalTime
+        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalTime time = LocalTime.parse(requestTime, formatterTime);
+        log.info(String.valueOf(time)); // Todo: need delete
+
+        Optional<OperatingTime> optime;
         try{
-            optime = operatingTimeService.getOpTimeDatetime(placeId, date);
-
+            // 해당 시간의 운영시간 정보 확인하기
+            optime = operatingTimeService.getOpTimeDatetime(placeId, time);
         }catch(Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
 
