@@ -1,6 +1,7 @@
 package com.startrip.codebase.domain.event;
 
 import com.startrip.codebase.domain.category.Category;
+import com.startrip.codebase.domain.event.dto.CreateEventDto;
 import com.startrip.codebase.domain.event.dto.UpdateEventDto;
 import com.startrip.codebase.domain.event_review.EventReview;
 import com.startrip.codebase.domain.place.Place;
@@ -63,6 +64,16 @@ public class Event {
 
     private String eventPicture;
 
+    public static Event of(CreateEventDto dto, EventReview eventReview, Category category, Place place){
+        Event event = Event.builder()
+                .eventReview(eventReview)
+                .category(category)
+                .place(place)
+                .eventTitle(dto.getEventTitle())
+                .description(dto.getDescription())
+                .build();
+        return event;
+    }
     public void update(UpdateEventDto dto) {
         this.eventTitle = dto.getEventTitle();
         this.startDate = dto.getStartDate();
