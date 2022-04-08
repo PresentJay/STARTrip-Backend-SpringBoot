@@ -1,5 +1,6 @@
 package com.startrip.codebase.service;
 
+import com.startrip.codebase.domain.event.EventRepository;
 import com.startrip.codebase.domain.event_review.EventReview;
 import com.startrip.codebase.domain.event_review.EventReviewRepository;
 import com.startrip.codebase.domain.event_review.dto.CreateEventReviewDto;
@@ -17,11 +18,14 @@ import java.util.Optional;
 @Slf4j
 public class EventReviewService {
     private EventReviewRepository eventReviewRepository;
+    private EventRepository eventRepository;
 
     @Autowired
-    public EventReviewService(EventReviewRepository eventReviewRepository) {
+    public EventReviewService(EventReviewRepository eventReviewRepository, EventRepository eventRepository) {
         this.eventReviewRepository = eventReviewRepository;
+        this.eventRepository = eventRepository;
     }
+
 
     public void createEventReview(CreateEventReviewDto dto) {
         EventReview eventReview = EventReview.builder()
@@ -48,9 +52,10 @@ public class EventReviewService {
     }
 
     public EventReview getReviewEvent(Long id){
-        return  eventReviewRepository.findById(id).get();
+        EventReview eventReview = eventReviewRepository.findById(id)
+                .orElseThrow(()->new RuntimeException("해당 이벤트 리뷰가 없습니다."));
+        return  eventReview;
     }
-    //ToDo: 해당 부분은 id 가 없을시엔, NPE 에러가 발생할 경우가 있으니, Optional 에서 orElseThrow() 를 던져서 예외를 처리
 
 
     public void updateReviewEvent(Long id, UpdateEventReviewDto dto){
