@@ -10,7 +10,9 @@ import com.startrip.codebase.dto.noticecomment.NewCommentDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -20,6 +22,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 class NoticeCommentServiceTest {
 
     @Autowired
@@ -55,7 +58,6 @@ class NoticeCommentServiceTest {
         return userRepository.save(user);
     }
 
-
     @DisplayName("해당 게시글에 코멘트가 생성된다")
     @Test
     void newComment() {
@@ -74,7 +76,6 @@ class NoticeCommentServiceTest {
         assertThat(comments.get(0).getCommentText()).isEqualTo("댓글내용");
     }
 
-
     @DisplayName("해당 게시글에 10개의 코멘트가 생성되고 조회한다")
     @Test
     void getComment_and_10() {
@@ -88,7 +89,6 @@ class NoticeCommentServiceTest {
             dto.setUserEmail(user.getEmail());
             commentService.newComment(dto);
         }
-
         // when
         List<NoticeComment> comments = commentRepository.findByNoticeId(notice.getNoticeId());
 
