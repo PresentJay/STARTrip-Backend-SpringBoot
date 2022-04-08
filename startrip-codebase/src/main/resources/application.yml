@@ -1,6 +1,6 @@
 spring:
   config:
-    import: "configserver:http://203.241.228.111:8888"
+    import: "configserver:http://203.241.228.111:18081"
   profiles:
     active: local, default
     include:
