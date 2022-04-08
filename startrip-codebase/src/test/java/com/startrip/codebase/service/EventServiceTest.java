@@ -58,7 +58,6 @@ public class EventServiceTest {
         createEventReview(event);
 
         EventReview find = eventReviewService.getReviewEvent(1L);
-        //assertThat(find.getCategory().getCategoryName()).isEqualTo("공지사항");
         assertThat(find.getEventId().getEventId()).isEqualTo(0);
     }
 
