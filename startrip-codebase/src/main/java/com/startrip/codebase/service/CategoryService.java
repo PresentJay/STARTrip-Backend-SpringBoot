@@ -17,7 +17,6 @@ import java.util.UUID;
 import static com.mongodb.assertions.Assertions.assertTrue;
 
 @Service
-@Slf4j
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;

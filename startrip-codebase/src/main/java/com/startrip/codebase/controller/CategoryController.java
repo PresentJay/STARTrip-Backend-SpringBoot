@@ -6,6 +6,7 @@ import com.startrip.codebase.dto.category.UpdateCategoryDto;
 import com.startrip.codebase.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
@@ -22,6 +23,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping("/category")
     public ResponseEntity<String> createCategory(@RequestBody CreateCategoryDto dto) {
         try {
@@ -32,6 +34,7 @@ public class CategoryController {
         return new ResponseEntity<>("카테고리 생성", HttpStatus.CREATED);
     }
 
+    @PreAuthorize("permitAll")
     @GetMapping("/category")
     public ResponseEntity<List<Category>> getCategory() {
         List<Category> categories;
@@ -43,6 +46,7 @@ public class CategoryController {
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
+    @PreAuthorize("permitAll")
     @GetMapping("/category/{id}")
     public ResponseEntity getCategory(@PathVariable("id") UUID id) {
         Category category;
@@ -55,6 +59,7 @@ public class CategoryController {
     }
 
     // GET All child
+    @PreAuthorize("permitAll")
     @GetMapping("/category/child-full/{id}")
     public ResponseEntity getCategoryChildren(@PathVariable("id") UUID id) {
         List<Category> children;
@@ -68,6 +73,7 @@ public class CategoryController {
     }
 
     // GET depth+1 child
+    @PreAuthorize("permitAll")
     @GetMapping("category/child/{id}")
     public ResponseEntity getCategoryChildren1Depth(@PathVariable("id") UUID id) {
         List<Category> children;
@@ -79,6 +85,7 @@ public class CategoryController {
         return new ResponseEntity<>(children, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping("/category/{id}")
     public ResponseEntity updateEvent(@PathVariable("id") UUID id, @RequestBody UpdateCategoryDto dto) {
         try {
@@ -89,6 +96,7 @@ public class CategoryController {
         return new ResponseEntity<>("수정", HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/category/{id}")
     public ResponseEntity deleteCategory(@PathVariable("id") @NotBlank UUID id) {
         try {
