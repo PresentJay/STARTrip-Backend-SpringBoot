@@ -8,9 +8,5 @@ import java.util.UUID;
 
 public interface OperatingTimeRepository extends JpaRepository<OperatingTime, UUID> {
 
-
     List<OperatingTime> findAllByPlaceId(Long placeId);
-    OperatingTime findOperatingTimeByPlaceId(Long placeId);
-
-
 }

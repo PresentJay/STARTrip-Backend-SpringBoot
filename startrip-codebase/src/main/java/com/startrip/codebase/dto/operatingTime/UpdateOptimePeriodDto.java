@@ -5,14 +5,14 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
-public class UpdateOptimPeriodeDto {
+public class UpdateOptimePeriodDto {
 
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-
+    private String startDate;
+    private String endDate;
+    private String startTime;
+    private String endTime;
 }

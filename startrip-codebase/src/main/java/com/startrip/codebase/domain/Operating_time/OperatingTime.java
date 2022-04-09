@@ -1,13 +1,12 @@
 package com.startrip.codebase.domain.Operating_time;
 
 import com.startrip.codebase.dto.operatingTime.RequestOptimeDto;
-import com.startrip.codebase.dto.operatingTime.ResponseOptimeDto;
+import com.startrip.codebase.dto.operatingTime.UpdateOptimePeriodDto;
 import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -53,10 +52,10 @@ public class OperatingTime {
         this.placeId = placeId;
     }
 
-    public static OperatingTime of ( RequestOptimeDto dto){ // List.of 같은 느낌
+    public static OperatingTime of ( RequestOptimeDto dto){
 
         DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
+        DateTimeFormatter formatterTime = DateTimeFormatter.ISO_LOCAL_TIME;
 
         OperatingTime operatingTime = OperatingTime.builder()
                 .placeId(dto.getPlaceId())
@@ -70,7 +69,8 @@ public class OperatingTime {
         return operatingTime;
     }
 
-    public void updateTime(RequestOptimeDto dto){
+    public void updateTime(UpdateOptimePeriodDto dto){
+
         DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter formatterTime = DateTimeFormatter.ISO_LOCAL_TIME;
 
