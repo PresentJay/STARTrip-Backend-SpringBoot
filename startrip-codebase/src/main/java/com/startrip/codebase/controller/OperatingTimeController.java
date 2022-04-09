@@ -2,42 +2,41 @@ package com.startrip.codebase.controller;
 
 import com.startrip.codebase.domain.Operating_time.OperatingTime;
 import com.startrip.codebase.dto.operatingTime.RequestOptimeDto;
-import com.startrip.codebase.dto.operatingTime.ResponseOptimeDto;
+import com.startrip.codebase.dto.operatingTime.UpdateOptimePeriodDto;
 import com.startrip.codebase.service.OperatingTimeService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
-@Slf4j
 @RestController
-@RequestMapping("/api/place")
+@RequestMapping("/api")
 public class OperatingTimeController {
 
      private final OperatingTimeService operatingTimeService;
 
+     @Autowired
      public OperatingTimeController(OperatingTimeService operatingTimeService ) {
          this.operatingTimeService = operatingTimeService;
      }
 
-    // CREATE
-    @PostMapping("/optime")
+    @PostMapping("place/optime")
     public ResponseEntity createOpTime(RequestOptimeDto dto){
-        operatingTimeService.createOpTime(dto);
-         return  new ResponseEntity<>("운영시간 생성",HttpStatus.OK);
+         try {
+             operatingTimeService.createOpTime(dto);
+         } catch(IllegalStateException e){
+             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+         }
+         return  new ResponseEntity<>("운영시간 생성",HttpStatus.CREATED);
     }
 
-    // GET : api/place/optime?palceId={placeId}  // 특정 장소의 모든 op_time 보기
-    @GetMapping (path = "/optime/list", params="placeid")
+    // GET : 특정 장소의 모든 op_time
+    @GetMapping (path = "place/optime/list", params="placeid")
     public ResponseEntity getOpTimeAll_inSpecificPlace(@RequestParam(value="placeid") Long placeId){
        List<OperatingTime> operatingTimes;
         try {
@@ -49,19 +48,16 @@ public class OperatingTimeController {
     }
 
 
-    // GET api/place/optime?placeId={placeId}&datetime={datetime} // 특정 시간의 특정장소 op_time 보기
-    @GetMapping (path= "/optime", params = {"placeid", "requestTime"})
+    // GET: 특정 시간의 op_time
+    @GetMapping (path= "place/optime", params = {"placeid", "requesttime"})
     public ResponseEntity getOpTimeAll_inSpecificTime(@RequestParam(value = "placeid") Long placeId,
-            String requestTime){
+            String requesttime){
 
-         // string to LocalTime
         DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
-        LocalTime time = LocalTime.parse(requestTime, formatterTime);
-        log.info(String.valueOf(time)); // Todo: need delete
+        LocalTime time = LocalTime.parse(requesttime, formatterTime);
 
         Optional<OperatingTime> optime;
         try{
-            // 해당 시간의 운영시간 정보 확인하기
             optime = operatingTimeService.getOpTimeDatetime(placeId, time);
         }catch(Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -71,8 +67,8 @@ public class OperatingTimeController {
     }
 
     // UPDATE opTime
-    @PutMapping ("/optime/{optimeId}")
-    public ResponseEntity updateOpTime( @PathVariable("optimeId") UUID optimeId, RequestOptimeDto dto){
+    @PutMapping ("place/optime/{optimeId}")
+    public ResponseEntity updateOpTime( @PathVariable("optimeId") UUID optimeId, UpdateOptimePeriodDto dto){
         try {
             operatingTimeService.updateOptime(optimeId, dto);
         }catch (Exception e) {
@@ -83,7 +79,7 @@ public class OperatingTimeController {
 
 
     // DELETE opTime
-    @DeleteMapping("/optime/{optimeId}")
+    @DeleteMapping("place/optime/{optimeId}")
     public ResponseEntity deleteOpTime(@PathVariable("optimeId") UUID optimeId){
         try {
             operatingTimeService.deleteOptime(optimeId);

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class UpdatePeriodOptimeDto {
+public class UpdateOptimPeriodeDto {
 
     private LocalDate startDate;
     private LocalDate endDate;
