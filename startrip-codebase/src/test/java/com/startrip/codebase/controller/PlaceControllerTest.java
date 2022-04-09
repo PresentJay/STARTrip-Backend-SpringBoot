@@ -8,6 +8,7 @@ import com.startrip.codebase.domain.place.Place;
 import com.startrip.codebase.domain.place.PlaceRepository;
 import com.startrip.codebase.dto.PlaceDto;
 import com.startrip.codebase.service.PlaceService;
+import org.apache.logging.log4j.core.LifeCycle;
 import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,14 +44,13 @@ public class PlaceControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private PlaceRepository placeRepository;
-
-    @Autowired
     private WebApplicationContext wac;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
     private UUID category_id_sample = UUID.randomUUID();
+    private UUID id1;
+
     @BeforeEach
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(wac)
@@ -58,7 +58,6 @@ public class PlaceControllerTest {
                 .build();
     }
 
-    String id1, id2;
     @DisplayName("Place에 새로운 장소를 추가한다 1")
     @Order(1)
     @Test
@@ -80,7 +79,10 @@ public class PlaceControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn();
-        id1 = result.getResponse().getContentAsString();
+
+        id1 = UUID.fromString(result.getResponse()
+                .getContentAsString()
+                .replaceAll("\\\"",""));
     }
 
     @DisplayName("Place에 새로운 장소를 추가한다 2")
@@ -104,7 +106,6 @@ public class PlaceControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn();
-        id2 = result.getResponse().getContentAsString();
     }
 
     @DisplayName("Place의 모든 목록을 읽어온다")
@@ -118,6 +119,7 @@ public class PlaceControllerTest {
     @Order(4)
     @Test
     void place_update() throws Exception {
+        System.out.println(id1 + ", ");
         PlaceDto dto = new PlaceDto();
         dto.setPlaceName("테스트 장소 1");
         dto.setAddress("부산시 북구 동동동");
