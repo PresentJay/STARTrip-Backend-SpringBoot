@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -57,6 +58,7 @@ public class PlaceControllerTest {
                 .build();
     }
 
+    String id1, id2;
     @DisplayName("Place에 새로운 장소를 추가한다 1")
     @Order(1)
     @Test
@@ -71,12 +73,14 @@ public class PlaceControllerTest {
         dto.setPhoneNumber("010-0000-0000");
         dto.setPlaceDescription("멋있는 장소이다.");
 
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                         post("/api/place")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
-                .andDo(print());
+                .andDo(print())
+                .andReturn();
+        id1 = result.getResponse().getContentAsString();
     }
 
     @DisplayName("Place에 새로운 장소를 추가한다 2")
@@ -93,12 +97,14 @@ public class PlaceControllerTest {
         dto.setPhoneNumber("010-1234-5678");
         dto.setPlaceDescription("트랜디한 장소이다.");
 
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                         post("/api/place")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
-                .andDo(print());
+                .andDo(print())
+                .andReturn();
+        id2 = result.getResponse().getContentAsString();
     }
 
     @DisplayName("Place의 모든 목록을 읽어온다")
@@ -123,7 +129,7 @@ public class PlaceControllerTest {
         dto.setPlaceDescription("멋있는 장소이다.");
 
         mockMvc.perform(
-                        post("/api/place/1") // 수정하기 위해서는 생성했던 id와 같은 내용이어야 조회 후 수정 가능
+                        post("/api/place/" + id1) // 수정하기 위해서는 생성했던 id와 같은 내용이어야 조회 후 수정 가능
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(dto))
                 )
@@ -135,7 +141,7 @@ public class PlaceControllerTest {
     @Order(5)
     @Test
     void place_detail_read() throws Exception {
-        mockMvc.perform(get("/api/place/1"))
+        mockMvc.perform(get("/api/place/" + id1))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -144,7 +150,7 @@ public class PlaceControllerTest {
     @Order(6)
     @Test
     void place_delete() throws Exception {
-        mockMvc.perform(delete("/api/place/1"))
+        mockMvc.perform(delete("/api/place/" + id1))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -153,7 +159,7 @@ public class PlaceControllerTest {
     @Order(7)
     @Test
     void place_detail_read_1() throws Exception {
-        mockMvc.perform(get("/api/place/1"))
+        mockMvc.perform(get("/api/place/" + id1))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
     }

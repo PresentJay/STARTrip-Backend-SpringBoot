@@ -37,7 +37,7 @@ public class PlaceController {
         } catch (Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity(id, HttpStatus.OK);
+        return new ResponseEntity(id.toString(), HttpStatus.OK);
     }
 
     @GetMapping("/place/list")
@@ -48,10 +48,10 @@ public class PlaceController {
 
     @GetMapping("/place/list/{categoryId}")
     public @ResponseBody
-    ResponseEntity showPlaceByCategory(@PathVariable("categoryId") UUID category_id) {
+    ResponseEntity showPlaceByCategory(@PathVariable("categoryId") String category_id) {
         List<Place> placeList;
         try{
-            placeList = placeService.categoryPlace(category_id);
+            placeList = placeService.categoryPlace(UUID.fromString(category_id));
         } catch (Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -60,10 +60,10 @@ public class PlaceController {
 
     @GetMapping("/place/{id}")
     public @ResponseBody
-    ResponseEntity getPlace(@PathVariable("id") UUID id) {
+    ResponseEntity getPlace(@PathVariable("id") String id) {
         Place place;
         try{
-            place = placeService.getPlace(id);
+            place = placeService.getPlace(UUID.fromString(id));
         } catch (Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -73,9 +73,9 @@ public class PlaceController {
     @Secured("ROLE_ADMIN")
     @PostMapping("/place/{id}")
     public @ResponseBody
-    ResponseEntity updatePlace(@PathVariable("id") UUID id, PlaceDto dto) {
+    ResponseEntity updatePlace(@PathVariable("id") String id, PlaceDto dto) {
         try{
-            placeService.updatePlace(id, dto);
+            placeService.updatePlace(UUID.fromString(id), dto);
         } catch (Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -85,9 +85,9 @@ public class PlaceController {
     @Secured("ROLE_ADMIN")
     @DeleteMapping("/place/{id}")
     public @ResponseBody
-    ResponseEntity deletePlace(@PathVariable("id") UUID id) {
+    ResponseEntity deletePlace(@PathVariable("id") String id) {
         try{
-            placeService.deletePlace(id);
+            placeService.deletePlace(UUID.fromString(id));
         } catch (Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
