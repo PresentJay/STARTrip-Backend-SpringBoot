@@ -8,17 +8,13 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
-    List<Category> findAllByCategoryParent(Category categoryParent);
     Optional<Category> findCategoryByCategoryName (String categoryName);
-
-
-    // 캍고리를, 이름과 엡스로 찾기
+    List<Category> findAllByCategoryParent(Category categoryParent);
     List<Category> findAllByDepthAndCategoryParent(Integer depth, Category category);
-
-    Boolean existsByCategoryParent(Category categoryParent); //없는지 조회하기 위함
 
     @Query("select max(c.depth) as max_depth from Category c")
     Integer findByDepthMax();

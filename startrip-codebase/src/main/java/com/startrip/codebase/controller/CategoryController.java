@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -21,37 +22,65 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    // CREATE
     @PostMapping("/category")
     public ResponseEntity<String> createCategory(@RequestBody CreateCategoryDto dto) {
-        categoryService.createCategory(dto);
-        return new ResponseEntity<>("카테고리 생성", HttpStatus.OK);
+        try {
+            categoryService.createCategory(dto);
+        } catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("카테고리 생성", HttpStatus.CREATED);
     }
 
-
-    // GET All
     @GetMapping("/category")
     public ResponseEntity<List<Category>> getCategory() {
-        List<Category> categories = categoryService.getCategoryList();
+        List<Category> categories;
+        try {
+            categories = categoryService.getCategoryList();
+        }catch(Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
-    // GET Only
     @GetMapping("/category/{id}")
-    public ResponseEntity getCategory(@PathVariable("id") Long id) {
+    public ResponseEntity getCategory(@PathVariable("id") UUID id) {
         Category category;
         try {
             category = categoryService.getCategory(id);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
-    // UPDATE
+    // GET All child
+    @GetMapping("/category/child-full/{id}")
+    public ResponseEntity getCategoryChildren(@PathVariable("id") UUID id) {
+        List<Category> children;
+        try {
+            children = categoryService.getChildrenCategory(id);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(children, HttpStatus.OK);
+    }
+
+    // GET depth+1 child
+    @GetMapping("category/child/{id}")
+    public ResponseEntity getCategoryChildren1Depth(@PathVariable("id") UUID id) {
+        List<Category> children;
+        try {
+            children = categoryService.getDepthPlus1ChildrenCategory(id);
+            } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(children, HttpStatus.OK);
+    }
+
     @PutMapping("/category/{id}")
-    public ResponseEntity updateEvent(@PathVariable("id") Long id, @RequestBody UpdateCategoryDto dto) {
+    public ResponseEntity updateEvent(@PathVariable("id") UUID id, @RequestBody UpdateCategoryDto dto) {
         try {
             categoryService.updateCategory(id, dto);
         } catch (Exception e) {
@@ -60,42 +89,13 @@ public class CategoryController {
         return new ResponseEntity<>("수정", HttpStatus.OK);
     }
 
-    // DELETE
     @DeleteMapping("/category/{id}")
-    public ResponseEntity deleteCategory(@PathVariable("id") @NotBlank Long id) {
+    public ResponseEntity deleteCategory(@PathVariable("id") @NotBlank UUID id) {
         try {
             categoryService.deleteCategory(id);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("삭제", HttpStatus.OK);
-    }
-
-
-    // GET depth+1 child
-    @GetMapping("category/child/{id}")
-    public ResponseEntity getCategoryChildren1Depth(@PathVariable("id") Long id) {
-
-        List<Category> children = null;
-        try {
-            children = categoryService.getDepthPlus1Children(id);
-            } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(children, HttpStatus.OK);
-    }
-
-
-    // GET All child
-    @GetMapping("/category/child-full/{id}")
-    public ResponseEntity getCategoryChildren(@PathVariable("id") Long id) {
-        List<Category> children = null;
-        try {
-            children = categoryService.getChildren(id);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(children, HttpStatus.OK);
     }
 }
