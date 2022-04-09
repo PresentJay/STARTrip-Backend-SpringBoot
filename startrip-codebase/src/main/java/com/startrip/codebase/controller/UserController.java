@@ -21,7 +21,6 @@ import java.security.Principal;
 
 @RestController()
 @RequestMapping("/api/user")
-@Controller
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 
@@ -36,15 +35,8 @@ public class UserController {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
-
-    @GetMapping("/{userId}")
-    public User login(@PathVariable("userId") Long id) {
-        User user = userService.findOne(id).get();
-        return user;
-    }
-
     @PostMapping("/login")
-    public @ResponseBody ResponseEntity login(@RequestBody LoginDto loginDto){
+    public @ResponseBody ResponseEntity login(@RequestBody LoginDto loginDto){ // JAVA 리플렉션
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
 

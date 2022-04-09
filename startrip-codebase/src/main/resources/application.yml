@@ -1,11 +1,12 @@
 spring:
   config:
-    import: "configserver:http://203.241.228.111:8888"
+    import: "configserver:http://203.241.228.111:18081"
   profiles:
     active: local, default
     include:
       - oauth2
       - mongoDB
+      - postgres
   application:
     name: secret
 
@@ -22,16 +23,13 @@ spring:
     properties:
       hibernate:
         show_sql: true
-      format_sql: true
+        format_sql: true
+
 
   data:
     mongodb:
       url: mongodb://127.0.0.1:27017
       database: mongostartrip
-  h2:
-    console:
-      enabled: true
-
 
 logging:
   config: classpath:log4j2.yml
