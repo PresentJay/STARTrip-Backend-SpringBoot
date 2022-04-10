@@ -7,10 +7,7 @@ import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.dto.LoginDto;
 import com.startrip.codebase.dto.SignUpDto;
 import com.startrip.codebase.jwt.TokenProvider;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserControllerTest {
 
     @Autowired
@@ -146,8 +144,6 @@ class UserControllerTest {
     @DisplayName("JWT 토큰을 헤더에 넣고 API 권한 검증 200 테스트")
     @Test
     void test6() throws Exception {
-        jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTY0OTQ4NjgxMH0.vI21YO2ihncH28xxXMnttQMtZWTHhmlLcUYXZse85K6_wEicHeVblYGsS64qmf-kKw7QgvmG_Ahlj9KV6Pa-TQ";
-
         mockMvc.perform(
                         get("/api/user/test")
                                 .contentType(MediaType.APPLICATION_JSON)

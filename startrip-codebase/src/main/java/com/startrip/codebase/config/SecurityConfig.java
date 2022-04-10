@@ -1,5 +1,6 @@
 package com.startrip.codebase.config;
 
+import com.startrip.codebase.domain.auth.CustomAccessDeniedHandler;
 import com.startrip.codebase.domain.auth.CustomAuthenticationSuccessHandler;
 import com.startrip.codebase.domain.auth.CustomOAuth2UserService;
 import com.startrip.codebase.jwt.JwtAccessDeniedHandler;

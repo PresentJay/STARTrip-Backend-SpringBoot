@@ -38,7 +38,7 @@ public class UserController {
 
     @PostMapping("/login")
     public @ResponseBody
-    ResponseEntity login(@RequestBody LoginDto loginDto) { // JAVA 리플렉션
+    ResponseEntity login(@RequestBody LoginDto loginDto) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
 
@@ -53,10 +53,20 @@ public class UserController {
         return new ResponseEntity<>(jwt, httpHeaders, HttpStatus.OK);
     }
 
+    @GetMapping("/logout")
+    @PreAuthorize("isAuthenticated()")
+    public @ResponseBody
+    ResponseEntity logout() {
+        SecurityContextHolder.clearContext();
+        // TODO : 토큰 해제 로직 추가
+        return new ResponseEntity<>("로그아웃", HttpStatus.OK);
+    }
+
     // Auth End-point
     @GetMapping("/auth/success")
     public @ResponseBody
     ResponseEntity login(@RequestParam("token") String token) {
+
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token);
 
