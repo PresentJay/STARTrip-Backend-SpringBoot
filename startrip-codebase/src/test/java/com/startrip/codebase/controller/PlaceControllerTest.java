@@ -39,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PlaceControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -48,7 +49,7 @@ public class PlaceControllerTest {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    private UUID category_id_sample = UUID.randomUUID();
+    private final UUID category_id_sample = UUID.randomUUID();
     private UUID id1;
 
     @BeforeEach
@@ -119,7 +120,6 @@ public class PlaceControllerTest {
     @Order(4)
     @Test
     void place_update() throws Exception {
-        System.out.println(id1 + ", ");
         PlaceDto dto = new PlaceDto();
         dto.setPlaceName("테스트 장소 1");
         dto.setAddress("부산시 북구 동동동");
@@ -170,6 +170,7 @@ public class PlaceControllerTest {
     @Order(8)
     @Test
     void place_read_category() throws Exception {
+        System.out.println(category_id_sample);
         mockMvc.perform(get("/api/place/list/"+category_id_sample)).andExpect(status().isOk()).andDo(print());
     }
 
