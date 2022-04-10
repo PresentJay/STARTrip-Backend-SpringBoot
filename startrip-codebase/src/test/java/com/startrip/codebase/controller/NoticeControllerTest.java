@@ -153,7 +153,7 @@ class NoticeControllerTest {
                         post("/api/notice")
                                 .contentType(MediaType.APPLICATION_JSON) // JSON 타입으로 지정
                                 .content(objectMapper.writeValueAsString(dto))
-                                .header("Authorization", "Bearer " + adminToken) 
+                                .header("Authorization", "Bearer " + adminToken)
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().string("생성되었습니다"))
