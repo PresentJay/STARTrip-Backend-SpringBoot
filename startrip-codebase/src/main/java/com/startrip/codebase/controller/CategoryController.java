@@ -1,8 +1,7 @@
 package com.startrip.codebase.controller;
 
 import com.startrip.codebase.domain.category.Category;
-import com.startrip.codebase.dto.category.CreateCategoryDto;
-import com.startrip.codebase.dto.category.UpdateCategoryDto;
+import com.startrip.codebase.dto.category.RequestCategoryDto;
 import com.startrip.codebase.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +24,7 @@ public class CategoryController {
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping("/category")
-    public ResponseEntity<String> createCategory(@RequestBody CreateCategoryDto dto) {
+    public ResponseEntity<String> createCategory(@RequestBody RequestCategoryDto dto) {
         try {
             categoryService.createCategory(dto);
         } catch(Exception e){
@@ -87,7 +86,7 @@ public class CategoryController {
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping("/category/{id}")
-    public ResponseEntity updateEvent(@PathVariable("id") UUID id, @RequestBody UpdateCategoryDto dto) {
+    public ResponseEntity updateEvent(@PathVariable("id") UUID id, RequestCategoryDto dto) {
         try {
             categoryService.updateCategory(id, dto);
         } catch (Exception e) {

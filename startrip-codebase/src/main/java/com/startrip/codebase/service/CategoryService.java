@@ -1,20 +1,15 @@
 package com.startrip.codebase.service;
 
-
 import com.startrip.codebase.domain.category.Category;
 import com.startrip.codebase.domain.category.CategoryRepository;
-import com.startrip.codebase.dto.category.CreateCategoryDto;
-import com.startrip.codebase.dto.category.UpdateCategoryDto;
-import lombok.extern.slf4j.Slf4j;
+import com.startrip.codebase.dto.category.RequestCategoryDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.mongodb.assertions.Assertions.assertTrue;
 
 @Service
 public class CategoryService {
@@ -25,7 +20,7 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public void createCategory(CreateCategoryDto dto) {
+    public void createCategory(RequestCategoryDto dto) {
         Category category;
         Optional<UUID> parentId = Optional.ofNullable(dto.getCategoryParentId());
 
@@ -87,7 +82,7 @@ public class CategoryService {
         return categoryRepository.findAllByDepthAndCategoryParent(depth, category);
     }
 
-    public void updateCategory(UUID id, UpdateCategoryDto dto){
+    public void updateCategory(UUID id, RequestCategoryDto dto){
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("해당 카테고리가 존재하지 않습니다"));
         category.setCategoryName(dto.getCategoryName());

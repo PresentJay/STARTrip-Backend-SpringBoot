@@ -1,6 +1,6 @@
 package com.startrip.codebase.domain.category;
 
-import com.startrip.codebase.dto.category.CreateCategoryDto;
+import com.startrip.codebase.dto.category.RequestCategoryDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,7 +30,7 @@ public class Category {
     @Column(nullable = false)
     private Integer depth;
 
-    public static Category createCategory(CreateCategoryDto dto) {
+    public static Category createCategory(RequestCategoryDto dto) {
         Category category = Category.builder()
                 .categoryName(dto.getCategoryName())
                 .build();
