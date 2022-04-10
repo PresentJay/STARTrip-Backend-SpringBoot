@@ -30,7 +30,7 @@ public class PlaceController {
     @Secured("ROLE_ADMIN")
     @PostMapping("/place")
     public @ResponseBody
-    ResponseEntity addPlace(PlaceDto dto) {
+    ResponseEntity addPlace(@RequestBody PlaceDto dto) {
         UUID id;
         try{
             id = placeService.createPlace(dto);
