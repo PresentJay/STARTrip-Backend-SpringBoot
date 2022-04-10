@@ -37,7 +37,8 @@ public class PlaceTripControllerTest {
 
     private final PlaceTripService placeTripService;
 
-    private final UUID placeTripId = UUID.randomUUID();
+    private final UUID placeTripId1 = UUID.randomUUID();
+    private final UUID placeTripId2 = UUID.randomUUID();
 
     private UUID id1;
     private UUID id2;
@@ -73,7 +74,7 @@ public class PlaceTripControllerTest {
         userRepository.save(user);
 
         CreatePlaceTripDto dto = new CreatePlaceTripDto();
-        dto.setTripId(placeTripId);
+        dto.setTripId(placeTripId1);
         dto.setUserId(user);
         dto.setUserPartner("a");
         dto.setPlaceId(UUID.randomUUID());
@@ -105,7 +106,7 @@ public class PlaceTripControllerTest {
         userRepository.save(user);
 
         CreatePlaceTripDto dto = new CreatePlaceTripDto();
-        dto.setTripId(UUID.randomUUID());
+        dto.setTripId(placeTripId2);
         dto.setUserId(user);
         dto.setUserPartner("c");
         dto.setPlaceId(UUID.randomUUID());

@@ -26,8 +26,8 @@ public class EventTripController {
     // Create
     @PostMapping("/eventtrip")
     public ResponseEntity createEventTrip(@RequestBody CreateEventTripDto dto) {
-        eventTripService.createEventTrip(dto);
-        return new ResponseEntity("Event Trip 생성", HttpStatus.OK);
+        UUID id = eventTripService.createEventTrip(dto);
+        return new ResponseEntity(id, HttpStatus.OK);
     }
 
     // All
