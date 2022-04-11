@@ -9,6 +9,7 @@ import com.startrip.codebase.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -51,6 +52,7 @@ public class NoticeController {
     }
 
     @PostMapping("/notice")
+    @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
     public @ResponseBody
     ResponseEntity addNotice(@RequestBody NewNoticeDto dto) {
         try {
@@ -62,6 +64,7 @@ public class NoticeController {
     }
 
     @PutMapping("/notice/{id}")
+    @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
     public @ResponseBody
     ResponseEntity updateNotice(@PathVariable("id") Long id, @RequestBody NewNoticeDto dto) {
         noticeService.updateNotice(id, dto);
@@ -69,6 +72,7 @@ public class NoticeController {
     }
 
     @DeleteMapping("/notice/{id}")
+    @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
     public @ResponseBody
     ResponseEntity deleteNotice(@PathVariable("id") Long id) {
         try {

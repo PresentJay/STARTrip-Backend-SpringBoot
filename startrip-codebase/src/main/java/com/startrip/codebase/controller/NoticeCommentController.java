@@ -9,6 +9,7 @@ import com.startrip.codebase.service.NoticeCommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class NoticeCommentController {
     }
 
     @PostMapping("/notice/{id}/comment")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity addComment(@PathVariable("id") Long noticeId, @RequestBody NewCommentDto dto) {
         try {
             dto.setNoticeId(noticeId);
@@ -47,6 +49,7 @@ public class NoticeCommentController {
 
     // TODO : 수정 시, 해당 인증 정보를 받아서 처리하기 (SecurityHolder)
     @PutMapping("/notice/{id}/comment/{commentId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity updateComment(@PathVariable("commentId") Long commentId, @RequestBody UpdateCommentDto dto) {
         try {
             noticeCommentService.updateComment(commentId, dto);
@@ -57,6 +60,7 @@ public class NoticeCommentController {
     }
 
     @DeleteMapping("/notice/{id}/comment/{commentId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity deleteComment(@PathVariable("commentId") Long commentId) {
         try {
             noticeCommentService.deleteComment(commentId);

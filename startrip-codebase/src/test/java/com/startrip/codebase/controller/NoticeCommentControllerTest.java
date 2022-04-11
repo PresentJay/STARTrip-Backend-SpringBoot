@@ -20,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -100,7 +101,7 @@ class NoticeCommentControllerTest {
         return noticeRepository.save(notice);
     }
 
-
+    @WithMockUser(roles = {"USER"})
     @DisplayName("게시글에 코멘트 생성 API가 작동한다")
     @Test
     void test1() throws Exception {
@@ -137,6 +138,7 @@ class NoticeCommentControllerTest {
                 .andDo(print());
     }
 
+    @WithMockUser(roles = {"USER"})
     @DisplayName("게시글에 코멘트 수정 API가 작동한다")
     @Test
     void test4() throws Exception {
@@ -154,7 +156,7 @@ class NoticeCommentControllerTest {
                 .andDo(print());
     }
 
-
+    @WithMockUser(roles = {"USER"})
     @DisplayName("게시글에 코멘트 삭제 API가 작동한다")
     @Test
     void test5() throws Exception {
