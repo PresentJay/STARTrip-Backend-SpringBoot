@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -38,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PlaceControllerTest {
@@ -59,6 +61,7 @@ public class PlaceControllerTest {
                 .build();
     }
 
+    @WithMockUser(roles = "ADMIN")
     @DisplayName("Place에 새로운 장소를 추가한다 1")
     @Order(1)
     @Test
@@ -86,6 +89,7 @@ public class PlaceControllerTest {
                 .replaceAll("\\\"",""));
     }
 
+    @WithMockUser(roles = "ADMIN")
     @DisplayName("Place에 새로운 장소를 추가한다 2")
     @Order(2)
     @Test
@@ -116,6 +120,7 @@ public class PlaceControllerTest {
         mockMvc.perform(get("/api/place/list")).andExpect(status().isOk()).andDo(print());
     }
 
+    @WithMockUser(roles = "ADMIN")
     @DisplayName("Place의 장소를 수정한다")
     @Order(4)
     @Test
@@ -148,6 +153,7 @@ public class PlaceControllerTest {
                 .andDo(print());
     }
 
+    @WithMockUser(roles = "ADMIN")
     @DisplayName("Place를 삭제한다" )
     @Order(6)
     @Test
