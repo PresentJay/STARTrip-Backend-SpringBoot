@@ -50,7 +50,7 @@ public class PlaceTripControllerTest {
     @Autowired
     private WebApplicationContext wac;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void setup() {
@@ -145,6 +145,7 @@ public class PlaceTripControllerTest {
         ).andExpect(status().isOk()).andDo(print());
     }
 
+    @WithMockUser(roles = "USER")
     @DisplayName("Update 테스트")
     @Test
     public void test5() throws Exception {
@@ -158,7 +159,6 @@ public class PlaceTripControllerTest {
 
         this.mockMvc.perform(MockMvcRequestBuilders.post("/api/placetrip/" + id1)
                 .contentType("application/json;charset=utf-8")
-                //.content(dto.getPlaceId().toString())
                 .content(objectMapper.writeValueAsString(dto)) // json 형식의 string 타입으로 변환
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print());
@@ -185,10 +185,10 @@ public class PlaceTripControllerTest {
     @Test
     public void test8() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/api/placetrip/" + id1)
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
-            .andExpect(content().string("없는 데이터입니다."))
-            .andDo(print());
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("없는 데이터입니다."))
+                .andDo(print());
     }
 
     @DisplayName("Delete 후 있는 데이터를 조회한다") // 지우지 않은 데이터 조회

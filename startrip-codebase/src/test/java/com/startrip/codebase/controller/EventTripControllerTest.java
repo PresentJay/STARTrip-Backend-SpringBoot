@@ -174,6 +174,7 @@ public class EventTripControllerTest {
         ).andExpect(status().isOk()).andDo(print());
     }
 
+    @WithMockUser(roles = "USER")
     @DisplayName("Delete 테스트")
     @Test
     public void test7() throws Exception {
