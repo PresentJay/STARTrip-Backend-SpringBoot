@@ -1,6 +1,5 @@
 package com.startrip.codebase.dto.event_trip;
 
-import com.startrip.codebase.domain.state.State;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +13,7 @@ public class UpdateEventTripDto {
     private UUID eventId;
     private Date startTime;
     private Date endTime;
-    private State state;
+    private Integer state;
     private String transportation;
     private String title;
 }

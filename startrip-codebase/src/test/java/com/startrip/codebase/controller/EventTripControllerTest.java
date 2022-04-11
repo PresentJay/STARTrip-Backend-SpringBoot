@@ -3,9 +3,9 @@ package com.startrip.codebase.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.domain.user.UserRepository;
-import com.startrip.codebase.dto.place_trip.CreatePlaceTripDto;
-import com.startrip.codebase.dto.place_trip.UpdatePlaceTripDto;
-import com.startrip.codebase.service.trip.PlaceTripService;
+import com.startrip.codebase.dto.event_trip.CreateEventTripDto;
+import com.startrip.codebase.dto.event_trip.UpdateEventTripDto;
+import com.startrip.codebase.service.trip.EventTripService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,13 +32,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // id1, id2가 삭제되는 것을 막음
-public class PlaceTripControllerTest {
+public class EventTripControllerTest {
     public MockMvc mockMvc;
 
-    private final PlaceTripService placeTripService;
+    private final EventTripService eventTripService;
 
-    private final UUID placeTripId1 = UUID.randomUUID();
-    private final UUID placeTripId2 = UUID.randomUUID();
+    private final UUID eventTripId1 = UUID.randomUUID();
+    private final UUID eventTripId2 = UUID.randomUUID();
 
     private UUID id1;
     private UUID id2;
@@ -47,13 +47,13 @@ public class PlaceTripControllerTest {
     private UserRepository userRepository;
 
     @Autowired
-    public PlaceTripControllerTest(PlaceTripService placeTripService) {
-        this.placeTripService = placeTripService;
+    public EventTripControllerTest(EventTripService eventTripService) {
+        this.eventTripService = eventTripService;
     }
 
     @BeforeEach
     public void before() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new PlaceTripController(placeTripService))
+        mockMvc = MockMvcBuilders.standaloneSetup(new EventTripController(eventTripService))
                 .addFilters(new CharacterEncodingFilter("UTF-8", true)) // 한글 깨짐 해결
                 .build();
     }
@@ -62,7 +62,7 @@ public class PlaceTripControllerTest {
         userRepository.deleteAllInBatch();
     }
 
-    @DisplayName("Place Trip Create 테스트 1번")
+    @DisplayName("Event Trip Create 테스트 1번")
     @Test
     public void test1() throws Exception {
         cleanUp();
@@ -73,11 +73,11 @@ public class PlaceTripControllerTest {
                 .build();
         userRepository.save(user);
 
-        CreatePlaceTripDto dto = new CreatePlaceTripDto();
-        dto.setTripId(placeTripId1);
+        CreateEventTripDto dto = new CreateEventTripDto();
+        dto.setTripId(eventTripId1);
         dto.setUserId(user);
         dto.setUserPartner("a");
-        dto.setPlaceId(UUID.randomUUID());
+        dto.setEventId(UUID.randomUUID());
         dto.setStartTime(Date.valueOf("2022-03-23"));
         dto.setEndTime(Date.valueOf("2022-03-25"));
         dto.setState(1);
@@ -85,7 +85,7 @@ public class PlaceTripControllerTest {
         dto.setTitle("울산 여행");
 
         String objectMapper = new ObjectMapper().writeValueAsString(dto); // json 형식의 string 타입으로 변환
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/placetrip")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/eventtrip")
                 .contentType("application/json;charset=utf-8")
                 .content(objectMapper)
                 .accept(MediaType.APPLICATION_JSON)
@@ -96,7 +96,7 @@ public class PlaceTripControllerTest {
                 .replaceAll("\\\"",""));
     }
 
-    @DisplayName("Place Trip Create 테스트 2번")
+    @DisplayName("Event Trip Create 테스트 2번")
     @Test
     public void test2() throws Exception {
         User user = User.builder()
@@ -105,11 +105,11 @@ public class PlaceTripControllerTest {
                 .build();
         userRepository.save(user);
 
-        CreatePlaceTripDto dto = new CreatePlaceTripDto();
-        dto.setTripId(placeTripId2);
+        CreateEventTripDto dto = new CreateEventTripDto();
+        dto.setTripId(eventTripId2);
         dto.setUserId(user);
         dto.setUserPartner("c");
-        dto.setPlaceId(UUID.randomUUID());
+        dto.setEventId(UUID.randomUUID());
         dto.setStartTime(Date.valueOf("2022-03-29"));
         dto.setEndTime(Date.valueOf("2022-03-30"));
         dto.setState(1);
@@ -117,7 +117,7 @@ public class PlaceTripControllerTest {
         dto.setTitle("김해 여행");
 
         String objectMapper = new ObjectMapper().writeValueAsString(dto); // json 형식의 string 타입으로 변환
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/placetrip")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/eventtrip")
                 .contentType("application/json;charset=utf-8")
                 .content(objectMapper)
                 .accept(MediaType.APPLICATION_JSON)
@@ -131,7 +131,7 @@ public class PlaceTripControllerTest {
     @DisplayName("All 테스트")
     @Test
     public void test3() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/placetrip")
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/eventtrip")
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print());
     }
@@ -139,7 +139,7 @@ public class PlaceTripControllerTest {
     @DisplayName("Get 테스트")
     @Test
     public void test4() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/placetrip/" + id1)
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/eventtrip/" + id1)
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print());
     }
@@ -147,18 +147,18 @@ public class PlaceTripControllerTest {
     @DisplayName("Update 테스트")
     @Test
     public void test5() throws Exception {
-        UpdatePlaceTripDto dto = new UpdatePlaceTripDto();
+        UpdateEventTripDto dto = new UpdateEventTripDto();
         dto.setUserPartner("b");
-        dto.setPlaceId(UUID.randomUUID());
+        dto.setEventId(UUID.randomUUID());
         dto.setStartTime(Date.valueOf("2022-03-25"));
         dto.setEndTime(Date.valueOf("2022-03-26"));
         dto.setTransportation("택시");
         dto.setTitle("울산 여행");
 
         String objectMapper = new ObjectMapper().writeValueAsString(dto); // json 형식의 string 타입으로 변환
-        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/placetrip/" + id1)
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/api/eventtrip/" + id1)
                 .contentType("application/json;charset=utf-8")
-                .content(dto.getPlaceId().toString())
+                .content("e3661498-9473-4c06-9d52-464cc2f59429")
                 .content(objectMapper)
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print());
@@ -167,7 +167,7 @@ public class PlaceTripControllerTest {
     @DisplayName("Update 후 Get 테스트")
     @Test
     public void test6() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/placetrip/" + id1)
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/eventtrip/" + id1)
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print());
     }
@@ -175,7 +175,7 @@ public class PlaceTripControllerTest {
     @DisplayName("Delete 테스트")
     @Test
     public void test7() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/placetrip/" + id1)
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/eventtrip/" + id1)
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print());
     }
@@ -183,17 +183,17 @@ public class PlaceTripControllerTest {
     @DisplayName("Delete 후 없는 데이터를 조회한다") //  지운 데이터 조회
     @Test
     public void test8() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/placetrip/" + id1)
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
-            .andExpect(content().string("없는 데이터입니다."))
-            .andDo(print());
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/eventtrip/" + id1)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("없는 데이터입니다."))
+                .andDo(print());
     }
 
     @DisplayName("Delete 후 있는 데이터를 조회한다") // 지우지 않은 데이터 조회
     @Test
     public void test9() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/placetrip/" + id2)
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/eventtrip/" + id2)
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print());
         cleanUp();
