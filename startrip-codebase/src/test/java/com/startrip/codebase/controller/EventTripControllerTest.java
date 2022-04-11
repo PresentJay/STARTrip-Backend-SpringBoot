@@ -10,15 +10,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.sql.Date;
@@ -28,14 +32,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // id1, id2가 삭제되는 것을 막음
 public class EventTripControllerTest {
     public MockMvc mockMvc;
-
-    private final EventTripService eventTripService;
 
     private final UUID eventTripId1 = UUID.randomUUID();
     private final UUID eventTripId2 = UUID.randomUUID();
@@ -47,14 +50,14 @@ public class EventTripControllerTest {
     private UserRepository userRepository;
 
     @Autowired
-    public EventTripControllerTest(EventTripService eventTripService) {
-        this.eventTripService = eventTripService;
-    }
+    private WebApplicationContext wac;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
-    public void before() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new EventTripController(eventTripService))
-                .addFilters(new CharacterEncodingFilter("UTF-8", true)) // 한글 깨짐 해결
+    public void setup() {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(wac)
+                .addFilter(new CharacterEncodingFilter("UTF-8", true))
                 .build();
     }
 
@@ -62,6 +65,7 @@ public class EventTripControllerTest {
         userRepository.deleteAllInBatch();
     }
 
+    @WithMockUser(roles = "USER")
     @DisplayName("Event Trip Create 테스트 1번")
     @Test
     public void test1() throws Exception {
@@ -84,10 +88,9 @@ public class EventTripControllerTest {
         dto.setTransportation("버스");
         dto.setTitle("울산 여행");
 
-        String objectMapper = new ObjectMapper().writeValueAsString(dto); // json 형식의 string 타입으로 변환
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/eventtrip")
                 .contentType("application/json;charset=utf-8")
-                .content(objectMapper)
+                .content(objectMapper.writeValueAsString(dto)) // json 형식의 string 타입으로 변환
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print()).andReturn();
 
@@ -96,6 +99,7 @@ public class EventTripControllerTest {
                 .replaceAll("\\\"",""));
     }
 
+    @WithMockUser(roles = "USER")
     @DisplayName("Event Trip Create 테스트 2번")
     @Test
     public void test2() throws Exception {
@@ -116,10 +120,9 @@ public class EventTripControllerTest {
         dto.setTransportation("기차");
         dto.setTitle("김해 여행");
 
-        String objectMapper = new ObjectMapper().writeValueAsString(dto); // json 형식의 string 타입으로 변환
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/eventtrip")
                 .contentType("application/json;charset=utf-8")
-                .content(objectMapper)
+                .content(objectMapper.writeValueAsString(dto)) // json 형식의 string 타입으로 변환
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print()).andReturn();
 
@@ -144,6 +147,7 @@ public class EventTripControllerTest {
         ).andExpect(status().isOk()).andDo(print());
     }
 
+    @WithMockUser(roles = "USER")
     @DisplayName("Update 테스트")
     @Test
     public void test5() throws Exception {
@@ -155,11 +159,9 @@ public class EventTripControllerTest {
         dto.setTransportation("택시");
         dto.setTitle("울산 여행");
 
-        String objectMapper = new ObjectMapper().writeValueAsString(dto); // json 형식의 string 타입으로 변환
         this.mockMvc.perform(MockMvcRequestBuilders.post("/api/eventtrip/" + id1)
                 .contentType("application/json;charset=utf-8")
-                .content("e3661498-9473-4c06-9d52-464cc2f59429")
-                .content(objectMapper)
+                .content(objectMapper.writeValueAsString(dto)) // json 형식의 string 타입으로 변환
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andDo(print());
     }
