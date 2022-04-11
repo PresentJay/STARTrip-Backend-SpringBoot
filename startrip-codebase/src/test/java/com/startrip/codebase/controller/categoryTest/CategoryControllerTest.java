@@ -69,6 +69,7 @@ public class CategoryControllerTest {
 
  @BeforeAll
  public void dataSetUp() throws Exception {
+  dataCleanUp();
   try (Connection conn = dataSource.getConnection()) {
    ScriptUtils.executeSqlScript(conn, new ClassPathResource("/db/data.sql"));
   }
@@ -159,10 +160,11 @@ public class CategoryControllerTest {
  void category_update() throws Exception {
 
   UpdateCategoryDto dto = new UpdateCategoryDto();
+  dto.setId(category.getId());
   dto.setCategoryName("음식점말고관광");
 
   mockMvc.perform(
-          put(String.format("/api/category/%s", category.getId()))
+          put("/api/category/" + category.getId())
                   .header("Authorization", "Bearer " + adminToken)
                   .contentType(MediaType.APPLICATION_JSON)
                   .content(objectMapper.writeValueAsString(dto))
@@ -199,7 +201,7 @@ public class CategoryControllerTest {
 
  @DisplayName("Step7: Category-Controller GET(Detail View) Test")
  @Test
- void test7() throws Exception {
+ void categpry_get_deletedItem() throws Exception {
      mockMvc.perform(
              get("/api/category/" + category.getId() )
              )

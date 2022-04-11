@@ -57,6 +57,7 @@ public class CategoryGetChildTest {
     @BeforeAll
     public void dataSetUp() throws Exception {
         try (Connection conn = dataSource.getConnection()) {
+            dataCleanUp();
             ScriptUtils.executeSqlScript(conn, new ClassPathResource("/db/data.sql"));
             ScriptUtils.executeSqlScript(conn, new ClassPathResource("/db/categoryTestData.sql"));
         }

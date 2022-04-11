@@ -16,7 +16,7 @@ public class Category {
     @Id
     @Column(name = "category_id")
     @GeneratedValue(generator = "UUID")
-    private UUID id; // PK
+    private UUID id;
 
     @Setter
     @ManyToOne(fetch = FetchType.EAGER, cascade= CascadeType.REMOVE)
@@ -24,7 +24,7 @@ public class Category {
     private Category categoryParent;
 
     @Setter
-    @Column(name = "category_name", unique = true) 
+    @Column(name = "category_name", unique = true)
     private String categoryName;
 
     @Column(nullable = false)

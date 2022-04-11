@@ -41,22 +41,15 @@ create table "user"
 
 create table category
 (
-   /* category_id        bigserial
+    category_id        uuid    not null
         primary key,
     category_name      varchar(255)
         constraint uk_lroeo5fvfdeg4hpicn4lw7x9b
             unique,
     depth              integer not null,
-    category_parent_id bigint
-        constraint fkgbowg38afm73793kwnokn0203
-            references category */
-
-    category_id uuid NOT NULL PRIMARY KEY,
-    category_name varchar(255) UNIQUE,
-    depth integer NOT NULL,
     category_parent_id uuid
-        CONSTRAINT category_parent
-            REFERENCES category
+        constraint fkgbowg38afm73793kwnokn0203
+            references category
 );
 
 create table event_comment
