@@ -26,8 +26,8 @@ public class PlaceTripController {
     // Create
     @PostMapping("/placetrip")
     public ResponseEntity createPlaceTrip(@RequestBody CreatePlaceTripDto dto) {
-        placeTripService.createPlaceTrip(dto);
-        return new ResponseEntity("Place Trip 생성", HttpStatus.OK);
+        UUID id = placeTripService.createPlaceTrip(dto);
+        return new ResponseEntity(id, HttpStatus.OK);
     }
 
     // All

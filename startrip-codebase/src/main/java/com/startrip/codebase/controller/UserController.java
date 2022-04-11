@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -36,7 +37,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public @ResponseBody ResponseEntity login(@RequestBody LoginDto loginDto){ // JAVA 리플렉션
+    public @ResponseBody
+    ResponseEntity login(@RequestBody LoginDto loginDto) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
 
@@ -51,9 +53,20 @@ public class UserController {
         return new ResponseEntity<>(jwt, httpHeaders, HttpStatus.OK);
     }
 
+    @GetMapping("/logout")
+    @PreAuthorize("isAuthenticated()")
+    public @ResponseBody
+    ResponseEntity logout() {
+        SecurityContextHolder.clearContext();
+        // TODO : 토큰 해제 로직 추가
+        return new ResponseEntity<>("로그아웃", HttpStatus.OK);
+    }
+
     // Auth End-point
     @GetMapping("/auth/success")
-    public @ResponseBody ResponseEntity login(@RequestParam("token") String token){
+    public @ResponseBody
+    ResponseEntity login(@RequestParam("token") String token) {
+
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + token);
 
@@ -72,5 +85,12 @@ public class UserController {
         } catch (Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/test")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
+    public ResponseEntity getTest() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return new ResponseEntity(authentication, HttpStatus.OK);
     }
 }

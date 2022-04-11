@@ -4,6 +4,8 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 public class PlaceDto {
@@ -14,7 +16,7 @@ public class PlaceDto {
     @NotNull
     private String address;
 
-    private Long categoryId;
+    private UUID categoryId;
     private String placeDescription;
     private String placePhoto;
     private String phoneNumber;

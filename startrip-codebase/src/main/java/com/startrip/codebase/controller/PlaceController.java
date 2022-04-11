@@ -13,6 +13,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -29,13 +30,14 @@ public class PlaceController {
     @Secured("ROLE_ADMIN")
     @PostMapping("/place")
     public @ResponseBody
-    ResponseEntity addPlace(PlaceDto dto) {
+    ResponseEntity addPlace(@RequestBody PlaceDto dto) {
+        UUID id;
         try{
-            placeService.createPlace(dto);
+            id = placeService.createPlace(dto);
         } catch (Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity("생성되었습니다", HttpStatus.OK);
+        return new ResponseEntity(id, HttpStatus.OK);
     }
 
     @GetMapping("/place/list")
@@ -46,7 +48,7 @@ public class PlaceController {
 
     @GetMapping("/place/list/{categoryId}")
     public @ResponseBody
-    ResponseEntity showPlaceByCategory(@PathVariable("categoryId") Long category_id) {
+    ResponseEntity showPlaceByCategory(@PathVariable("categoryId") UUID category_id) {
         List<Place> placeList;
         try{
             placeList = placeService.categoryPlace(category_id);
@@ -58,7 +60,7 @@ public class PlaceController {
 
     @GetMapping("/place/{id}")
     public @ResponseBody
-    ResponseEntity getPlace(@PathVariable("id") Long id) {
+    ResponseEntity getPlace(@PathVariable("id") UUID id) {
         Place place;
         try{
             place = placeService.getPlace(id);
@@ -71,7 +73,7 @@ public class PlaceController {
     @Secured("ROLE_ADMIN")
     @PostMapping("/place/{id}")
     public @ResponseBody
-    ResponseEntity updatePlace(@PathVariable("id") Long id, PlaceDto dto) {
+    ResponseEntity updatePlace(@PathVariable("id") UUID id, PlaceDto dto) {
         try{
             placeService.updatePlace(id, dto);
         } catch (Exception e){
@@ -83,7 +85,7 @@ public class PlaceController {
     @Secured("ROLE_ADMIN")
     @DeleteMapping("/place/{id}")
     public @ResponseBody
-    ResponseEntity deletePlace(@PathVariable("id") Long id) {
+    ResponseEntity deletePlace(@PathVariable("id") UUID id) {
         try{
             placeService.deletePlace(id);
         } catch (Exception e){
