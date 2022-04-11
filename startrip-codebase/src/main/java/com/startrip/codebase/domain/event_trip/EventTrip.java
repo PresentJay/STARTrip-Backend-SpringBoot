@@ -1,12 +1,13 @@
 package com.startrip.codebase.domain.event_trip;
 
-import com.startrip.codebase.domain.state.State;
 import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.dto.event_trip.UpdateEventTripDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -24,6 +25,7 @@ public class EventTrip {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User userId;
 
     @Column(name = "user_partner")
@@ -38,9 +40,7 @@ public class EventTrip {
     @Column(name = "end_time")
     private Date endTime;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="state_id")
-    private State state;
+    private Integer state;
 
     private String transportation;
 

@@ -22,7 +22,7 @@ public class EventTripService {
     }
 
     // Create
-    public void createEventTrip(CreateEventTripDto dto) {
+    public UUID createEventTrip(CreateEventTripDto dto) {
         EventTrip eventTrip = EventTrip.builder()
                 .tripId(dto.getTripId())
                 .userId(dto.getUserId())
@@ -37,6 +37,7 @@ public class EventTripService {
 
         eventTripRepository.save(eventTrip);
         log.info(eventTrip.toString());
+        return eventTrip.getTripId();
     }
 
     // All

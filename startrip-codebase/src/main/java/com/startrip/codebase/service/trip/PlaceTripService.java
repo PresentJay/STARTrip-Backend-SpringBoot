@@ -22,7 +22,7 @@ public class PlaceTripService {
     }
 
     // Create
-    public void createPlaceTrip(CreatePlaceTripDto dto) {
+    public UUID createPlaceTrip(CreatePlaceTripDto dto) {
         PlaceTrip placeTrip = PlaceTrip.builder()
                 .tripId(dto.getTripId())
                 .userId(dto.getUserId())
@@ -37,6 +37,7 @@ public class PlaceTripService {
 
         placeTripRepository.save(placeTrip);
         log.info(placeTrip.toString());
+        return placeTrip.getTripId();
     }
 
     // All

@@ -1,7 +1,5 @@
 package com.startrip.codebase.dto.place_trip;
 
-import com.startrip.codebase.domain.state.State;
-import com.startrip.codebase.service.StateService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +13,7 @@ public class UpdatePlaceTripDto {
     private UUID placeId;
     private Date startTime;
     private Date endTime;
-    private State state;
+    private Integer state;
     private String transportation;
     private String title;
 }
