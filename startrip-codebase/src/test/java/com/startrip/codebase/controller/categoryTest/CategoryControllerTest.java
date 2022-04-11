@@ -1,4 +1,4 @@
-package com.startrip.codebase.controller;
+package com.startrip.codebase.controller.categoryTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.startrip.codebase.domain.category.Category;
@@ -56,22 +56,21 @@ public class CategoryControllerTest {
 
  private ObjectMapper objectMapper = new ObjectMapper();
 
- private Category category;
-
  private String adminToken;
+ private Category category;
 
  @BeforeEach
  public void setup() {
-  mockMvc = MockMvcBuilders.webAppContextSetup(wac)
+  this.mockMvc = MockMvcBuilders.webAppContextSetup(wac)
           .addFilter(new CharacterEncodingFilter("UTF-8", true))
           .apply(SecurityMockMvcConfigurers.springSecurity())
           .build();
  }
 
  @BeforeAll
- public void dataSetup() throws Exception {
-  try (Connection conn = dataSource.getConnection()) {  // (2)
-   ScriptUtils.executeSqlScript(conn, new ClassPathResource("/db/data.sql"));  // (1)
+ public void dataSetUp() throws Exception {
+  try (Connection conn = dataSource.getConnection()) {
+   ScriptUtils.executeSqlScript(conn, new ClassPathResource("/db/data.sql"));
   }
    createAdminJwt();
  }
@@ -85,13 +84,13 @@ public class CategoryControllerTest {
 
  private void createAdminJwt() throws Exception {
   LoginDto loginDto = new LoginDto();
-  loginDto.setEmail("admin@aadmin.com");
+  loginDto.setEmail("admin@admin.com");
   loginDto.setPassword("1234");
 
   MvcResult mvcResult = mockMvc.perform(
-                  post("/api/user/login")
-                          .contentType(MediaType.APPLICATION_JSON)
-                          .content(objectMapper.writeValueAsString(loginDto))
+          post("/api/user/login")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(loginDto))
           )
           .andExpect(status().isOk())
           .andDo(print())
@@ -111,12 +110,12 @@ public class CategoryControllerTest {
   dto.setCategoryName("음식점");
 
   mockMvc.perform(
-          post("api/category")
+          post("/api/category")
                   .contentType(MediaType.APPLICATION_JSON)
                   .content(objectMapper.writeValueAsString(dto))
                   .header("Authorization", "Bearer " + adminToken)
           )
-          .andExpect(status().isOk())
+          .andExpect(status().isCreated())
           .andDo(print());
 
   category = categoryRepository.findCategoryByCategoryName("음식점").get();
@@ -142,13 +141,13 @@ public class CategoryControllerTest {
   Category rootCategory = categoryRepository.findCategoryByCategoryName("ROOT").get();
   // 자동 생성된 Root Category 확인
   mockMvc.perform(
-          get(String.format("/api/category/%s", rootCategory.getCategoryName() )))
+          get("/api/category/" + rootCategory.getId() ))
           .andExpect(status().isOk())
           .andDo(print());
 
   // 생성된 Category(음식점)확인
   mockMvc.perform(
-          get(String.format("/api/category%s", category.getCategoryName())))
+          get("/api/category/" + category.getId()))
           .andExpect(status().isOk())
           .andDo(print());
  }
@@ -178,7 +177,7 @@ public class CategoryControllerTest {
  void category_get_updatedCategory() throws Exception {
 
   mockMvc.perform(
-          get(String.format("/api/notice/%s", category.getId() ))
+          get("/api/category/" + category.getId() )
           )
           .andExpect(status().isOk())
           .andDo(print());
@@ -190,7 +189,7 @@ public class CategoryControllerTest {
  @Test
  void category_delete() throws Exception {
   mockMvc.perform(
-          delete(String.format("/api/notice/%s", category.getId() ))
+          delete("/api/category/" + category.getId() )
                   .contentType(MediaType.APPLICATION_JSON)
                   .header("Authorization", "Bearer " + adminToken)
           )
@@ -202,7 +201,7 @@ public class CategoryControllerTest {
  @Test
  void test7() throws Exception {
      mockMvc.perform(
-             get(String.format("/api/notice/%s", category.getId() ))
+             get("/api/category/" + category.getId() )
              )
              .andExpect(status().isBadRequest())
              .andDo(print());
