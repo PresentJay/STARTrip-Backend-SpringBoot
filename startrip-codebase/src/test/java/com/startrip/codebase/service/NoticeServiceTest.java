@@ -6,20 +6,40 @@ import com.startrip.codebase.domain.notice.Notice;
 import com.startrip.codebase.domain.notice.NoticeRepository;
 import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.domain.user.UserRepository;
+import org.apache.catalina.realm.DataSourceRealm;
 import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@ActiveProfiles("test")
 class NoticeServiceTest {
+
+    private final static Logger logger = LoggerFactory.getLogger(NoticeServiceTest.class);
 
     @Autowired
     private NoticeService noticeService;
@@ -32,6 +52,13 @@ class NoticeServiceTest {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private DataSource dataSource;
+
+    @BeforeEach
+    public void setup() {
+    }
 
     private void createNotice(User user, Category category) {
         Notice notice = Notice.builder()
@@ -62,35 +89,38 @@ class NoticeServiceTest {
     @Test
     void notice_view_counting() {
         createNotice();
-
-        Notice find = noticeService.getNotice(1L); // 게시글 조회 로직
+        Notice notice = noticeRepository.findAll().get(0);
+        Notice find = noticeService.getNotice(notice.getNoticeId()); // 게시글 조회 로직
 
         assertThat(find.getViewCount()).isEqualTo(1);
     }
 
-    @DisplayName("게시글 100번 조회 테스트")
+    @DisplayName("게시글 10번 조회 테스트")
     @Test
     void notifce_view_100() {
+        noticeRepository.deleteAll();
         createNotice();
 
-        for (int i = 0; i < 100; i++) {
-            noticeService.getNotice(1L); // 게시글 조회 로직
+        List<Notice> notices = noticeRepository.findAll();
+        Notice firstNotice = notices.get(0);
+        for (int i = 0; i < 10; i++) {
+            noticeService.getNotice(firstNotice.getNoticeId()); // 게시글 조회 로직
         }
 
-        Notice find = noticeRepository.findById(1L).get();
-        assertThat(find.getViewCount()).isEqualTo(100);
+        Notice find = noticeRepository.findById(firstNotice.getNoticeId()).get();
+        assertThat(find.getViewCount()).isEqualTo(10);
     }
 
     @DisplayName("게시글 등록 시, 유저, 카테고리도 매핑된다")
     @Test
     void notice_post_with_user_and_category() {
+        noticeRepository.deleteAll();
         User user = User.builder()
                 .name("테스트이름")
                 .email("test@test.com")
                 .build();
 
         Category category = Category.builder()
-                .categoryParent(null)
                 .categoryName("공지사항")
                 .depth(0)
                 .build();
@@ -100,7 +130,10 @@ class NoticeServiceTest {
 
         createNotice(user, category);
 
-        Notice find = noticeService.getNotice(1L);
+        List<Notice> notices = noticeRepository.findAll();
+        Notice firstNotice = notices.get(0);
+
+        Notice find = noticeService.getNotice(firstNotice.getNoticeId());
 
         assertThat(find.getUser().getEmail()).isEqualTo("test@test.com");
         assertThat(find.getCategory().getCategoryName()).isEqualTo("공지사항");

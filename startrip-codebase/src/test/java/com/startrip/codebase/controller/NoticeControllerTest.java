@@ -1,32 +1,38 @@
 package com.startrip.codebase.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.startrip.codebase.config.SecurityConfig;
 import com.startrip.codebase.domain.category.Category;
 import com.startrip.codebase.domain.category.CategoryRepository;
 import com.startrip.codebase.domain.notice.Notice;
 import com.startrip.codebase.domain.notice.NoticeRepository;
-import com.startrip.codebase.domain.user.User;
-import com.startrip.codebase.domain.user.UserRepository;
+import com.startrip.codebase.dto.LoginDto;
 import com.startrip.codebase.dto.notice.NewNoticeDto;
-import com.startrip.codebase.dto.noticecomment.NewCommentDto;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcBuilderCustomizer;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import static org.junit.jupiter.api.Assertions.*;
+import javax.sql.DataSource;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -36,37 +42,96 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ActiveProfiles("test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class NoticeControllerTest {
+
+    private final static Logger logger = LoggerFactory.getLogger(NoticeControllerTest.class);
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private UserRepository userRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    NoticeRepository noticeRepository;
 
     @Autowired
     private WebApplicationContext wac;
 
+    @Autowired
+    private DataSource dataSource;
+
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    private String userToken;
+    private String adminToken;
 
     @BeforeEach
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .addFilter(new CharacterEncodingFilter("UTF-8", true))
+                .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
     }
 
+    @BeforeAll
+    public void dataSetUp() throws Exception {
+        logger.info("테스트 용 데이터를 DB로 삽입합니다");
+        try (Connection conn = dataSource.getConnection()) {  // (2)
+            ScriptUtils.executeSqlScript(conn, new ClassPathResource("/db/data.sql"));  // (1)
+        }
+        createJwt();
+    }
+
+    @AfterAll
+    public void dataCleanUp() throws SQLException {
+        logger.info("테이블 초기화합니다");
+        try (Connection conn = dataSource.getConnection()) {
+            ScriptUtils.executeSqlScript(conn, new ClassPathResource("db/scheme.sql"));
+        }
+    }
+
+    private void createJwt() throws Exception {
+        // 관리자 토큰 발급
+        LoginDto loginDto = new LoginDto();
+        loginDto.setEmail("admin@admin.com");
+        loginDto.setPassword("1234");
+
+        MvcResult mvcResult = mockMvc.perform(
+                        post("/api/user/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(loginDto))
+                )
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+
+        adminToken = mvcResult.getResponse().getContentAsString();
+
+        // 일반 유저 토큰 발급
+        loginDto = new LoginDto();
+        loginDto.setEmail("user@user.com");
+        loginDto.setPassword("1234");
+
+        mvcResult = mockMvc.perform(
+                        post("/api/user/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(loginDto))
+                )
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+        userToken = mvcResult.getResponse().getContentAsString();
+    }
+
+
+    @WithMockUser(roles = "ADMIN")
     @DisplayName("게시글 생성 API 가 작동한다")
     @Order(1)
     @Test
     void notice_save() throws Exception {
-        User user = User.builder()
-                .name("테스트이름")
-                .email("test@test.com")
-                .build();
 
         Category category = Category.builder()
                 .categoryParent(null)
@@ -74,12 +139,13 @@ class NoticeControllerTest {
                 .depth(0)
                 .build();
 
-        userRepository.save(user);
         categoryRepository.save(category);
 
+        Category find = categoryRepository.findCategoryByCategoryName("공지사항").get();
+
         NewNoticeDto dto = new NewNoticeDto();
-        dto.setUserEmail("test@test.com");
-        dto.setCategoryId(1L);
+        dto.setUserEmail("admin@admin.com");
+        dto.setCategoryId(find.getId());
         dto.setAttachment("파일URL");
         dto.setText("본문");
         dto.setTitle("테스트제목");
@@ -88,37 +154,35 @@ class NoticeControllerTest {
                         post("/api/notice")
                                 .contentType(MediaType.APPLICATION_JSON) // JSON 타입으로 지정
                                 .content(objectMapper.writeValueAsString(dto))
+                                .header("Authorization", "Bearer " + adminToken)
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().string("생성되었습니다"))
                 .andDo(print());
     }
 
-    @DisplayName("게시글에 코멘트 생성 API가 작동한다")
+    @WithMockUser(roles = "USER")
+    @DisplayName("일반 유저가 게시글 생성 API를 할시, 403")
     @Order(2)
     @Test
-    void notice_comment() throws Exception {
-        // given
-        User temp = User.builder()
-                .name("성훈")
-                .email("hoon@h.com")
-                .nickname("hoon")
-                .password("1234")
-                .build();
-        userRepository.save(temp);
+    void test0() throws Exception {
 
-        NewCommentDto dto = new NewCommentDto();
-        dto.setNoticeId(1L);
-        dto.setCommentText("댓글내용");
-        dto.setUserEmail(temp.getEmail());
+        Category find = categoryRepository.findCategoryByCategoryName("공지사항").get();
 
-        // when
-        mockMvc.perform(post("/api/notice/1/comment")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto))
+        NewNoticeDto dto = new NewNoticeDto();
+        dto.setUserEmail("user@user.com");
+        dto.setCategoryId(find.getId());
+        dto.setAttachment("파일URL");
+        dto.setText("본문");
+        dto.setTitle("테스트제목");
+
+        mockMvc.perform(
+                        post("/api/notice")
+                                .contentType(MediaType.APPLICATION_JSON) // JSON 타입으로 지정
+                                .content(objectMapper.writeValueAsString(dto))
+                                .header("Authorization", "Bearer " + userToken)
                 )
-                .andExpect(status().isOk())
-                .andExpect(content().string("댓글 생성되었습니다."))
+                .andExpect(status().isForbidden())
                 .andDo(print());
     }
 
@@ -134,11 +198,13 @@ class NoticeControllerTest {
                 .andDo(print());
     }
 
-
+    @WithMockUser(roles = "ADMIN")
     @DisplayName("게시글 수정 API 가 작동한다")
     @Order(4)
     @Test
     void notice_put() throws Exception {
+
+        Notice notice = noticeRepository.findByTitle("테스트제목").get();
 
         NewNoticeDto dto = new NewNoticeDto();
         dto.setTitle("수정된제목");
@@ -146,30 +212,51 @@ class NoticeControllerTest {
         dto.setAttachment("수정된파일URL");
 
         mockMvc.perform(
-                    put("/api/notice/1")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(dto))
+                        put(String.format("/api/notice/%d", notice.getNoticeId()))
+                                .header("Authorization", "Bearer " + adminToken)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto))
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
     }
 
-    @DisplayName("게시글 상세 조회 API 가 작동한다")
+    @DisplayName("게시글 수정 후, 상세 조회 API 가 작동한다")
     @Order(5)
     @Test
     void notice_detail_get() throws Exception {
-        mockMvc.perform(get("/api/notice/1"))
+        Notice notice = noticeRepository.findByTitle("수정된제목").get();
+
+        mockMvc.perform(get(String.format("/api/notice/%d", notice.getNoticeId())))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
 
+    @WithMockUser(roles = "ADMIN")
     @DisplayName("게시글 삭제 API 가 작동한다")
     @Order(6)
     @Test
     void notice_delete() throws Exception {
-        mockMvc.perform(delete("/api/notice/1"))
+        Notice notice = noticeRepository.findByTitle("수정된제목").get();
+
+        mockMvc.perform(
+                    delete(String.format("/api/notice/%d", notice.getNoticeId()))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + adminToken)
+                )
                 .andExpect(status().isOk())
                 .andDo(print());
     }
 
+    @DisplayName("게시글 삭제후 조회 시 테스트")
+    @Order(7)
+    @Test
+    void notice_get_and_delete() throws Exception {
+
+        mockMvc.perform(
+                        get("/api/notice/1")
+                )
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
 }
