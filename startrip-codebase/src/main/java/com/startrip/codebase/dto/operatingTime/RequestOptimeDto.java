@@ -5,11 +5,13 @@ import io.swagger.annotations.ApiParam;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 public class RequestOptimeDto {
 
-    private Long placeId;
+    private UUID placeId;
 
     @ApiParam(value = "적용시작 날짜", example = "2000-01-01")
     private String startDate;

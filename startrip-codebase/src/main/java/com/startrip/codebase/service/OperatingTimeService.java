@@ -39,7 +39,7 @@ public class OperatingTimeService {
         operatingTimeRepository.save(operatingTime);
     }
 
-    public List<OperatingTime> getOptimeAll(Long placeId){
+    public List<OperatingTime> getOptimeAll(UUID placeId){
         FindPlace(placeId);
 
         Optional<List<OperatingTime>> optimes = Optional.ofNullable(operatingTimeRepository.findAllByPlaceId(placeId));
@@ -50,7 +50,7 @@ public class OperatingTimeService {
     }
 
     //for Get optime In Specific datetime
-    public Optional<OperatingTime> getOpTimeDatetime(Long placeId, LocalTime requestTime) {
+    public Optional<OperatingTime> getOpTimeDatetime(UUID placeId, LocalTime requestTime) {
         FindPlace(placeId);
 
         Optional<List<OperatingTime>> optimes = Optional.ofNullable(operatingTimeRepository.findAllByPlaceId(placeId));
@@ -93,7 +93,7 @@ public class OperatingTimeService {
         operatingTimeRepository.deleteById(optimeId);
     }
 
-    public void FindPlace(Long placeId) { //TODO: placeId는 UUID로 변경될 여지가 있다
+    public void FindPlace(UUID placeId) { //TODO: placeId는 UUID로 변경될 여지가 있다
         placeRepository.findById(placeId)
                 .orElseThrow( () -> new RuntimeException("해당 place는 존재하지 않습니다"));
     }
