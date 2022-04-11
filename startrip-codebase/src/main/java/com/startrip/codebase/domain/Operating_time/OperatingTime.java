@@ -24,7 +24,7 @@ public class OperatingTime {
     @NotNull
     @Setter
     @Column(name = "place_id")
-    private Long placeId; // 얘는 이런 플레이스 꺼예요
+    private UUID placeId; // 얘는 이런 플레이스 꺼예요
 
     @Setter
     @Column(name = "start_date")
@@ -48,7 +48,7 @@ public class OperatingTime {
     @Column(name = "cycle")
     private Integer cycle; // 1년 = 31,356,000 ... Integer = 2,147,483,648 ~ 2,147,483,647
 
-    public void setId(Long placeId) {
+    public void setId(UUID placeId) {
         this.placeId = placeId;
     }
 
@@ -81,7 +81,7 @@ public class OperatingTime {
     }
 
     @Builder
-    public OperatingTime (Long placeId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, Boolean isBreakTime, Integer cycle){
+    public OperatingTime (UUID placeId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, Boolean isBreakTime, Integer cycle){
 
         this.placeId = placeId;
 

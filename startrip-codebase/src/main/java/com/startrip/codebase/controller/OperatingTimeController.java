@@ -37,7 +37,7 @@ public class OperatingTimeController {
 
     // GET : 특정 장소의 모든 op_time
     @GetMapping (path = "place/optime/list", params="placeid")
-    public ResponseEntity getOpTimeAll_inSpecificPlace(@RequestParam(value="placeid") Long placeId){
+    public ResponseEntity getOpTimeAll_inSpecificPlace(@RequestParam(value="placeid") UUID placeId){
        List<OperatingTime> operatingTimes;
         try {
             operatingTimes = operatingTimeService.getOptimeAll(placeId);
@@ -50,7 +50,7 @@ public class OperatingTimeController {
 
     // GET: 특정 시간의 op_time
     @GetMapping (path= "place/optime", params = {"placeid", "requesttime"})
-    public ResponseEntity getOpTimeAll_inSpecificTime(@RequestParam(value = "placeid") Long placeId,
+    public ResponseEntity getOpTimeAll_inSpecificTime(@RequestParam(value = "placeid") UUID placeId,
             String requesttime){
 
         DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm:ss");
