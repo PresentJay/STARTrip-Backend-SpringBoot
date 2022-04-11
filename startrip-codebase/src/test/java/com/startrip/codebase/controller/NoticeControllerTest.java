@@ -85,6 +85,14 @@ class NoticeControllerTest {
         createJwt();
     }
 
+    @AfterAll
+    public void dataCleanUp() throws SQLException {
+        logger.info("테이블 초기화합니다");
+        try (Connection conn = dataSource.getConnection()) {
+            ScriptUtils.executeSqlScript(conn, new ClassPathResource("db/scheme.sql"));
+        }
+    }
+
     private void createJwt() throws Exception {
         // 관리자 토큰 발급
         LoginDto loginDto = new LoginDto();
@@ -118,13 +126,6 @@ class NoticeControllerTest {
         userToken = mvcResult.getResponse().getContentAsString();
     }
 
-    @AfterAll
-    public void dataCleanUp() throws SQLException {
-        logger.info("테이블 초기화합니다");
-        try (Connection conn = dataSource.getConnection()) {
-            ScriptUtils.executeSqlScript(conn, new ClassPathResource("db/scheme.sql"));
-        }
-    }
 
     @WithMockUser(roles = "ADMIN")
     @DisplayName("게시글 생성 API 가 작동한다")
