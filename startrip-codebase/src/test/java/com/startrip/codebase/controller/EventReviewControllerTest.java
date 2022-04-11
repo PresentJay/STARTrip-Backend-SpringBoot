@@ -125,6 +125,8 @@ public class EventReviewControllerTest {
     @Order(7)
     @Test
     void evnetReview_Read_After_Delete() throws Exception {
-        mockMvc.perform(get("/api/eventReview")).andExpect(status().isOk()).andDo(print());
+        mockMvc.perform(get("/api/eventReview"))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
     }
 }

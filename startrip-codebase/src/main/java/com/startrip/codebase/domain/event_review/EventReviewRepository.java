@@ -6,5 +6,5 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface EventReviewRepository extends JpaRepository<EventReview, Long> {
-    List<EventReview> findByEventId(@Param(value = "event_id") Long event_id);
+    List<EventReview> findByEventId(@Param(value = "event_id") Long eventId);
 }

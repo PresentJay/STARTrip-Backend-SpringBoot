@@ -4,14 +4,21 @@ import com.startrip.codebase.domain.event.Event;
 import com.startrip.codebase.domain.event.EventRepository;
 import com.startrip.codebase.domain.event_review.EventReview;
 import com.startrip.codebase.domain.event_review.EventReviewRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@ActiveProfiles("test")
+@Transactional
 public class EventServiceTest {
     @Autowired
     private EventService eventService;
@@ -24,6 +31,10 @@ public class EventServiceTest {
 
     @Autowired
     private EventReviewRepository eventReviewRepository;
+
+    @BeforeEach
+    public void setup() {
+    }
 
     private void createEventReview(Event event){
         EventReview eventReview = EventReview.builder()
@@ -53,12 +64,15 @@ public class EventServiceTest {
                 .description("환상의 나라 에버랜드로~")
                 .contact("02-123-421")
                 .build();
+
         eventRepository.save(event);
 
         createEventReview(event);
 
-        EventReview find = eventReviewService.getReviewEvent(1L);
-        assertThat(find.getEventId().getEventId()).isEqualTo(0);
-    }
+        List<EventReview> eventReviews = eventReviewRepository.findAll();
+        EventReview reviews = eventReviews.get(0);
+        Event find = eventService.getEvent(reviews.getReviewId());
 
+        assertThat(find.getEventTitle()).isEqualTo("서울 롯데월드");
+    }
 }

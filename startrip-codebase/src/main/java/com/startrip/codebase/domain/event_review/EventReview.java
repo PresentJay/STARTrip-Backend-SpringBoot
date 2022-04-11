@@ -22,7 +22,7 @@ public class EventReview {
     @Column(name = "creator_id")
     private Long creatorId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)  //영속성 전이
     @JoinColumn(name = "event_id")
     private Event eventId;
 
