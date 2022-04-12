@@ -28,6 +28,7 @@ public class EventReviewController {
     public List<ResponseEventReviewDto> getEventReviews() {
         List<ResponseEventReviewDto> eventReviews = eventReviewService.allEventReview();
         return eventReviews;
+        //ToDo: try-catch로 예외처리하기
     }
 
     //생성

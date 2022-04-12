@@ -26,7 +26,7 @@ public class Category {
     private Category categoryParent;
 
     @Setter
-    @Column(name = "category_name", unique = true) 
+    @Column(name = "category_name", unique = true)
     private String categoryName;
 
     @Setter
