@@ -203,8 +203,29 @@ public class PlaceInfoControllerTest {
     }
 
     @WithMockUser(roles = "ADMIN")
-    @DisplayName("PlaceInfo의 정보를 수정한다")
+    @DisplayName("PlaceInfo에 유저가 없는 place를 추가히면 400")
     @Order(3)
+    @Test
+    void placeinfo_create_4() throws Exception {
+
+        PlaceInfoDto dto = new PlaceInfoDto();
+        dto.setPlaceId(randomPlaceId);
+        dto.setEntranceFee(false);
+        dto.setParkingLot(false);
+        dto.setParkingLot(false);
+
+        mockMvc.perform(
+                        post("/api/place/info")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(dto))
+                                .header("Authorization", "Bearer " + adminToken))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @WithMockUser(roles = "ADMIN")
+    @DisplayName("PlaceInfo의 정보를 수정한다")
+    @Order(4)
     @Test
     void placeinfo_update() throws Exception {
         PlaceInfoDto dto = new PlaceInfoDto();
@@ -223,7 +244,7 @@ public class PlaceInfoControllerTest {
     }
 
     @DisplayName("PlaceInfo의 ID로 정보의 세부내역을 가져온다")
-    @Order(4)
+    @Order(5)
     @Test
     void placeinfo_detail_read() throws Exception {
         mockMvc.perform(get("/api/place/info/" + placeInfoId1))
@@ -231,9 +252,18 @@ public class PlaceInfoControllerTest {
                 .andDo(print());
     }
 
+    @DisplayName("없는 PlaceInfo 세부내역을 가져올 수 없다")
+    @Order(6)
+    @Test
+    void placeinfo_detail_read_error() throws Exception {
+        mockMvc.perform(get("/api/place/info/3"))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
     @WithMockUser(roles = "ADMIN")
     @DisplayName("PlaceInfo를 삭제한다")
-    @Order(5)
+    @Order(7)
     @Test
     void place_delete() throws Exception {
         mockMvc.perform(delete("/api/place/info/" + placeInfoId1)
@@ -243,7 +273,7 @@ public class PlaceInfoControllerTest {
     }
 
     @DisplayName("PlaceInfo의 삭제된 ID로 정보의 세부내역을 가져올 수 없다.")
-    @Order(6)
+    @Order(8)
     @Test
     void place_detail_read_1() throws Exception {
         mockMvc.perform(get("/api/place/info/" + placeInfoId1))
