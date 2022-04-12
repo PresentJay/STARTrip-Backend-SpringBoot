@@ -16,20 +16,17 @@ public class PlaceInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "placeinfo_id")
     private Long id; //자체 식별키
 
     @NotNull
-    @Setter
     @JoinColumn(name = "place_id")
     private UUID placeId;
 
-    @Setter
     private boolean isParkingLot;
 
-    @Setter
     private boolean isEntranceFee;
 
-    @Setter
     private boolean isRestRoom;
 
     public static PlaceInfo of (PlaceInfoDto dto){
