@@ -4,13 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class PlaceInfoDto {
 
     @NotNull
-    private Long placeId;
+    private UUID placeId;
 
     private boolean isParkingLot;
     private boolean isEntranceFee;
