@@ -19,7 +19,7 @@ public class Place {
 
     @Id
     @GeneratedValue(generator ="uuid")
-    @Column(nullable = false)
+    @Column(name = "place_id")
     private UUID id;
 
     @JoinColumn(name = "category_id")
