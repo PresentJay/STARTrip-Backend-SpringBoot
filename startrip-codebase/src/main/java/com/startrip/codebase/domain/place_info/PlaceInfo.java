@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -19,8 +20,8 @@ public class PlaceInfo {
 
     @NotNull
     @Setter
-    @Column(name = "place_id")
-    private Long placeId;
+    @JoinColumn(name = "place_id")
+    private UUID placeId;
 
     @Setter
     private boolean isParkingLot;

@@ -22,13 +22,14 @@ public class PlaceInfoController {
     @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
     @PostMapping("/place/info")
     public @ResponseBody
-    ResponseEntity addPlaceInfo(PlaceInfoDto dto) {
+    ResponseEntity addPlaceInfo(@RequestBody PlaceInfoDto dto) {
+        Long id;
         try{
-            placeInfoService.createPlaceInfo(dto);
+            id = placeInfoService.createPlaceInfo(dto);
         } catch (Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity("생성되었습니다", HttpStatus.OK);
+        return new ResponseEntity(id, HttpStatus.OK);
     }
 
     @GetMapping("/place/info/{id}")
