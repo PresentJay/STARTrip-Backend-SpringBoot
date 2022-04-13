@@ -15,6 +15,7 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
     Optional<Category> findCategoryByCategoryName (String categoryName);
     List<Category> findAllByCategoryParent(Category categoryParent);
     List<Category> findAllByDepthAndCategoryParent(Integer depth, Category category);
+    Optional<Category> findByCategoryId(UUID categoryId);
 
     @Query("select max(c.depth) as max_depth from Category c")
     Integer findByDepthMax();

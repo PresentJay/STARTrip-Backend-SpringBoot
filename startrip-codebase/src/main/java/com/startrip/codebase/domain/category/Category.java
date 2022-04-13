@@ -1,6 +1,7 @@
 package com.startrip.codebase.domain.category;
 
 import com.startrip.codebase.dto.category.RequestCategoryDto;
+import com.startrip.codebase.dto.category.UpdateCategoryDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ public class Category {
     @Id
     @Column(name = "category_id")
     @GeneratedValue(generator = "UUID")
-    private UUID id;
+    private UUID categoryId;
 
     @Setter
     @ManyToOne(fetch = FetchType.EAGER, cascade= CascadeType.REMOVE)
@@ -27,14 +28,20 @@ public class Category {
     @Column(name = "category_name", unique = true)
     private String categoryName;
 
+    @Setter
     @Column(nullable = false)
     private Integer depth;
 
-    public static Category createCategory(RequestCategoryDto dto) {
+    public static Category of(RequestCategoryDto dto, Category categoryParent) {
         Category category = Category.builder()
+                .categoryParent(categoryParent)
                 .categoryName(dto.getCategoryName())
                 .build();
         return category;
+    }
+
+    public void update (UpdateCategoryDto dto){
+        this.categoryName = dto.getCategoryName();
     }
 
     @Builder
