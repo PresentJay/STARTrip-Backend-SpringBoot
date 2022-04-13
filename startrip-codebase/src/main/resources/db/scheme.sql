@@ -41,13 +41,13 @@ create table "user"
 
 create table category
 (
-    category_id        uuid    not null
+    category_id        UUID    not null
         primary key,
     category_name      varchar(255)
         constraint uk_lroeo5fvfdeg4hpicn4lw7x9b
             unique,
     depth              integer not null,
-    category_parent_id uuid
+    category_parent_id UUID
         constraint fkgbowg38afm73793kwnokn0203
             references category
 );
@@ -75,7 +75,7 @@ create table notice
     title        varchar(255),
     updated_time timestamp,
     view_count   integer,
-    category_id  bigint
+    category_id  UUID
         constraint fk4sj4tjb6t1o2l62o7tm44gtk5
             references category,
     user_id      bigint
@@ -130,7 +130,7 @@ create table event
     spend_time_unit  varchar(255),
     start_date       timestamp,
     updated_date     timestamp,
-    category_id      bigint
+    category_id      UUID
         constraint fk751x8cp2x1h1fay38u2p5gpkr
             references category,
     place_id         UUID
