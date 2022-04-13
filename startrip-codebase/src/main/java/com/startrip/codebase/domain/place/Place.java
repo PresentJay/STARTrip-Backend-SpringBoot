@@ -18,8 +18,7 @@ import java.util.UUID;
 public class Place {
 
     @Id
-    @GeneratedValue(generator ="uuid")
-    @Column(nullable = false)
+    @Column(name = "place_id")
     private UUID id;
 
     @JoinColumn(name = "category_id")
@@ -45,6 +44,7 @@ public class Place {
 
     public static Place of (PlaceDto dto){
         return Place.builder()
+                .id(UUID.randomUUID())
                 .placeName(dto.getPlaceName())
                 .address(dto.getAddress())
                 .placePhoto(dto.getPlacePhoto())

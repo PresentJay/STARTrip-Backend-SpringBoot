@@ -101,10 +101,10 @@ create table notice_comment
 
 create table place
 (
-    place_id          bigserial
+    place_id          UUID
         primary key,
     address           varchar(255),
-    category_id       bigint,
+    category_id       UUID,
     latitude          double precision,
     longitude         double precision,
     phone_number      varchar(255),
@@ -133,7 +133,7 @@ create table event
     category_id      bigint
         constraint fk751x8cp2x1h1fay38u2p5gpkr
             references category,
-    place_id         bigint
+    place_id         UUID
         constraint fkpuvix4lexrakgdlt8si1tbtxv
             references place
 );
@@ -156,12 +156,12 @@ create table event_review
 
 create table place_info
 (
-    id              bigserial
+    placeinfo_id    bigserial
         primary key,
-    is_entrance_fee boolean not null,
-    is_parking_lot  boolean not null,
-    is_rest_room    boolean not null,
-    place_id        bigint  not null
+    is_entrance_fee boolean,
+    is_parking_lot  boolean,
+    is_rest_room    boolean,
+    place_id        UUID  not null
 );
 
 create table place_review
