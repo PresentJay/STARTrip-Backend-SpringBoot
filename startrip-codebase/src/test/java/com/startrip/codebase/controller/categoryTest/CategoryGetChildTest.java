@@ -78,7 +78,7 @@ public class CategoryGetChildTest {
 
         Category category = categoryRepository.findCategoryByCategoryName("ROOT").get();
         mockMvc.perform(
-                        get("/api/category/child-full/" + category.getId())
+                        get("/api/category/child-full/" + category.getCategoryId())
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -90,7 +90,7 @@ public class CategoryGetChildTest {
     void category_get_child() throws Exception {
         Category category = categoryRepository.findCategoryByCategoryName("ROOT").get();
         mockMvc.perform(
-                        get("/api/category/child-full/" + category.getId())
+                        get("/api/category/child-full/" + category.getCategoryId())
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
