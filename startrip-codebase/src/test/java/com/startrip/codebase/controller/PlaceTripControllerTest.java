@@ -36,6 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // id1, id2가 삭제되는 것을 막음
 public class PlaceTripControllerTest {
+
+    @Autowired
     public MockMvc mockMvc;
 
     private final UUID placeTripId1 = UUID.randomUUID();
