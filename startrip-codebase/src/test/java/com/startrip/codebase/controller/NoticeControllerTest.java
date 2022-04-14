@@ -145,7 +145,7 @@ class NoticeControllerTest {
 
         NewNoticeDto dto = new NewNoticeDto();
         dto.setUserEmail("admin@admin.com");
-        dto.setCategoryId(find.getId());
+        dto.setCategoryId(find.getCategoryId());
         dto.setAttachment("파일URL");
         dto.setText("본문");
         dto.setTitle("테스트제목");
@@ -171,7 +171,7 @@ class NoticeControllerTest {
 
         NewNoticeDto dto = new NewNoticeDto();
         dto.setUserEmail("user@user.com");
-        dto.setCategoryId(find.getId());
+        dto.setCategoryId(find.getCategoryId());
         dto.setAttachment("파일URL");
         dto.setText("본문");
         dto.setTitle("테스트제목");

@@ -1,149 +1,236 @@
 package com.startrip.codebase.controller.categoryTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.startrip.codebase.controller.CategoryController;
-import com.startrip.codebase.domain.category.dto.CreateCategoryDto;
-import com.startrip.codebase.domain.category.dto.UpdateCategoryDto;
-import com.startrip.codebase.service.CategoryService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.startrip.codebase.domain.category.Category;
+import com.startrip.codebase.dto.category.UpdateCategoryDto;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.security.test.context.support.WithMockUser;
+import com.startrip.codebase.domain.category.CategoryRepository;
+import com.startrip.codebase.dto.LoginDto;
+import com.startrip.codebase.dto.category.RequestCategoryDto;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+
+import javax.sql.DataSource;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Optional;
+import java.util.UUID;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("test")
- public class CategoryControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class CategoryControllerTest {
 
  @Autowired
  private MockMvc mockMvc;
 
  @Autowired
- private ObjectMapper objectMapper;
-
- private final CategoryService categoryService;
-
+ private CategoryRepository categoryRepository;
 
  @Autowired
- public CategoryControllerTest(CategoryService categoryService) {
-  this.categoryService = categoryService;
- }
+ private WebApplicationContext wac;
 
- @BeforeTestClass
- public void cleanUp() {
+ @Autowired
+ private DataSource dataSource;
 
- }
- //한글 깨짐 해결
+ private final ObjectMapper objectMapper = new ObjectMapper();
+
+ private String adminToken;
+ private UUID categoryId, rootId;
+
  @BeforeEach
- public void before() {
-  mockMvc = MockMvcBuilders.standaloneSetup(new CategoryController(categoryService))
-          .addFilters(new CharacterEncodingFilter("UTF-8", true))
+ public void setup() {
+  this.mockMvc = MockMvcBuilders.webAppContextSetup(wac)
+          .addFilter(new CharacterEncodingFilter("UTF-8", true))
+          .apply(SecurityMockMvcConfigurers.springSecurity())
           .build();
  }
 
- @DisplayName("Step1: Category-Controller CREATE")
- @Test
- void test1() throws Exception {
+ @BeforeAll
+ public void dataSetUp() throws Exception {
+  dataCleanUp();
+  try (Connection conn = dataSource.getConnection()) {
+   ScriptUtils.executeSqlScript(conn, new ClassPathResource("/db/data.sql"));
+  }
+   createAdminJwt();
+ }
 
-  CreateCategoryDto dto = new CreateCategoryDto();
-  dto.setCategoryName("맛집");
-  dto.setCategoryParentId(null);
+ @AfterAll
+ public void dataCleanUp() throws SQLException {
+  try (Connection conn = dataSource.getConnection()) {
+   ScriptUtils.executeSqlScript(conn, new ClassPathResource("db/scheme.sql"));
+  }
+ }
 
+ private void createAdminJwt() throws Exception {
+  LoginDto loginDto = new LoginDto();
+  loginDto.setEmail("admin@admin.com");
+  loginDto.setPassword("1234");
 
-  mockMvc.perform(post("/api/category")
-          .contentType(MediaType.APPLICATION_JSON) // JSON 타입으로 지정
-          .content(objectMapper.writeValueAsString(dto))
+  MvcResult mvcResult = mockMvc.perform(
+          post("/api/user/login")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(loginDto))
           )
-          .andExpect(status().isOk()).andDo(print());
+          .andExpect(status().isOk())
+          .andDo(print())
+          .andReturn();
+
+  adminToken = mvcResult.getResponse().getContentAsString();
  }
 
- @DisplayName("Step2: Category-Controller GET(All View)")
+
+ @DisplayName("Category-Controller CREATE")
+ @Order(1)
  @Test
- void test2() throws Exception {
-  mockMvc.perform(get("/api/category")
-          .accept(MediaType.APPLICATION_JSON)
-  ).andExpect(status().isOk()).andDo(print());
+ void category_createUnAuthorize() throws Exception {
+
+  RequestCategoryDto dto = new RequestCategoryDto();
+  dto.setCategoryParentId(null);
+  dto.setCategoryName("음식점");
+
+  mockMvc.perform(
+                  post("/api/category")
+                          .contentType(MediaType.APPLICATION_JSON)
+                          .content(objectMapper.writeValueAsString(dto))
+          )
+          .andExpect(status().isUnauthorized())
+          .andDo(print());
+
  }
 
- @DisplayName("Step3: Category-Controller GET(Detail View)")
+ @WithMockUser(roles = "ADMIN")
+ @DisplayName("Category-Controller CREATE")
+ @Order(2)
  @Test
- void test3() throws Exception {
-  String root = "ROOT";
-  String market = "맛집";
+ void category() throws Exception {
 
-  //자동 생성된 (id:1) Root Category 확인
-  mockMvc.perform(get("/api/category/1"))
+  RequestCategoryDto dto = new RequestCategoryDto();
+  dto.setCategoryParentId(null);
+  dto.setCategoryName("음식점");
+
+  MvcResult result = mockMvc.perform(
+          post("/api/category")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(dto))
+                  .header("Authorization", "Bearer " + adminToken)
+          )
+          .andExpect(status().isCreated())
+          .andDo(print())
+          .andReturn();
+
+  Optional<Category> category = categoryRepository.findCategoryByCategoryName("음식점");
+  category.ifPresent(value -> categoryId = value.getCategoryId());
+
+ }
+
+ @DisplayName("Category-Controller GET(All View)")
+ @Order(3)
+ @Test
+ void category_getList() throws Exception {
+
+  mockMvc.perform(
+          get("/api/category"))
+          .andExpect(status().isOk())
+          .andDo(print());
+ }
+
+ @DisplayName("Category-Controller GET(Detail View)")
+ @Order(4)
+ @Test
+ void category_get() throws Exception {
+
+  Optional<Category> rootCategory = categoryRepository.findCategoryByCategoryName("ROOT");
+  rootCategory.ifPresent(value -> rootId = value.getCategoryId());
+
+  // 자동 생성된 Root Category 확인
+  mockMvc.perform(
+          get("/api/category/" + rootId ))
           .andExpect(status().isOk())
           .andDo(print());
 
-  // step1에서 생성된 (id:2)
-  mockMvc.perform(get("/api/category/2"))
+  // 생성된 Category(음식점)확인
+  mockMvc.perform(
+          get("/api/category/" + categoryId))
           .andExpect(status().isOk())
           .andDo(print());
  }
 
- @DisplayName("Step4: Category-Controller UPDATE Test")
+ @WithMockUser(roles = "ADMIN")
+ @DisplayName("Category-Controller UPDATE Test")
+ @Order(5)
  @Test
- void test4() throws Exception {
+ void category_update() throws Exception {
 
   UpdateCategoryDto dto = new UpdateCategoryDto();
-  dto.setId((long)2);
-  dto.setCategoryName("관광");
+  dto.setCategoryName("음식점말고관광");
 
-  mockMvc.perform(put("/api/category/2")
-          .contentType(MediaType.APPLICATION_JSON) // JSON 타입으로 지정
-          .content(objectMapper.writeValueAsString(dto))
+  mockMvc.perform(
+          put("/api/category/" + categoryId )
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(objectMapper.writeValueAsString(dto))
+                  .header("Authorization", "Bearer " + adminToken)
           )
           .andExpect(status().isOk())
           .andDo(print());
  }
 
- @DisplayName("Step5: Category-Controller GET Test")
+ @DisplayName("Category-Controller Get-UpdatedCategory")
+ @Order(6)
  @Test
- void test5() throws Exception {
-  mockMvc.perform(get("/api/category/2")
-          .accept(MediaType.APPLICATION_JSON)
-  ).andExpect(status().isOk()).andDo(print());
- }
+ void category_get_updatedCategory() throws Exception {
 
- @DisplayName("Step6: Category-Controller DELETE Test")
- @Test
- void test6() throws Exception {
-  mockMvc.perform(delete("/api/category/2")
-          .accept(MediaType.APPLICATION_JSON)
-  ).andExpect(status().isOk()).andDo(print());
- }
-
- @DisplayName("Step7: Category-Controller GET(Detail View) Test")
- @Test
- void test7() throws Exception {
-  mockMvc.perform(get("/api/category/2")
-          .accept(MediaType.APPLICATION_JSON)
-  ).andExpect(status().isBadRequest()).andDo(print());
- }
-
- @DisplayName("Step8: UniquePropertyTest - CREATE-removedItemName Test")
- @Test
- void test8() throws Exception {
-  CreateCategoryDto dto = new CreateCategoryDto();
-  dto.setCategoryName("맛집");
-  dto.setCategoryParentId((long)1);
-
-  mockMvc.perform(post("/api/category")
-                  .contentType(MediaType.APPLICATION_JSON) // JSON 타입으로 지정
-                  .content(objectMapper.writeValueAsString(dto))
+  mockMvc.perform(
+          get("/api/category/" + categoryId )
           )
-          .andExpect(status().isOk()).andDo(print());
+          .andExpect(status().isOk())
+          .andDo(print());
+ }
+
+ @WithMockUser(roles = "ADMIN")
+ @DisplayName("Category-Controller DELETE Test")
+ @Order(7)
+ @Test
+ void category_delete() throws Exception {
+  mockMvc.perform(
+          delete("/api/category/" + categoryId )
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .header("Authorization", "Bearer " + adminToken)
+          )
+          .andExpect(status().isOk())
+          .andDo(print());
+ }
+
+ @DisplayName("Category-Controller GET(Detail View) Test")
+ @Order(8)
+ @Test
+ void category_get_deletedItem() throws Exception {
+     mockMvc.perform(
+             get("/api/category/" + categoryId )
+             )
+             .andExpect(status().isBadRequest())
+             .andDo(print());
  }
 }

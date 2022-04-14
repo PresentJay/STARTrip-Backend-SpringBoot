@@ -19,8 +19,14 @@ public class Event {
 
     @Id
     @Column(name = "event_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long eventId;
+
+    /*
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "eventReview_id")
+    private EventReview eventReview;
+     */
 
     @OneToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "category_id")

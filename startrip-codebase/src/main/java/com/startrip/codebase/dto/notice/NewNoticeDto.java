@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -12,7 +13,7 @@ public class NewNoticeDto {
 
     private String userEmail;
 
-    private Long categoryId;
+    private UUID categoryId;
 
     @NotNull
     private String title;

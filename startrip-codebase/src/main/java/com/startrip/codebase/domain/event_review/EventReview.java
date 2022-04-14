@@ -19,12 +19,12 @@ public class EventReview {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long reviewId ;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "event_id")
-    private Event event;
-
     @Column(name = "creator_id")
     private Long creatorId;
+
+    @ManyToOne(cascade = CascadeType.MERGE)  //영속성 전이
+    @JoinColumn(name = "event_id")
+    private Event eventId;
 
     private String eventReviewTitle;
 

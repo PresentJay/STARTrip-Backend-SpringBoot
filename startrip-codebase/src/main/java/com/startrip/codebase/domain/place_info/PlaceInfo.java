@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -15,20 +16,17 @@ public class PlaceInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "placeinfo_id")
     private Long id; //자체 식별키
 
     @NotNull
-    @Setter
-    @Column(name = "place_id")
-    private Long placeId;
+    @JoinColumn(name = "place_id")
+    private UUID placeId;
 
-    @Setter
     private boolean isParkingLot;
 
-    @Setter
     private boolean isEntranceFee;
 
-    @Setter
     private boolean isRestRoom;
 
     public static PlaceInfo of (PlaceInfoDto dto){

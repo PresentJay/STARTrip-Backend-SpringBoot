@@ -41,13 +41,13 @@ create table "user"
 
 create table category
 (
-    category_id        bigserial
+    category_id        UUID    not null
         primary key,
     category_name      varchar(255)
         constraint uk_lroeo5fvfdeg4hpicn4lw7x9b
             unique,
     depth              integer not null,
-    category_parent_id bigint
+    category_parent_id UUID
         constraint fkgbowg38afm73793kwnokn0203
             references category
 );
@@ -75,7 +75,7 @@ create table notice
     title        varchar(255),
     updated_time timestamp,
     view_count   integer,
-    category_id  bigint
+    category_id  UUID
         constraint fk4sj4tjb6t1o2l62o7tm44gtk5
             references category,
     user_id      bigint
@@ -101,10 +101,10 @@ create table notice_comment
 
 create table place
 (
-    place_id          bigserial
+    place_id          UUID
         primary key,
     address           varchar(255),
-    category_id       bigint,
+    category_id       UUID,
     latitude          double precision,
     longitude         double precision,
     phone_number      varchar(255),
@@ -130,10 +130,10 @@ create table event
     spend_time_unit  varchar(255),
     start_date       timestamp,
     updated_date     timestamp,
-    category_id      bigint
+    category_id      UUID
         constraint fk751x8cp2x1h1fay38u2p5gpkr
             references category,
-    place_id         bigint
+    place_id         UUID
         constraint fkpuvix4lexrakgdlt8si1tbtxv
             references place
 );
@@ -156,12 +156,12 @@ create table event_review
 
 create table place_info
 (
-    id              bigserial
+    placeinfo_id    bigserial
         primary key,
-    is_entrance_fee boolean not null,
-    is_parking_lot  boolean not null,
-    is_rest_room    boolean not null,
-    place_id        bigint  not null
+    is_entrance_fee boolean,
+    is_parking_lot  boolean,
+    is_rest_room    boolean,
+    place_id        UUID  not null
 );
 
 create table place_review
