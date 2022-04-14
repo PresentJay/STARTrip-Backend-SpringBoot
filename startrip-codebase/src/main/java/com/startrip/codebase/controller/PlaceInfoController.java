@@ -6,6 +6,7 @@ import com.startrip.codebase.service.PlaceInfoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,16 +19,17 @@ public class PlaceInfoController {
         this.placeInfoService = placeInfoService;
     }
 
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
     @PostMapping("/place/info")
     public @ResponseBody
-    ResponseEntity addPlaceInfo(PlaceInfoDto dto) {
+    ResponseEntity addPlaceInfo(@RequestBody PlaceInfoDto dto) {
+        Long id;
         try{
-            placeInfoService.createPlaceInfo(dto);
+            id = placeInfoService.createPlaceInfo(dto);
         } catch (Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity("생성되었습니다", HttpStatus.OK);
+        return new ResponseEntity(id, HttpStatus.OK);
     }
 
     @GetMapping("/place/info/{id}")
@@ -42,7 +44,7 @@ public class PlaceInfoController {
         return new ResponseEntity(placeInfo, HttpStatus.OK);
     }
 
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
     @PostMapping("/place/info/{id}")
     public @ResponseBody
     ResponseEntity updatePlaceInfo(@PathVariable("id") Long id, PlaceInfoDto dto) {
@@ -54,7 +56,7 @@ public class PlaceInfoController {
         return new ResponseEntity("수정되었습니다", HttpStatus.OK);
     }
 
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
     @DeleteMapping("/place/info/{id}")
     public @ResponseBody
     ResponseEntity deletePlaceInfo(@PathVariable("id") Long id) {

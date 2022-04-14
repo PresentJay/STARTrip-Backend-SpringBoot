@@ -37,6 +37,7 @@ import static org.assertj.core.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("test")
+@TestInstance(value = TestInstance.Lifecycle.PER_CLASS)
 class NoticeServiceTest {
 
     private final static Logger logger = LoggerFactory.getLogger(NoticeServiceTest.class);
@@ -58,6 +59,23 @@ class NoticeServiceTest {
 
     @BeforeEach
     public void setup() {
+    }
+
+    @BeforeAll
+    public void dataSetUp() throws Exception {
+        dataCleanUp();
+        logger.info("테스트 용 데이터를 DB로 삽입합니다");
+        try (Connection conn = dataSource.getConnection()) {  // (2)
+            ScriptUtils.executeSqlScript(conn, new ClassPathResource("/db/data.sql"));  // (1)
+        }
+    }
+
+    @AfterAll
+    public void dataCleanUp() throws SQLException {
+        logger.info("테이블 초기화합니다");
+        try (Connection conn = dataSource.getConnection()) {
+            ScriptUtils.executeSqlScript(conn, new ClassPathResource("db/scheme.sql"));
+        }
     }
 
     private void createNotice(User user, Category category) {

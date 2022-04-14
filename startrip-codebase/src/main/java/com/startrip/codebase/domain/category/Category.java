@@ -1,12 +1,12 @@
 package com.startrip.codebase.domain.category;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.startrip.codebase.domain.category.dto.CreateCategoryDto;
+import com.startrip.codebase.dto.category.RequestCategoryDto;
+import com.startrip.codebase.dto.category.UpdateCategoryDto;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
+
 
 @Entity
 @Getter
@@ -15,10 +15,9 @@ import java.util.List;
 public class Category {
 
     @Id
-    @Setter
     @Column(name = "category_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // PK
+    @GeneratedValue(generator = "UUID")
+    private UUID categoryId;
 
     @Setter
     @ManyToOne(fetch = FetchType.EAGER, cascade= CascadeType.REMOVE)
@@ -33,16 +32,19 @@ public class Category {
     @Column(nullable = false)
     private Integer depth;
 
-    //dto -> Entity
-    public static Category createCategory(CreateCategoryDto dto) {
-        // createDto에 있던 categoryParentId는 여기서 Entity로 바꾸지 않는다.
+    public static Category of(RequestCategoryDto dto, Category categoryParent) {
         Category category = Category.builder()
+                .categoryParent(categoryParent)
                 .categoryName(dto.getCategoryName())
                 .build();
         return category;
     }
 
-    @Builder // id를 제외하여 builder를 적용시킬 것이므로 따로 생성자 위에 builder 패턴을 적용하였음.
+    public void update (UpdateCategoryDto dto){
+        this.categoryName = dto.getCategoryName();
+    }
+
+    @Builder
     public Category (Category categoryParent, String categoryName, Integer depth){
         this.categoryParent = categoryParent;
         this.categoryName = categoryName;
