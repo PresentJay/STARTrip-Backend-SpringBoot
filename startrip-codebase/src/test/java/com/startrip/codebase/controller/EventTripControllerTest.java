@@ -3,19 +3,22 @@ package com.startrip.codebase.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.domain.user.UserRepository;
+import com.startrip.codebase.dto.LoginDto;
 import com.startrip.codebase.dto.event_trip.CreateEventTripDto;
 import com.startrip.codebase.dto.event_trip.UpdateEventTripDto;
 import com.startrip.codebase.service.trip.EventTripService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,9 +28,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.UUID;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,6 +45,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // id1, id2가 삭제되는 것을 막음
 public class EventTripControllerTest {
+    private final static Logger logger = LoggerFactory.getLogger(NoticeControllerTest.class);
+
+    @Autowired
     public MockMvc mockMvc;
 
     private final UUID eventTripId1 = UUID.randomUUID();
@@ -52,13 +62,70 @@ public class EventTripControllerTest {
     @Autowired
     private WebApplicationContext wac;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private DataSource dataSource;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private String userToken;
+    private String adminToken;
 
     @BeforeEach
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .addFilter(new CharacterEncodingFilter("UTF-8", true))
+                .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
+    }
+
+    @BeforeAll
+    public void dataSetUp() throws Exception {
+        logger.info("테스트 용 데이터를 DB로 삽입합니다");
+        try (Connection conn = dataSource.getConnection()) {  // (2)
+            ScriptUtils.executeSqlScript(conn, new ClassPathResource("/db/data.sql"));  // (1)
+        }
+        createJwt();
+    }
+
+    @AfterAll
+    public void dataCleanUp() throws SQLException {
+        logger.info("테이블 초기화합니다");
+        try (Connection conn = dataSource.getConnection()) {
+            ScriptUtils.executeSqlScript(conn, new ClassPathResource("db/scheme.sql"));
+        }
+    }
+
+    private void createJwt() throws Exception {
+        // 관리자 토큰 발급
+        LoginDto loginDto = new LoginDto();
+        loginDto.setEmail("admin@admin.com");
+        loginDto.setPassword("1234");
+
+        MvcResult mvcResult = mockMvc.perform(
+                        post("/api/user/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(loginDto))
+                )
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+
+        adminToken = mvcResult.getResponse().getContentAsString();
+
+        // 일반 유저 토큰 발급
+        loginDto = new LoginDto();
+        loginDto.setEmail("user@user.com");
+        loginDto.setPassword("1234");
+
+        mvcResult = mockMvc.perform(
+                        post("/api/user/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(loginDto))
+                )
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+        userToken = mvcResult.getResponse().getContentAsString();
     }
 
     public void cleanUp() {
@@ -73,7 +140,7 @@ public class EventTripControllerTest {
 
         User user = User.builder()
                 .name("b")
-                .email("1@1.com")
+                .email("user@user.com")
                 .build();
         userRepository.save(user);
 
@@ -92,6 +159,7 @@ public class EventTripControllerTest {
                 .contentType("application/json;charset=utf-8")
                 .content(objectMapper.writeValueAsString(dto)) // json 형식의 string 타입으로 변환
                 .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + userToken)
         ).andExpect(status().isOk()).andDo(print()).andReturn();
 
         id1 = UUID.fromString(mvcResult.getResponse()
@@ -99,13 +167,13 @@ public class EventTripControllerTest {
                 .replaceAll("\\\"",""));
     }
 
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = "ADMIN")
     @DisplayName("Event Trip Create 테스트 2번")
     @Test
     public void test2() throws Exception {
         User user = User.builder()
                 .name("b")
-                .email("2@2.com")
+                .email("admin@admin.com")
                 .build();
         userRepository.save(user);
 
@@ -124,6 +192,7 @@ public class EventTripControllerTest {
                 .contentType("application/json;charset=utf-8")
                 .content(objectMapper.writeValueAsString(dto)) // json 형식의 string 타입으로 변환
                 .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + adminToken)
         ).andExpect(status().isOk()).andDo(print()).andReturn();
 
         id2 = UUID.fromString(mvcResult.getResponse()
@@ -163,6 +232,7 @@ public class EventTripControllerTest {
                 .contentType("application/json;charset=utf-8")
                 .content(objectMapper.writeValueAsString(dto)) // json 형식의 string 타입으로 변환
                 .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + userToken)
         ).andExpect(status().isOk()).andDo(print());
     }
 
@@ -180,6 +250,7 @@ public class EventTripControllerTest {
     public void test7() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/eventtrip/" + id1)
                 .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + userToken)
         ).andExpect(status().isOk()).andDo(print());
     }
 

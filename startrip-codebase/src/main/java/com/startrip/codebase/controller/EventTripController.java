@@ -26,7 +26,7 @@ public class EventTripController {
 
     // Create
     @PostMapping("/eventtrip")
-    @PreAuthorize("isAuthenticated() and hasRole('USER')")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity createEventTrip(@RequestBody CreateEventTripDto dto) {
         UUID id = eventTripService.createEventTrip(dto);
         return new ResponseEntity(id, HttpStatus.OK);
@@ -53,7 +53,7 @@ public class EventTripController {
 
     // Update
     @PostMapping("/eventtrip/{id}")
-    @PreAuthorize("isAuthenticated() and hasRole('USER')")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity updateEventTrip(@PathVariable("id") UUID id, @RequestBody UpdateEventTripDto dto) {
         try{
             eventTripService.updateEventTrip(id, dto);
@@ -65,7 +65,7 @@ public class EventTripController {
 
     // Delete
     @DeleteMapping("/eventtrip/{id}")
-    @PreAuthorize("isAuthenticated() and hasRole('USER')")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity deleteEventTrip(@PathVariable("id") UUID id){
         try {
             eventTripService.deleteEventTrip(id);
