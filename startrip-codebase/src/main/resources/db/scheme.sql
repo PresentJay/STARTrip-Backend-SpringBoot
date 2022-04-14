@@ -20,6 +20,8 @@ drop table if exists place_review cascade;
 
 drop table if exists PLACE_TRIP cascade;
 
+drop table if exists operating_time cascade;
+
 drop table if exists "user" cascade;
 
 create table "user"

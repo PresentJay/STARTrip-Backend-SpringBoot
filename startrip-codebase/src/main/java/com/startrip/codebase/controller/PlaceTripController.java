@@ -26,7 +26,7 @@ public class PlaceTripController {
 
     // Create
     @PostMapping("/placetrip")
-    @PreAuthorize("isAuthenticated() and hasRole('USER')")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity createPlaceTrip(@RequestBody CreatePlaceTripDto dto) {
         UUID id = placeTripService.createPlaceTrip(dto);
         return new ResponseEntity(id, HttpStatus.OK);
@@ -53,7 +53,7 @@ public class PlaceTripController {
 
     // Update
     @PostMapping("/placetrip/{id}")
-    @PreAuthorize("isAuthenticated() and hasRole('USER')")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity updatePlaceTrip(@PathVariable("id") UUID id, @RequestBody UpdatePlaceTripDto dto) {
         try{
             placeTripService.updatePlaceTrip(id, dto);
@@ -65,7 +65,7 @@ public class PlaceTripController {
 
     // Delete
     @DeleteMapping("/placetrip/{id}")
-    @PreAuthorize("isAuthenticated() and hasRole('USER')")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity deletePlaceTrip(@PathVariable("id") UUID id){
         try {
             placeTripService.deletePlaceTrip(id);
