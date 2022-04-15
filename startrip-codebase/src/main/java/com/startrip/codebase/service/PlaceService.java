@@ -15,7 +15,7 @@ import java.util.*;
 @Service
 public class PlaceService {
 
-    private PlaceRepository placeRepository;
+    private final PlaceRepository placeRepository;
 
     @Autowired
     public PlaceService(PlaceRepository placeRepository){

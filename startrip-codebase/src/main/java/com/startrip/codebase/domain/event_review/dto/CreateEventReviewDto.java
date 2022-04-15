@@ -7,6 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateEventReviewDto {
+    private Long eventId;
+
     private String eventReviewTitle;
 
     private String text;

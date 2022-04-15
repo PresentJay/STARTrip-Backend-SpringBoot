@@ -8,6 +8,7 @@ import com.startrip.codebase.service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,7 +28,7 @@ public class PlaceController {
         this.placeService = placeService;
     }
 
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
     @PostMapping("/place")
     public @ResponseBody
     ResponseEntity addPlace(@RequestBody PlaceDto dto) {
@@ -70,7 +71,7 @@ public class PlaceController {
         return new ResponseEntity(place, HttpStatus.OK);
     }
 
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
     @PostMapping("/place/{id}")
     public @ResponseBody
     ResponseEntity updatePlace(@PathVariable("id") UUID id, PlaceDto dto) {
@@ -82,7 +83,7 @@ public class PlaceController {
         return new ResponseEntity("수정되었습니다", HttpStatus.OK);
     }
 
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
     @DeleteMapping("/place/{id}")
     public @ResponseBody
     ResponseEntity deletePlace(@PathVariable("id") UUID id) {

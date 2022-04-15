@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -25,7 +24,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ActiveProfiles("test")
 public class EventReviewControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -127,6 +125,8 @@ public class EventReviewControllerTest {
     @Order(7)
     @Test
     void evnetReview_Read_After_Delete() throws Exception {
-        mockMvc.perform(get("/api/eventReview")).andExpect(status().isOk()).andDo(print());
+        mockMvc.perform(get("/api/eventReview"))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
     }
 }
