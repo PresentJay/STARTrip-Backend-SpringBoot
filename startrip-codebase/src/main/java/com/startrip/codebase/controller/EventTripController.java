@@ -8,6 +8,7 @@ import com.startrip.codebase.service.trip.EventTripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class EventTripController {
 
     // Create
     @PostMapping("/eventtrip")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity createEventTrip(@RequestBody CreateEventTripDto dto) {
         UUID id = eventTripService.createEventTrip(dto);
         return new ResponseEntity(id, HttpStatus.OK);
@@ -51,6 +53,7 @@ public class EventTripController {
 
     // Update
     @PostMapping("/eventtrip/{id}")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity updateEventTrip(@PathVariable("id") UUID id, @RequestBody UpdateEventTripDto dto) {
         try{
             eventTripService.updateEventTrip(id, dto);
@@ -62,6 +65,7 @@ public class EventTripController {
 
     // Delete
     @DeleteMapping("/eventtrip/{id}")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity deleteEventTrip(@PathVariable("id") UUID id){
         try {
             eventTripService.deleteEventTrip(id);

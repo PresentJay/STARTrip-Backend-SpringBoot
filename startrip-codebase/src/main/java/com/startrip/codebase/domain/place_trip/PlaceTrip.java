@@ -18,6 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "PLACE_TRIP")
 public class PlaceTrip {
     @Id
     @Column(name = "trip_id")

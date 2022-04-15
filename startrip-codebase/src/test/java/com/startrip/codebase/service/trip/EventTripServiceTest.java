@@ -6,16 +6,19 @@ import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.domain.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.Date;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("test")
 public class EventTripServiceTest {
     @Autowired
@@ -27,9 +30,15 @@ public class EventTripServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    private final UUID eventTripId = UUID.randomUUID();
+
+    public void cleanUp() {
+        userRepository.deleteAllInBatch();
+    }
+
     private void createEventTrip(User user) {
         EventTrip placeTrip = EventTrip.builder()
-                .tripId(UUID.fromString("e3661498-9473-4c06-9d52-464cc2f59429"))
+                .tripId(eventTripId)
                 .userId(user)
                 .userPartner("a")
                 .eventId(UUID.randomUUID())
@@ -45,17 +54,19 @@ public class EventTripServiceTest {
     @DisplayName("EventTrip과 User 매핑 확인")
     @Test
     public void eventtrip_user() {
+        cleanUp();
         User user = User.builder()
-                .name("a")
-                .email("1@1.com")
+                .name("c")
+                .email("3@3.com")
                 .build();
         userRepository.save(user);
 
         createEventTrip(user);
 
-        EventTrip find = eventTripService.getEventTrip(UUID.fromString("e3661498-9473-4c06-9d52-464cc2f59429"));
+        EventTrip find = eventTripService.getEventTrip(eventTripId);
 
-        assertThat(find.getUserId().getName().compareTo("a"));
-        assertThat(find.getUserId().getEmail().compareTo("1@1"));
+        assertThat(find.getUserId().getName().compareTo("c"));
+        assertThat(find.getUserId().getEmail().compareTo("3@3"));
+        cleanUp();
     }
 }
