@@ -1,32 +1,32 @@
 package com.startrip.codebase.domain.event;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.startrip.codebase.domain.category.Category;
 import com.startrip.codebase.domain.event.dto.UpdateEventDto;
+import com.startrip.codebase.domain.event_review.EventReview;
 import com.startrip.codebase.domain.place.Place;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Time;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@Table(name = "event")
 public class Event {
 
     @Id
     @Column(name = "event_id")
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private Long eventId;
-
-    /*
-    @OneToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "eventReview_id")
-    private EventReview eventReview;
-     */
+    private UUID eventId;
 
     @OneToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "category_id")
@@ -35,6 +35,10 @@ public class Event {
     @OneToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "place_id")
     private Place place;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)//, cascade = CascadeType.REMOVE)
+    private List<EventReview> reviews;
 
     private String eventTitle;
 
@@ -74,4 +78,16 @@ public class Event {
         this.contact = dto.getContact();
         this.eventPicture = dto.getEventPicture();
     }
+
+    /*
+    public void addReview(EventReview review) {
+        this.reviews.add(review);
+    }
+
+    public void removeReview(EventReview review){
+        for (EventReview item : this.reviews){
+
+        }
+    }
+     */
 }

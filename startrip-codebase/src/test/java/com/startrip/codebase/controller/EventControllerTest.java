@@ -15,8 +15,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import java.util.UUID;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -25,7 +28,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //ToDo: 통합테스트이므로, 해당 테스트가 종료되기 전에 사용한 DB 테이블을 삭제하거나, 데이터를 날리는 작업
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EventControllerTest {
+    private final UUID EventId1 = UUID.randomUUID();
+    private final UUID EventId2 = UUID.randomUUID();
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -49,6 +56,7 @@ public class EventControllerTest {
     @Test
     void event_create_1() throws Exception {
         CreateEventDto dto = new CreateEventDto();
+        dto.setEventId(EventId1);
         dto.setEventTitle("진해 구낭제");
         dto.setDescription("벗꼿페슽히벌");
         dto.setContact("010-1234-1234");
@@ -66,6 +74,7 @@ public class EventControllerTest {
     @Test
     void event_create_2() throws Exception {
         CreateEventDto dto = new CreateEventDto();
+        dto.setEventId(EventId2);
         dto.setEventTitle("진영 단감축제");
         dto.setDescription("가을 축제");
         dto.setContact("test2@gmail.com");
@@ -82,7 +91,8 @@ public class EventControllerTest {
     @Order(3)
     @Test
     void event_read() throws Exception {
-        mockMvc.perform(get("/api/event")).andExpect(status().isOk()).andDo(print());
+        mockMvc.perform(get("/api/event"))
+                .andExpect(status().isOk()).andDo(print());
     }
 
     @DisplayName("Event Update TEST")
@@ -90,12 +100,13 @@ public class EventControllerTest {
     @Test
     void event_update() throws Exception {
         CreateEventDto dto = new CreateEventDto();
+        dto.setEventId(EventId2);
         dto.setEventTitle("진영 단감축제");
         dto.setDescription("가을 축제");
         dto.setContact("010-1234-1234");
 
         mockMvc.perform(
-                        post("/api/event/1") // 수정하기 위해서는 생성했던 id와 같은 내용이어야 조회 후 수정 가능
+                        put("/api/event/" + EventId2 )
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(dto))
                 )
@@ -107,7 +118,7 @@ public class EventControllerTest {
     @Order(5)
     @Test
     void event_detail_read() throws Exception {
-        mockMvc.perform(get("/api/event/1"))
+        mockMvc.perform(get("/api/event/" + EventId2))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -116,7 +127,7 @@ public class EventControllerTest {
     @Order(6)
     @Test
     void event_delete() throws Exception {
-        mockMvc.perform(delete("/api/event/1"))
+        mockMvc.perform(delete("/api/event/" + EventId1))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -125,8 +136,10 @@ public class EventControllerTest {
     @Order(7)
     @Test
     void event_detail_read_1() throws Exception {
-        mockMvc.perform(get("/api/event/1"))
+        mockMvc.perform(get("/api/event/" + EventId1)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
+                .andExpect(content().string("해당 이벤트가 없습니다."))
                 .andDo(print());
     }
 
