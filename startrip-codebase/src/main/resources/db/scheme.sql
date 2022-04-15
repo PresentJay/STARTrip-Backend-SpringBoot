@@ -1,5 +1,3 @@
-drop table if exists event_comment cascade;
-
 drop table if exists event_review cascade;
 
 drop table if exists event cascade;
@@ -22,7 +20,8 @@ drop table if exists place_trip cascade;
 
 drop table if exists "user" cascade;
 
-drop table if exists state cascade;
+drop table if exists operating_time cascade;
+
 
 create table "user"
 (
@@ -52,19 +51,6 @@ create table category
     category_parent_id uuid
         constraint fkgbowg38afm73793kwnokn0203
             references category
-);
-
-create table event_comment
-(
-    comment_id integer not null
-        constraint event_comment_pkey
-            primary key,
-    comment_text varchar(255),
-    comment_up_id integer,
-    created_time bytea,
-    event_id uuid,
-    is_updated boolean,
-    user_id bigint
 );
 
 create table event_trip

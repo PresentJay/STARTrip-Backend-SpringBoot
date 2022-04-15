@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class EventServiceTest {
     private final UUID eventReviewId = UUID.randomUUID();
 
-    private final static Logger logger = LoggerFactory.getLogger(NoticeServiceTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(EventServiceTest.class);
 
     @Autowired
     private EventService eventService;
