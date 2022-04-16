@@ -45,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // id1, id2가 삭제되는 것을 막음
 public class PlaceTripControllerTest {
-    private final static Logger logger = LoggerFactory.getLogger(NoticeControllerTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(PlaceTripControllerTest.class);
 
     @Autowired
     public MockMvc mockMvc;
