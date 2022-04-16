@@ -1,30 +1,34 @@
 package com.startrip.codebase.domain.event_review;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.startrip.codebase.domain.event.Event;
 import com.startrip.codebase.domain.event_review.dto.UpdateEventReviewDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class EventReview {
     @Id
     @Column(name = "review_id")
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private Long reviewId ;
+    private UUID reviewId ;
 
     @Column(name = "creator_id")
-    private Long creatorId;
+    private UUID creatorId;
 
-    @ManyToOne(cascade = CascadeType.MERGE)  //영속성 전이
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "event_id")
-    private Event eventId;
+    private Event event;
 
     private String eventReviewTitle;
 

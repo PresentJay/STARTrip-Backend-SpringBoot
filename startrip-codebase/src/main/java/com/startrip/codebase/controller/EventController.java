@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -41,14 +42,19 @@ public class EventController {
 
     //상세 조회
     @GetMapping(value ={"/event/{id}"})
-    public Event getEvent(@PathVariable("id") Long id) {
-        Event event = eventService.getEvent(id);
-        return event;
+    public ResponseEntity getEvent(@PathVariable("id") UUID id) {
+        Event event;
+        try{
+            event = eventService.getEvent(id);
+        }catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(event, HttpStatus.OK);
     }
 
     //수정
-    @PostMapping("/event/{id}")
-    public ResponseEntity updateEvent(@PathVariable("id") Long id, @RequestBody UpdateEventDto dto) {
+    @PutMapping("/event/{id}")
+    public ResponseEntity updateEvent(@PathVariable("id") UUID id, @RequestBody UpdateEventDto dto) {
         try{
             eventService.updateEvent(id, dto);
         } catch (Exception e){
@@ -59,7 +65,7 @@ public class EventController {
 
     //삭제
     @DeleteMapping("/event/{id}")
-    public String deleteEvent(@PathVariable("id") Long id){
+    public String deleteEvent(@PathVariable("id") UUID id){
         eventService.deleteEvent(id);
         return "삭제";
     }
