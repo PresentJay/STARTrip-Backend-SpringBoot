@@ -26,8 +26,8 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
 
-    - name: Look for gradlew
-      run: find / -type f -name "gradlew"
+    - name: make gradlew
+      run: gradle wrapper
         
     - name: Cache Gradle packages
       uses: actions/cache@v2
