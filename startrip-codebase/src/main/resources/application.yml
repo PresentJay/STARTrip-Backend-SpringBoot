@@ -1,0 +1,41 @@
+spring:
+  config:
+    import: "configserver:http://203.241.228.111:18081"
+  profiles:
+    active: local, default
+    include:
+      - oauth2
+      - mongoDB
+      - postgres
+  application:
+    name: secret
+
+  hikari:
+    maximum-pool-size: 4
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+
+  data:
+    mongodb:
+      url: mongodb://127.0.0.1:27017
+      database: mongostartrip
+
+logging:
+  config: classpath:log4j2.yml
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
