@@ -39,18 +39,15 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle-    
-    
-    - name: change directory where has gradlew
-      run: echo $(ls) && cd startrip-codebase
         
     - name: Grant execute permission for gradlew
-      run: echo $(ls) && chmod +x gradlew
+      run: cd startrip-codebase && chmod +x gradlew
 
     - name: Build with Gradle
-      run: gradlew --info test
+      run: cd startrip-codebase && gradlew --info test
       
     - name: Test with Gradle
-      run: gradlew --info test
+      run: cd startrip-codebase && gradlew --info test
       
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
