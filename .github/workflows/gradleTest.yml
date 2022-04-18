@@ -27,7 +27,7 @@ jobs:
         distribution: 'temurin'
 
     - name: make gradlew
-      run: gradle wrapper
+      run: cd startrip-codebase && gradle wrapper
         
     - name: Cache Gradle packages
       uses: actions/cache@v2
