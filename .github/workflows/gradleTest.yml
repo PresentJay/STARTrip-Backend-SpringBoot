@@ -13,9 +13,6 @@ on:
   pull_request:
     branches: [ master, develop ]
 
-permissions:
-  contents: read
-
 jobs:
   build:
 
@@ -55,6 +52,9 @@ jobs:
       
     - name: Test with Gradle
       run: cd startrip-codebase && ./gradlew --info test
+
+    - name: startrip-ls
+      run: echo $(ls startrip-codebase)
       
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
