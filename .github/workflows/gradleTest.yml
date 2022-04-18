@@ -44,9 +44,9 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          startrip-codebase/.gradle/caches
-          startrip-codebase/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          ~/startrip-codebase/.gradle/caches
+          ~/startrip-codebase/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('startrip-codebase/**/*.gradle*', 'startrip-codebase/**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle-    
         
@@ -60,10 +60,10 @@ jobs:
       uses: EnricoMi/publish-unit-test-result-action@v1
       if: ${{ always() }}
       with:
-        files: cd startrip-codebase && build/test-results/**/*.xml
+        files: startrip-codebase/build/test-results/**/*.xml
         
     - name: Cleanup Gradle Cache
       if: ${{ always() }}
       run: |
-        rm -f startrip-codebase/.gradle/caches/modules-2/modules-2.lock
-        rm -f startrip-codebase/.gradle/caches/modules-2/gc.properties
+        rm -f ~/startrip-codebase/.gradle/caches/modules-2/modules-2.lock
+        rm -f ~/startrip-codebase/.gradle/caches/modules-2/gc.properties
