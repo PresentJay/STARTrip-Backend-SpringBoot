@@ -42,9 +42,6 @@ jobs:
         
     - name: Grant execute permission for gradlew
       run: cd startrip-codebase && chmod +x ./gradlew
-
-    - name: Build with Gradle
-      run: cd startrip-codebase && ./gradlew --info test
       
     - name: Test with Gradle
       run: cd startrip-codebase && ./gradlew --info test
