@@ -44,7 +44,7 @@ jobs:
       run: chmod +x startrip-codebase/gradlew
       
     - name: Test with Gradle
-      run: startrip-codebase/gradlew --info test
+      run: cd startrip-codebase && gradlew --info test
       
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
