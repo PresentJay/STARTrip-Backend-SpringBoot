@@ -1,6 +1,7 @@
 package com.startrip.codebase.controller;
 
-import com.startrip.codebase.domain.Operating_time.OperatingTime;
+
+import com.startrip.codebase.domain.operating_time.OperatingTime;
 import com.startrip.codebase.dto.operatingTime.RequestOptimeDto;
 import com.startrip.codebase.dto.operatingTime.UpdateOptimePeriodDto;
 import com.startrip.codebase.service.OperatingTimeService;
