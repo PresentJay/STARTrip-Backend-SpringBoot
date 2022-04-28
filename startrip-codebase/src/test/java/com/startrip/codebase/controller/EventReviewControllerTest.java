@@ -63,18 +63,6 @@ public class EventReviewControllerTest {
                 .addFilter(new CharacterEncodingFilter("UTF-8", true))
                 .build();
     }
-/*
-    public Event event_create() throws  Exception {
-        Event event = Event.builder()
-                .eventId(UUID.randomUUID())
-                .eventTitle("진해 군항제")
-                .description("매해 4월1일 ~ 4월10일 진행된다.")
-                .contact("010-1234-1231")
-                .build();
-        eventRepository.save(event);
-        return  event;
-    }
- */
 
     @DisplayName("EventReview Create TEST1")
     @Order(1)
