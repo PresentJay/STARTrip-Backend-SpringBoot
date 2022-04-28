@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -35,20 +36,25 @@ public class EventReviewController {
     @PostMapping("/eventReview")
     public ResponseEntity
     createEvent(@RequestBody CreateEventReviewDto dto) {
-        eventReviewService.createEventReview(dto);
-        return new ResponseEntity("이벤트 리뷰 생성", HttpStatus.OK);
+        UUID id = eventReviewService.createEventReview(dto);
+        return new ResponseEntity(id, HttpStatus.OK);
     }
 
     //상세 조회
     @GetMapping("/eventReview/{id}")
-    public EventReview getReviewEvent(@PathVariable("id") Long id) {
-        EventReview eventReviews = eventReviewService.getReviewEvent(id);
-        return eventReviews;
+    public ResponseEntity getReviewEvent(@PathVariable("id") UUID id) {
+        EventReview eventReviews;
+        try{
+            eventReviews = eventReviewService.getReviewEvent(id);
+        }catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(eventReviews, HttpStatus.OK);
     }
 
     //수정
-    @PostMapping("/eventReview/{id}")
-    public ResponseEntity updateReviewEvent(@PathVariable("id") Long id, @RequestBody UpdateEventReviewDto dto) {
+    @PutMapping("/eventReview/{id}")
+    public ResponseEntity updateReviewEvent(@PathVariable("id") UUID id, @RequestBody UpdateEventReviewDto dto) {
         try{
             eventReviewService.updateReviewEvent(id, dto);
         } catch (Exception e){
@@ -59,7 +65,7 @@ public class EventReviewController {
 
     //삭제
     @DeleteMapping("/eventReview/{id}")
-    public String deleteEventReveiw(@PathVariable("id") Long id){
+    public String deleteEventReveiw(@PathVariable("id") UUID id){
         eventReviewService.deleteEventReveiw(id);
         return "삭제";
     }

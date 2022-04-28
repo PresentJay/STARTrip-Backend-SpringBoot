@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -29,6 +30,7 @@ public class EventService {
 
     public void createEvent(CreateEventDto dto) {
         Event event = Event.builder()
+                .eventId(dto.getEventId())
                 .eventTitle(dto.getEventTitle())
                 .description(dto.getDescription())
                 .contact(dto.getContact())
@@ -39,7 +41,6 @@ public class EventService {
 
     public List<ResponseEventDto> allEvent() {
         List<Event> events = eventRepository.findAll();
-        // Event -> ReponseEventDto
         List<ResponseEventDto> dtos = new ArrayList<>();
 
         for (Event event : events) {
@@ -53,13 +54,13 @@ public class EventService {
         return dtos;
     }
 
-    public Event getEvent(Long id){
+    public Event getEvent(UUID id){
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("해당 이벤트가 없습니다."));
         return event;
     }
 
-    public void updateEvent(Long id, UpdateEventDto dto){
+    public void updateEvent(UUID id, UpdateEventDto dto){
         // 조회
         Optional<Event> event = eventRepository.findById(id);
         if (event.isEmpty()){
@@ -72,7 +73,7 @@ public class EventService {
         eventRepository.save(use);
     }
 
-    public void deleteEvent( Long id){
+    public void deleteEvent( UUID id){
         eventRepository.deleteById(id);
     }
 }
