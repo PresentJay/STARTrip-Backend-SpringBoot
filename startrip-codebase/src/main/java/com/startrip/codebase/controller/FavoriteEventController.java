@@ -1,14 +1,16 @@
 package com.startrip.codebase.controller;
 
-
-import com.startrip.codebase.domain.event.Event;
-import com.startrip.codebase.domain.user.User;
+import com.startrip.codebase.domain.favorite_event.FavoriteEvent;
+import com.startrip.codebase.domain.operating_time.OperatingTime;
 import com.startrip.codebase.dto.favoriteEvent.RequestFavoriteE;
 import com.startrip.codebase.service.FavoriteEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -31,6 +33,18 @@ public class FavoriteEventController {
         }
         return new ResponseEntity<>("FavoriteEvent 생성", HttpStatus.CREATED);
 
+    }
+
+    @GetMapping("/favoriteevent/{user-id}")
+    public ResponseEntity getFavoriteEvent(RequestFavoriteE dto){
+
+        List<FavoriteEvent> favoriteEvents;
+        try{
+            favoriteEvents = favoriteEventService.getFavoriteEvent(dto);
+        } catch(Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(favoriteEvents, HttpStatus.OK);
     }
 
 

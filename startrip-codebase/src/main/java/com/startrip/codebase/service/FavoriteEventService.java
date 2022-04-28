@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,7 +27,6 @@ public class FavoriteEventService {
     public FavoriteEventService(FavoriteEventRepository favoriteEventRepository,
                                 EventRepository eventRepository,
                                 UserRepository userRepository){
-
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
         this.favoriteEventRepository = favoriteEventRepository;
@@ -45,6 +45,19 @@ public class FavoriteEventService {
         FavoriteEvent favoriteEvent = FavoriteEvent.of(user, event);
         favoriteEventRepository.save(favoriteEvent);
     }
+
+    public List<FavoriteEvent> getFavoriteEvent (RequestFavoriteE dto){
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("존재하지 않는 유저입니다");
+                });
+        Optional<List<FavoriteEvent>> favoriteEvents = Optional.ofNullable(favoriteEventRepository.findAllByUserId(dto.getUserId()));
+        if(favoriteEvents.isEmpty()){
+            throw new RuntimeException("해당 user에 존재하는 좋아요이벤트 정보가 없습니다");
+        }
+        return favoriteEvents.get();
+    }
+
 
 
 
