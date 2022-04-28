@@ -6,16 +6,20 @@ import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.domain.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.Date;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("test")
 public class PlaceTripServiceTest {
     @Autowired
@@ -27,9 +31,15 @@ public class PlaceTripServiceTest {
     @Autowired
     private UserRepository userRepository;
 
+    private final UUID placeTripId = UUID.randomUUID();
+
+    public void cleanUp() {
+        userRepository.deleteAllInBatch();
+    }
+
     private void createPlaceTrip(User user) {
         PlaceTrip placeTrip = PlaceTrip.builder()
-                .tripId(UUID.fromString("e3661498-9473-4c06-9d52-464cc2f59429"))
+                .tripId(placeTripId)
                 .userId(user)
                 .userPartner("a")
                 .placeId(UUID.randomUUID())
@@ -42,20 +52,23 @@ public class PlaceTripServiceTest {
         placeTripRepository.save(placeTrip);
     }
 
+    @WithMockUser(roles = "USER")
     @DisplayName("PlaceTrip과 User 매핑 확인")
     @Test
     public void placetrip_user() {
+        cleanUp();
         User user = User.builder()
-                .name("a")
-                .email("1@1.com")
+                .name("d")
+                .email("4@4.com")
                 .build();
         userRepository.save(user);
 
         createPlaceTrip(user);
 
-        PlaceTrip find = placeTripService.getPlaceTrip(UUID.fromString("e3661498-9473-4c06-9d52-464cc2f59429"));
+        PlaceTrip find = placeTripService.getPlaceTrip(placeTripId);
 
-        assertThat(find.getUserId().getName().compareTo("a"));
-        assertThat(find.getUserId().getEmail().compareTo("1@1"));
+        assertThat(find.getUserId().getName().compareTo("d"));
+        assertThat(find.getUserId().getEmail().compareTo("4@4"));
+        cleanUp();
     }
 }

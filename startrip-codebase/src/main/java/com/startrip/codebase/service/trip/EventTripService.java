@@ -24,7 +24,7 @@ public class EventTripService {
     // Create
     public UUID createEventTrip(CreateEventTripDto dto) {
         EventTrip eventTrip = EventTrip.builder()
-                .tripId(dto.getTripId())
+                .tripId(UUID.randomUUID())
                 .userId(dto.getUserId())
                 .userPartner(dto.getUserPartner())
                 .eventId(dto.getEventId())
