@@ -8,6 +8,7 @@ import com.startrip.codebase.service.trip.PlaceTripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class PlaceTripController {
 
     // Create
     @PostMapping("/placetrip")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity createPlaceTrip(@RequestBody CreatePlaceTripDto dto) {
         UUID id = placeTripService.createPlaceTrip(dto);
         return new ResponseEntity(id, HttpStatus.OK);
@@ -51,6 +53,7 @@ public class PlaceTripController {
 
     // Update
     @PostMapping("/placetrip/{id}")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity updatePlaceTrip(@PathVariable("id") UUID id, @RequestBody UpdatePlaceTripDto dto) {
         try{
             placeTripService.updatePlaceTrip(id, dto);
@@ -62,6 +65,7 @@ public class PlaceTripController {
 
     // Delete
     @DeleteMapping("/placetrip/{id}")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity deletePlaceTrip(@PathVariable("id") UUID id){
         try {
             placeTripService.deletePlaceTrip(id);

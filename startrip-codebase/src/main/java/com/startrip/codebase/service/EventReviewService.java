@@ -1,5 +1,6 @@
 package com.startrip.codebase.service;
 
+import com.startrip.codebase.domain.event.Event;
 import com.startrip.codebase.domain.event.EventRepository;
 import com.startrip.codebase.domain.event_review.EventReview;
 import com.startrip.codebase.domain.event_review.EventReviewRepository;
@@ -13,11 +14,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
 public class EventReviewService {
-    private EventReviewRepository eventReviewRepository;
+    private final EventReviewRepository eventReviewRepository;
     private EventRepository eventRepository;
 
     @Autowired
@@ -27,14 +29,21 @@ public class EventReviewService {
     }
 
 
-    public void createEventReview(CreateEventReviewDto dto) {
+    public UUID createEventReview(CreateEventReviewDto dto) {
+        Event event = eventRepository.findById(dto.getEventId()).orElseThrow(() -> {
+            throw new IllegalStateException("해당 이벤트가 없습니다");
+        });
+
         EventReview eventReview = EventReview.builder()
+                .reviewId(UUID.randomUUID())
+                .event(event)
                 .eventReviewTitle(dto.getEventReviewTitle())
                 .text((dto.getText()))
                 .reviewRate((dto.getReviewRate()))
                 .build();
         eventReviewRepository.save((eventReview));
         log.info(eventReview.toString());
+        return  eventReview.getReviewId();
     }
 
     public List<ResponseEventReviewDto> allEventReview() {
@@ -51,14 +60,14 @@ public class EventReviewService {
         return dtos;
     }
 
-    public EventReview getReviewEvent(Long id){
+    public EventReview getReviewEvent(UUID id){
         EventReview eventReview = eventReviewRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("해당 이벤트 리뷰가 없습니다."));
         return  eventReview;
     }
 
 
-    public void updateReviewEvent(Long id, UpdateEventReviewDto dto){
+    public void updateReviewEvent(UUID id, UpdateEventReviewDto dto){
         // 조회
         Optional<EventReview> eventReview = eventReviewRepository.findById(id);
         if (eventReview.isEmpty()){
@@ -71,7 +80,7 @@ public class EventReviewService {
         eventReviewRepository.save(use);
     }
 
-    public void deleteEventReveiw( Long id){
+    public void deleteEventReveiw( UUID id){
         eventReviewRepository.deleteById(id);
     }
 }
