@@ -34,8 +34,8 @@ public class FavoriteEvent {
     @JoinColumn(name = "event_id")  //0416기준,  Long
     private Event eventId;
 
-    private int state;
-    private boolean isExecuted;
+    private Boolean isValid;
+    private Boolean isExecuted;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
 
@@ -45,6 +45,7 @@ public class FavoriteEvent {
                 .userId(user)
                 .eventId(event)
                 .createdDate(LocalDateTime.now())
+                .isValid(true)
                 .isExecuted(false)
                 .build();
 
@@ -52,7 +53,7 @@ public class FavoriteEvent {
     }
 
     public void update(UpdateFavoriteE dto){
-        this.state = dto.getState(); //TODO: state는 기간에 따라 0, 1, 삭제 작동하도록 작성해야 한다
+        this.isValid = dto.getIsValid(); //TODO: state는 기간에 따라 0, 1, 삭제 작동하도록 작성해야 한다
         this.updatedDate = LocalDateTime.now();
     }
 

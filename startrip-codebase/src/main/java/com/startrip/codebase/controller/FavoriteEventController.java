@@ -3,6 +3,7 @@ package com.startrip.codebase.controller;
 import com.startrip.codebase.domain.favorite_event.FavoriteEvent;
 import com.startrip.codebase.domain.operating_time.OperatingTime;
 import com.startrip.codebase.dto.favoriteEvent.RequestFavoriteE;
+import com.startrip.codebase.dto.favoriteEvent.UpdateFavoriteE;
 import com.startrip.codebase.service.FavoriteEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,12 @@ public class FavoriteEventController {
         return new ResponseEntity(favoriteEvents, HttpStatus.OK);
     }
 
+    @PostMapping("/favoriteevent/{fEvent_id}")
+    public ResponseEntity updateFavoriteEvent(UpdateFavoriteE dto){
 
+
+
+        return new ResponseEntity("수정되었습니다", HttpStatus.OK); // TODO: check, 이것은 사실 "삭제되었습니다"가 맞지 않을까?
+    }
 
 }

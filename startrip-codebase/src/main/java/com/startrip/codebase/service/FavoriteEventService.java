@@ -8,6 +8,7 @@ import com.startrip.codebase.domain.favorite_event.FavoriteEventRepository;
 import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.domain.user.UserRepository;
 import com.startrip.codebase.dto.favoriteEvent.RequestFavoriteE;
+import com.startrip.codebase.dto.favoriteEvent.UpdateFavoriteE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -56,6 +57,17 @@ public class FavoriteEventService {
             throw new RuntimeException("해당 user에 존재하는 좋아요이벤트 정보가 없습니다");
         }
         return favoriteEvents.get();
+    }
+
+    public void updateFavoriteEvent (UpdateFavoriteE dto){
+
+        Optional<FavoriteEvent> favoriteEvent = favoriteEventRepository.findById(dto.getFavoriteEventId());
+
+
+
+        // TODO: 사실상, 유저가 보내는 삭제요청이다
+        // TODO: 시스템이 24h 기준으로 모니터링 하여 해당 데이터(garbage)삭제하도록 해야한다
+
     }
 
 
