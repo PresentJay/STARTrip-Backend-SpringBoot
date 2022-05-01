@@ -48,12 +48,14 @@ public class FavoriteEventController {
         return new ResponseEntity(favoriteEvents, HttpStatus.OK);
     }
 
-    @PostMapping("/favoriteevent/{fEvent_id}")
+    @PutMapping("/favoriteevent/{fEvent_id}")
     public ResponseEntity updateFavoriteEvent(UpdateFavoriteE dto){
-
-
-
-        return new ResponseEntity("수정되었습니다", HttpStatus.OK); // TODO: check, 이것은 사실 "삭제되었습니다"가 맞지 않을까?
+        try{
+            favoriteEventService.updateFavoriteEvent(dto);
+        }catch(Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity("이벤트좋아요 수행여부 수정완료", HttpStatus.OK);
     }
 
 }

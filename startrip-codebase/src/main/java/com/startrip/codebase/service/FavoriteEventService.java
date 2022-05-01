@@ -5,6 +5,7 @@ import com.startrip.codebase.domain.event.Event;
 import com.startrip.codebase.domain.event.EventRepository;
 import com.startrip.codebase.domain.favorite_event.FavoriteEvent;
 import com.startrip.codebase.domain.favorite_event.FavoriteEventRepository;
+import com.startrip.codebase.domain.operating_time.OperatingTime;
 import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.domain.user.UserRepository;
 import com.startrip.codebase.dto.favoriteEvent.RequestFavoriteE;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class FavoriteEventService {
@@ -60,17 +62,25 @@ public class FavoriteEventService {
     }
 
     public void updateFavoriteEvent (UpdateFavoriteE dto){
-
-        Optional<FavoriteEvent> favoriteEvent = favoriteEventRepository.findById(dto.getFavoriteEventId());
-
-
-
-        // TODO: 사실상, 유저가 보내는 삭제요청이다
-        // TODO: 시스템이 24h 기준으로 모니터링 하여 해당 데이터(garbage)삭제하도록 해야한다
+        FavoriteEvent favoriteEvent = favoriteEventRepository.findById(dto.getFavoriteEventId())
+                .orElseThrow( () -> new RuntimeException("해당 이벤트좋아요는 존재하지 않습니다"));
+        favoriteEvent.update(dto);
+        favoriteEventRepository.save(favoriteEvent);
 
     }
 
+    public void deleteFavoriteEvent (UUID fEventId){
+        // TODO: 유저가 보내는 삭제요청이다
+        // TODO: 시스템이 24h 기준으로 모니터링 하여 해당 데이터(garbage)삭제하도록 해야한다
+        FavoriteEvent favoriteEvent = favoriteEventRepository.findById(fEventId)
+                .orElseThrow( () -> new RuntimeException("해당 이벤트좋아요는 존재하지 않습니다"));
+        favoriteEvent.offValid();
+        favoriteEventRepository.save(favoriteEvent);
 
+
+
+        favoriteEventRepository.deleteById(fEventId);
+    }
 
 
 }

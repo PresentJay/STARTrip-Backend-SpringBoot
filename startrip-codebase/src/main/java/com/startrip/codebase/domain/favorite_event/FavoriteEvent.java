@@ -53,8 +53,12 @@ public class FavoriteEvent {
     }
 
     public void update(UpdateFavoriteE dto){
-        this.isValid = dto.getIsValid(); //TODO: state는 기간에 따라 0, 1, 삭제 작동하도록 작성해야 한다
+        this.isExecuted = dto.getIsExecuted();
         this.updatedDate = LocalDateTime.now();
+    }
+
+    public void offValid(){
+        this.isValid = false;
     }
 
 }
