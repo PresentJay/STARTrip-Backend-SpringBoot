@@ -27,6 +27,7 @@ public class FavoriteEventController {
 
     @PostMapping("{userId}/favoriteevent") //TODO: {userId}/favoriteevent
     public ResponseEntity createFavoriteEvent(@PathVariable("userId") Long userId, RequestFavoriteE dto){ // TODO: (@PathVariable("userId") Long userId)
+
         try {
             favoriteEventService.createFavoriteEvent(userId, dto);
         } catch(IllegalStateException e){

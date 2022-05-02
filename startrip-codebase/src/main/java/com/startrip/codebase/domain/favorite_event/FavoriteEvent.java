@@ -31,8 +31,8 @@ public class FavoriteEvent {
     @JoinColumn(name = "user_id") // 0416기준, Long
     private User userId;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "event_id")  //0416기준,  Long
+    @ManyToOne(cascade = CascadeType.MERGE) // TODO: user당 하나씩만 가지도록 해야한다
+    @JoinColumn(name = "event_id")
     private Event eventId;
 
     private Boolean isValid;
@@ -55,11 +55,17 @@ public class FavoriteEvent {
 
     public void update(UpdateFavoriteE dto){
         this.isExecuted = dto.getIsExecuted();
+        this.isValid = dto.getIsValid();
         this.updatedDate = LocalDateTime.now();
     }
 
     public void offValid(){
         this.isValid = false;
+        this.updatedDate = LocalDateTime.now();
+    }
+
+    public void onValid(){
+        this.isValid = true;
         this.updatedDate = LocalDateTime.now();
     }
 

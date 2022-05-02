@@ -15,22 +15,18 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
 public class FavoriteEventService {
 
-    private UserRepository userRepository;
-    private EventRepository eventRepository;
-    private FavoriteEventRepository favoriteEventRepository;
+    private static UserRepository userRepository;
+    private static EventRepository eventRepository;
+    private static FavoriteEventRepository favoriteEventRepository;
 
-    private static Boolean hasDeleteItem = false;
     private static final Long DELETE_SEC = Long.valueOf(120); //2m
-    private static LocalDateTime updateTime;
-    private FavoriteEvent deleteFEvent;
+    private static List<FavoriteEvent> deleteFEvents = new LinkedList<>();
 
     @Autowired
     public FavoriteEventService(FavoriteEventRepository favoriteEventRepository,
@@ -51,9 +47,17 @@ public class FavoriteEventService {
                 .orElseThrow(() -> {
                     throw new IllegalStateException("존재하지 않는 이벤트입니다");
                 });
-        FavoriteEvent favoriteEvent = FavoriteEvent.of(user, event);
 
-        favoriteEventRepository.save(favoriteEvent);
+        FavoriteEvent favoriteEvent;
+        Optional<FavoriteEvent> FEventFindByEvent = Optional.ofNullable(favoriteEventRepository.findByEventIdAndUserId(event, user));
+        if(FEventFindByEvent.isPresent()){
+            favoriteEvent = FEventFindByEvent.get();
+            favoriteEvent.onValid();
+        }else{
+            favoriteEvent = FavoriteEvent.of(user, event);
+            favoriteEventRepository.save(favoriteEvent);
+        }
+
     }
 
     public List<FavoriteEvent> getFavoriteEvent (Long userId){
@@ -78,38 +82,36 @@ public class FavoriteEventService {
 
     public void deleteFavoriteEvent (UUID fEventId){
 
-        deleteFEvent = favoriteEventRepository.findById(fEventId)
+        FavoriteEvent deleteFEvent = favoriteEventRepository.findById(fEventId)
                 .orElseThrow( () -> new RuntimeException("해당 이벤트좋아요는 존재하지 않습니다"));
-        hasDeleteItem = true;
 
         deleteFEvent.offValid();
-
         favoriteEventRepository.save(deleteFEvent);
-        updateTime = deleteFEvent.getUpdatedDate();
-
+        deleteFEvents.add(deleteFEvent);
     }
 
-    @Scheduled(cron = "1 * * * * ?")
+    @Scheduled(fixedRate = 1000*60)
     public void deleteFEventJob(){ // 1분마다
-        if (hasDeleteItem) {
-            try {
-                Long diffSeconds = moniteringOffValidItem();
-                log.info(String.valueOf(diffSeconds));
 
-                if (diffSeconds > DELETE_SEC) {
-                    favoriteEventRepository.deleteById(deleteFEvent.getFavoriteEventId());
-                    hasDeleteItem = false;
-                    log.info("삭제완료");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        if( !deleteFEvents.isEmpty()) {
+            log.info("스케쥴 작업 시작, 리스트에 담긴 아이템 확인중");
+            for (Iterator<FavoriteEvent> iter = deleteFEvents.iterator(); iter.hasNext();) {
+                FavoriteEvent deleteFEvent  = iter.next();
+                if (!deleteFEvent.getIsValid()) timeOver_deleteItem(deleteFEvent);
+                else iter.remove();
             }
         }
     } // 1분마다
 
-    public static long moniteringOffValidItem ( ) {
+    public static void timeOver_deleteItem (FavoriteEvent deleteFEvent) {
+
         LocalDateTime currentTime = LocalDateTime.now();
-        Long diffSeconds = ChronoUnit.SECONDS.between(updateTime, currentTime);
-        return diffSeconds;
+        Long diffSeconds = ChronoUnit.SECONDS.between(deleteFEvent.getUpdatedDate(), currentTime);
+
+        if (diffSeconds > DELETE_SEC) {
+            favoriteEventRepository.deleteById(deleteFEvent.getFavoriteEventId());
+            log.info("삭제완료");
+            deleteFEvents.remove(deleteFEvent);
+        }
     }
 }

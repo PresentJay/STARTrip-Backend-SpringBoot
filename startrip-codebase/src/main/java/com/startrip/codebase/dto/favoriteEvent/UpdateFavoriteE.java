@@ -11,5 +11,6 @@ public class UpdateFavoriteE {
 
     private UUID favoriteEventId;
     private Boolean isExecuted;
+    private Boolean isValid;
 
 }
