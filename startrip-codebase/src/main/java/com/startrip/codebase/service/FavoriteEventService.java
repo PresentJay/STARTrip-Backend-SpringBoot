@@ -26,6 +26,8 @@ public class FavoriteEventService {
     private UserRepository userRepository;
     private EventRepository eventRepository;
     private FavoriteEventRepository favoriteEventRepository;
+
+    private static Boolean hasDeleteItem = false;
     private static final Long DELETE_SEC = Long.valueOf(120); //2m
     private static LocalDateTime updateTime;
     private FavoriteEvent deleteFEvent;
@@ -57,9 +59,9 @@ public class FavoriteEventService {
     public List<FavoriteEvent> getFavoriteEvent (Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> {
-                    throw new IllegalStateException("존재하지 않는 유저입니다");
-                });
-        Optional<List<FavoriteEvent>> favoriteEvents = Optional.ofNullable(favoriteEventRepository.findAllByUserId(userId));
+                    throw new IllegalStateException("존재하지 않는 유저입니다"); });
+
+        Optional<List<FavoriteEvent>> favoriteEvents = Optional.ofNullable(favoriteEventRepository.findAllByUserId(user));
         if(favoriteEvents.isEmpty()){
             throw new RuntimeException("해당 user에 존재하는 좋아요이벤트 정보가 없습니다");
         }
@@ -78,6 +80,8 @@ public class FavoriteEventService {
 
         deleteFEvent = favoriteEventRepository.findById(fEventId)
                 .orElseThrow( () -> new RuntimeException("해당 이벤트좋아요는 존재하지 않습니다"));
+        hasDeleteItem = true;
+
         deleteFEvent.offValid();
 
         favoriteEventRepository.save(deleteFEvent);
@@ -87,13 +91,14 @@ public class FavoriteEventService {
 
     @Scheduled(cron = "1 * * * * ?")
     public void deleteFEventJob(){ // 1분마다
-        if ( deleteFEvent != null ) {
+        if (hasDeleteItem) {
             try {
                 Long diffSeconds = moniteringOffValidItem();
                 log.info(String.valueOf(diffSeconds));
 
                 if (diffSeconds > DELETE_SEC) {
                     favoriteEventRepository.deleteById(deleteFEvent.getFavoriteEventId());
+                    hasDeleteItem = false;
                     log.info("삭제완료");
                 }
             } catch (Exception e) {
@@ -101,7 +106,6 @@ public class FavoriteEventService {
             }
         }
     } // 1분마다
-
 
     public static long moniteringOffValidItem ( ) {
         LocalDateTime currentTime = LocalDateTime.now();
