@@ -25,8 +25,8 @@ public class FavoriteEventController {
         this.favoriteEventService = favoriteEventService;
     }
 
-    @PostMapping("{userId}/favoriteevent") //TODO: {userId}/favoriteevent
-    public ResponseEntity createFavoriteEvent(@PathVariable("userId") Long userId, RequestFavoriteE dto){ // TODO: (@PathVariable("userId") Long userId)
+    @PostMapping("{userId}/favoriteevent")
+    public ResponseEntity createFavoriteEvent(@PathVariable("userId") Long userId, RequestFavoriteE dto){
 
         try {
             favoriteEventService.createFavoriteEvent(userId, dto);

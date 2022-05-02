@@ -24,9 +24,10 @@ public class FavoriteEventService {
     private static UserRepository userRepository;
     private static EventRepository eventRepository;
     private static FavoriteEventRepository favoriteEventRepository;
+    private static Iterator<UUID> iter;
 
-    private static final Long DELETE_SEC = Long.valueOf(120); //2m
-    private static List<FavoriteEvent> deleteFEvents = new LinkedList<>();
+    private static final Long DELETE_SEC = Long.valueOf(120);
+    private static List<UUID> deleteFEvents = new LinkedList<>();
 
     @Autowired
     public FavoriteEventService(FavoriteEventRepository favoriteEventRepository,
@@ -71,7 +72,7 @@ public class FavoriteEventService {
         }
         return favoriteEvents.get();
     }
-
+    @Transactional
     public void updateFavoriteEvent (UpdateFavoriteE dto){
         FavoriteEvent favoriteEvent = favoriteEventRepository.findById(dto.getFavoriteEventId())
                 .orElseThrow( () -> new RuntimeException("해당 이벤트좋아요는 존재하지 않습니다"));
@@ -80,6 +81,7 @@ public class FavoriteEventService {
 
     }
 
+    @Transactional
     public void deleteFavoriteEvent (UUID fEventId){
 
         FavoriteEvent deleteFEvent = favoriteEventRepository.findById(fEventId)
@@ -87,31 +89,39 @@ public class FavoriteEventService {
 
         deleteFEvent.offValid();
         favoriteEventRepository.save(deleteFEvent);
-        deleteFEvents.add(deleteFEvent);
+        deleteFEvents.add(deleteFEvent.getFavoriteEventId());
     }
 
     @Scheduled(fixedRate = 1000*60)
+    @Transactional
     public void deleteFEventJob(){ // 1분마다
 
-        if( !deleteFEvents.isEmpty()) {
-            log.info("스케쥴 작업 시작, 리스트에 담긴 아이템 확인중");
-            for (Iterator<FavoriteEvent> iter = deleteFEvents.iterator(); iter.hasNext();) {
-                FavoriteEvent deleteFEvent  = iter.next();
-                if (!deleteFEvent.getIsValid()) timeOver_deleteItem(deleteFEvent);
-                else iter.remove();
+            for (iter = deleteFEvents.iterator(); iter.hasNext();) {
+                log.info("검사시작");
+                UUID deletedItemId = iter.next();
+                FavoriteEvent currentItem = favoriteEventRepository.findById(deletedItemId)
+                        .orElseThrow( () -> new RuntimeException("해당 이벤트좋아요는 존재하지 않습니다"));
+
+                if (currentItem.getIsValid().equals(true)) {
+                    log.info("얘는 삭제 않고 넘어갈게요: " + deletedItemId);
+                    iter.remove();
+                }
+                else {
+                    timeOver_deleteItem(currentItem);
+                    Optional<FavoriteEvent> confirmItem = favoriteEventRepository.findById(deletedItemId);
+                    if(confirmItem.isEmpty()) iter.remove();
+                }
             }
-        }
     } // 1분마다
 
     public static void timeOver_deleteItem (FavoriteEvent deleteFEvent) {
 
         LocalDateTime currentTime = LocalDateTime.now();
         Long diffSeconds = ChronoUnit.SECONDS.between(deleteFEvent.getUpdatedDate(), currentTime);
-
+        log.info(String.valueOf(diffSeconds));
         if (diffSeconds > DELETE_SEC) {
             favoriteEventRepository.deleteById(deleteFEvent.getFavoriteEventId());
             log.info("삭제완료");
-            deleteFEvents.remove(deleteFEvent);
         }
     }
 }
