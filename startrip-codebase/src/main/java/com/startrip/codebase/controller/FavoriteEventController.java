@@ -25,10 +25,10 @@ public class FavoriteEventController {
         this.favoriteEventService = favoriteEventService;
     }
 
-    @PostMapping("/favoriteevent") //TODO: {userId}/favoriteevent
-    public ResponseEntity createFavoriteEvent(RequestFavoriteE dto){ // TODO: (@PathVariable("userId") Long userId)
+    @PostMapping("{userId}/favoriteevent") //TODO: {userId}/favoriteevent
+    public ResponseEntity createFavoriteEvent(@PathVariable("userId") Long userId, RequestFavoriteE dto){ // TODO: (@PathVariable("userId") Long userId)
         try {
-            favoriteEventService.createFavoriteEvent(dto);
+            favoriteEventService.createFavoriteEvent(userId, dto);
         } catch(IllegalStateException e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
 

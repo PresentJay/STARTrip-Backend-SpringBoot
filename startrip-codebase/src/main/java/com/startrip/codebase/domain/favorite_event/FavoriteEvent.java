@@ -22,6 +22,7 @@ import java.util.UUID;
 public class FavoriteEvent {
 
     @Id
+    @GeneratedValue(generator = "UUID")
     @Column(name = "favoriteevent_id")
     private UUID favoriteEventId;
 
@@ -39,8 +40,8 @@ public class FavoriteEvent {
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
 
-    public static FavoriteEvent of (User user, Event event ){
-        // TODO: requestDTO 가 필요없는 게 맞는지 확인해야한다
+
+        public static FavoriteEvent of ( User user, Event event ){
         FavoriteEvent favoriteEvent = FavoriteEvent.builder()
                 .userId(user)
                 .eventId(event)
@@ -59,6 +60,7 @@ public class FavoriteEvent {
 
     public void offValid(){
         this.isValid = false;
+        this.updatedDate = LocalDateTime.now();
     }
 
 }
