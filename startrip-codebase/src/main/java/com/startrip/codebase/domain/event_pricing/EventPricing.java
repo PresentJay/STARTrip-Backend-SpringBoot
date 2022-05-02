@@ -35,6 +35,13 @@ public class EventPricing {
     private LocalDateTime updatedTime;
 
     public static EventPricing of(EventPricingDto dto, Event event) {
-        return null;
+        EventPricing eventPricing = EventPricing.builder()
+                .id(UUID.randomUUID())
+                .range(dto.getRange())
+                .content(dto.getContent())
+                .event(event)
+                .createdTime(LocalDateTime.now())
+                .build();
+        return eventPricing;
     }
 }
