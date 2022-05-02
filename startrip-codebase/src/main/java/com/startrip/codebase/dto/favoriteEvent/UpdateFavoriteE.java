@@ -10,7 +10,6 @@ import java.util.UUID;
 public class UpdateFavoriteE {
 
     private UUID favoriteEventId;
-    private Boolean isValid;
     private Boolean isExecuted;
 
 }
