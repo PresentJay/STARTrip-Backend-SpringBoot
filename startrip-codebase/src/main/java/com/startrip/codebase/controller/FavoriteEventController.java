@@ -8,6 +8,7 @@ import com.startrip.codebase.service.FavoriteEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,17 +26,18 @@ public class FavoriteEventController {
     }
 
     @PostMapping("user/{userId}/favoriteevent")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity createFavoriteEvent(@PathVariable("userId") Long userId, RequestFavoriteEventDto dto){
         try {
             favoriteEventService.createFavoriteEvent(userId, dto);
         } catch(IllegalStateException e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-
         }
         return new ResponseEntity<>("FavoriteEvent 생성", HttpStatus.CREATED);
     }
 
     @GetMapping("user/{userId}/favoriteevent/")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity getFavoriteEvent(@PathVariable("userId") Long userId){
         List<ResponseFavoriteEventDto> responseFavoriteEventDtos;
         try{
@@ -47,6 +49,7 @@ public class FavoriteEventController {
     }
 
     @PutMapping("user/{userid}/favoriteevent/{favoriteeventId}")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity updateFavoriteEvent(@PathVariable("favoriteeventId") UUID favoriteeventId, UpdateFavoriteEventDto dto){
         try{
             favoriteEventService.updateFavoriteEvent(favoriteeventId, dto);
@@ -57,6 +60,7 @@ public class FavoriteEventController {
     }
 
     @DeleteMapping ("user/{userid}/favoriteevent/{favoriteeventId}")
+    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity deleteFavoriteEvent(@PathVariable("favoriteeventId") UUID favoriteeventId){
         try{
             favoriteEventService.deleteFavoriteEvent(favoriteeventId);
