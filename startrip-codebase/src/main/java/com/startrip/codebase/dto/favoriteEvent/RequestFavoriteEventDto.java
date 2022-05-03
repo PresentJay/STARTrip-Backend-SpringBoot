@@ -7,6 +7,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class RequestFavoriteE {
+public class RequestFavoriteEventDto {
     private UUID eventId;
 }

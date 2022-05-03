@@ -5,29 +5,27 @@ import com.startrip.codebase.domain.favorite_event.FavoriteEvent;
 import com.startrip.codebase.domain.favorite_event.FavoriteEventRepository;
 import com.startrip.codebase.domain.user.User;
 import com.startrip.codebase.domain.user.UserRepository;
-import com.startrip.codebase.dto.favoriteEvent.RequestFavoriteE;
-import com.startrip.codebase.dto.favoriteEvent.UpdateFavoriteE;
-import lombok.extern.slf4j.Slf4j;
+import com.startrip.codebase.dto.favoriteEvent.RequestFavoriteEventDto;
+import com.startrip.codebase.dto.favoriteEvent.ResponseFavoriteEventDto;
+import com.startrip.codebase.dto.favoriteEvent.UpdateFavoriteEventDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-@Slf4j
 @Service
 public class FavoriteEventService {
 
     private static UserRepository userRepository;
     private static EventRepository eventRepository;
     private static FavoriteEventRepository favoriteEventRepository;
-    private static Iterator<UUID> iter;
 
-    private static final Long DELETE_SEC = Long.valueOf(120);
-    private static List<UUID> deleteFEvents = new LinkedList<>();
+    private static final Long DELETE_SEC = 1800L; // Timelimit util deletion : 30m
+    private static final List<UUID> deleteFEvents = new LinkedList<>();
 
     @Autowired
     public FavoriteEventService(FavoriteEventRepository favoriteEventRepository,
@@ -39,7 +37,7 @@ public class FavoriteEventService {
     }
 
     @Transactional
-    public void createFavoriteEvent (Long userId, RequestFavoriteE dto){
+    public void createFavoriteEvent (Long userId, RequestFavoriteEventDto dto){
        User user = userRepository.findById(userId)
                 .orElseThrow(() -> {
                    throw new IllegalStateException("존재하지 않는 유저입니다");
@@ -61,7 +59,7 @@ public class FavoriteEventService {
 
     }
 
-    public List<FavoriteEvent> getFavoriteEvent (Long userId){
+    public List<ResponseFavoriteEventDto> getFavoriteEvent (Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> {
                     throw new IllegalStateException("존재하지 않는 유저입니다"); });
@@ -70,58 +68,55 @@ public class FavoriteEventService {
         if(favoriteEvents.isEmpty()){
             throw new RuntimeException("해당 user에 존재하는 좋아요이벤트 정보가 없습니다");
         }
-        return favoriteEvents.get();
+
+        List<ResponseFavoriteEventDto> responseFavoriteEventDtos = new ArrayList<>();
+        for( FavoriteEvent favoriteEvent : favoriteEvents.get() ){
+            responseFavoriteEventDtos.add(ResponseFavoriteEventDto.of(favoriteEvent));
+        }
+        return responseFavoriteEventDtos;
     }
+
     @Transactional
-    public void updateFavoriteEvent (UpdateFavoriteE dto){
-        FavoriteEvent favoriteEvent = favoriteEventRepository.findById(dto.getFavoriteEventId())
+    public void updateFavoriteEvent (UUID favoriteeventId, UpdateFavoriteEventDto dto){
+        FavoriteEvent favoriteEvent = favoriteEventRepository.findById(favoriteeventId)
                 .orElseThrow( () -> new RuntimeException("해당 이벤트좋아요는 존재하지 않습니다"));
-        favoriteEvent.update(dto);
+        favoriteEvent.updateIsExcuted(dto);
         favoriteEventRepository.save(favoriteEvent);
-
     }
 
     @Transactional
-    public void deleteFavoriteEvent (UUID fEventId){
-
-        FavoriteEvent deleteFEvent = favoriteEventRepository.findById(fEventId)
+    public void deleteFavoriteEvent (UUID favoriteeventId){
+        FavoriteEvent deleteFEvent = favoriteEventRepository.findById(favoriteeventId)
                 .orElseThrow( () -> new RuntimeException("해당 이벤트좋아요는 존재하지 않습니다"));
-
         deleteFEvent.offValid();
         favoriteEventRepository.save(deleteFEvent);
+
         deleteFEvents.add(deleteFEvent.getFavoriteEventId());
     }
 
-    @Scheduled(fixedRate = 1000*60)
+    @Scheduled(fixedRate = 1000*600)  // It runs every hour
     @Transactional
-    public void deleteFEventJob(){ // 1분마다
-
-            for (iter = deleteFEvents.iterator(); iter.hasNext();) {
-                log.info("검사시작");
+    public void deleteFavoriteEventJob(){
+        Iterator<UUID> iter;
+        for (iter = deleteFEvents.iterator(); iter.hasNext();) {
                 UUID deletedItemId = iter.next();
                 FavoriteEvent currentItem = favoriteEventRepository.findById(deletedItemId)
                         .orElseThrow( () -> new RuntimeException("해당 이벤트좋아요는 존재하지 않습니다"));
-
-                if (currentItem.getIsValid().equals(true)) {
-                    log.info("얘는 삭제 않고 넘어갈게요: " + deletedItemId);
-                    iter.remove();
-                }
+                if (currentItem.getIsValid().equals(true)) iter.remove();
                 else {
-                    timeOver_deleteItem(currentItem);
+                    deleteTimeoverFavoriteEvent(currentItem);
                     Optional<FavoriteEvent> confirmItem = favoriteEventRepository.findById(deletedItemId);
                     if(confirmItem.isEmpty()) iter.remove();
                 }
             }
-    } // 1분마다
+    }
 
-    public static void timeOver_deleteItem (FavoriteEvent deleteFEvent) {
-
+    @Transactional
+    public void deleteTimeoverFavoriteEvent (FavoriteEvent deleteFEvent) {
         LocalDateTime currentTime = LocalDateTime.now();
         Long diffSeconds = ChronoUnit.SECONDS.between(deleteFEvent.getUpdatedDate(), currentTime);
-        log.info(String.valueOf(diffSeconds));
         if (diffSeconds > DELETE_SEC) {
             favoriteEventRepository.deleteById(deleteFEvent.getFavoriteEventId());
-            log.info("삭제완료");
         }
     }
 }

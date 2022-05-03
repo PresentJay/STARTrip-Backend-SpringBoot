@@ -2,8 +2,7 @@ package com.startrip.codebase.domain.favorite_event;
 
 import com.startrip.codebase.domain.event.Event;
 import com.startrip.codebase.domain.user.User;
-import com.startrip.codebase.dto.favoriteEvent.RequestFavoriteE;
-import com.startrip.codebase.dto.favoriteEvent.UpdateFavoriteE;
+import com.startrip.codebase.dto.favoriteEvent.UpdateFavoriteEventDto;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,9 +52,8 @@ public class FavoriteEvent {
         return favoriteEvent;
     }
 
-    public void update(UpdateFavoriteE dto){
+    public void updateIsExcuted(UpdateFavoriteEventDto dto){
         this.isExecuted = dto.getIsExecuted();
-        this.isValid = dto.getIsValid();
         this.updatedDate = LocalDateTime.now();
     }
 
