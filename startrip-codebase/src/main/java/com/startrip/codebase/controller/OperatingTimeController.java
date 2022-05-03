@@ -1,6 +1,7 @@
 package com.startrip.codebase.controller;
 
-import com.startrip.codebase.domain.Operating_time.OperatingTime;
+
+import com.startrip.codebase.domain.operating_time.OperatingTime;
 import com.startrip.codebase.dto.operatingTime.RequestOptimeDto;
 import com.startrip.codebase.dto.operatingTime.UpdateOptimePeriodDto;
 import com.startrip.codebase.service.OperatingTimeService;
@@ -25,7 +26,7 @@ public class OperatingTimeController {
          this.operatingTimeService = operatingTimeService;
      }
 
-    @PostMapping("place/optime")
+    @PostMapping("/place/optime")
     public ResponseEntity createOpTime(RequestOptimeDto dto){
          try {
              operatingTimeService.createOpTime(dto);
@@ -36,7 +37,7 @@ public class OperatingTimeController {
     }
 
     // GET : 특정 장소의 모든 op_time
-    @GetMapping (path = "place/optime/list", params="placeid")
+    @GetMapping (path = "/place/optime/list", params="placeid")
     public ResponseEntity getOpTimeAll_inSpecificPlace(@RequestParam(value="placeid") UUID placeId){
        List<OperatingTime> operatingTimes;
         try {
@@ -49,7 +50,7 @@ public class OperatingTimeController {
 
 
     // GET: 특정 시간의 op_time
-    @GetMapping (path= "place/optime", params = {"placeid", "requesttime"})
+    @GetMapping (path= "/place/optime", params = {"placeid", "requesttime"})
     public ResponseEntity getOpTimeAll_inSpecificTime(@RequestParam(value = "placeid") UUID placeId,
             String requesttime){
 
@@ -67,7 +68,7 @@ public class OperatingTimeController {
     }
 
     // UPDATE opTime
-    @PutMapping ("place/optime/{optimeId}")
+    @PutMapping ("/place/optime/{optimeId}")
     public ResponseEntity updateOpTime( @PathVariable("optimeId") UUID optimeId, UpdateOptimePeriodDto dto){
         try {
             operatingTimeService.updateOptime(optimeId, dto);
@@ -79,7 +80,7 @@ public class OperatingTimeController {
 
 
     // DELETE opTime
-    @DeleteMapping("place/optime/{optimeId}")
+    @DeleteMapping("/place/optime/{optimeId}")
     public ResponseEntity deleteOpTime(@PathVariable("optimeId") UUID optimeId){
         try {
             operatingTimeService.deleteOptime(optimeId);
