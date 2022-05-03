@@ -30,7 +30,6 @@ public class EventController {
     public List<ResponseEventDto> getEvents() {
         List<ResponseEventDto> events = eventService.allEvent();
         return events;
-        //ToDo: try-catch로 예외처리하기
     }
 
     //생성
@@ -38,7 +37,11 @@ public class EventController {
     @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_EVENT_CREATOR','ADMIN')")
     public ResponseEntity
     createEvent(@RequestBody CreateEventDto dto) {
-        eventService.createEvent(dto);
+        try{
+            eventService.createEvent(dto);
+        }catch (IllegalStateException e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity("이벤트 생성", HttpStatus.OK);
     }
 
@@ -63,15 +66,19 @@ public class EventController {
         } catch (Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity("", HttpStatus.OK);
+        return new ResponseEntity("이벤트 수정", HttpStatus.OK);
     }
 
     //삭제
     @DeleteMapping("/event/{id}")
     @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
-    public String deleteEvent(@PathVariable("id") UUID id){
-        eventService.deleteEvent(id);
-        return "삭제";
+    public ResponseEntity deleteEvent(@PathVariable("id") UUID id){
+        try{
+            eventService.deleteEvent(id);
+        }catch (IllegalStateException e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity("이벤트 삭제", HttpStatus.OK);
     }
 
 

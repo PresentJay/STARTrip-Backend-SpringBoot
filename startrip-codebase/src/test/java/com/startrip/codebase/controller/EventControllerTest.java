@@ -3,18 +3,28 @@ package com.startrip.codebase.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.startrip.codebase.domain.event.EventRepository;
 import com.startrip.codebase.domain.event.dto.CreateEventDto;
+import com.startrip.codebase.dto.LoginDto;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -25,11 +35,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-//ToDo: 통합테스트이므로, 해당 테스트가 종료되기 전에 사용한 DB 테이블을 삭제하거나, 데이터를 날리는 작업
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EventControllerTest {
+    private final static Logger logger = LoggerFactory.getLogger(PlaceTripControllerTest.class);
+
     private final UUID EventId1 = UUID.randomUUID();
     private final UUID EventId2 = UUID.randomUUID();
 
@@ -42,13 +53,70 @@ public class EventControllerTest {
     @Autowired
     private WebApplicationContext wac;
 
+    @Autowired
+    private DataSource dataSource;
+
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    private String userToken;
+    private String adminToken;
 
     @BeforeEach
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .addFilter(new CharacterEncodingFilter("UTF-8", true))
+                .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
+    }
+
+    @BeforeAll
+    public void dataSetUp() throws Exception {
+        logger.info("테스트 용 데이터를 DB로 삽입합니다");
+        try (Connection conn = dataSource.getConnection()) {  // (2)
+            ScriptUtils.executeSqlScript(conn, new ClassPathResource("/db/data.sql"));  // (1)
+        }
+        createJwt();
+    }
+
+    @AfterAll
+    public void dataCleanUp() throws SQLException {
+        logger.info("테이블 초기화합니다");
+        try (Connection conn = dataSource.getConnection()) {
+            ScriptUtils.executeSqlScript(conn, new ClassPathResource("db/scheme.sql"));
+        }
+    }
+
+    private void createJwt() throws Exception {
+        // 관리자 토큰 발급
+        LoginDto loginDto = new LoginDto();
+        loginDto.setEmail("admin@admin.com");
+        loginDto.setPassword("1234");
+
+        MvcResult mvcResult = mockMvc.perform(
+                        post("/api/user/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(loginDto))
+                )
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+
+        adminToken = mvcResult.getResponse().getContentAsString();
+
+        // 일반 유저 토큰 발급
+        loginDto = new LoginDto();
+        loginDto.setEmail("user@user.com");
+        loginDto.setPassword("1234");
+
+        mvcResult = mockMvc.perform(
+                        post("/api/user/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(loginDto))
+                )
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+        userToken = mvcResult.getResponse().getContentAsString();
     }
 
     @DisplayName("Event Create TEST1")
