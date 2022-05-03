@@ -25,9 +25,8 @@ public class FavoriteEventController {
         this.favoriteEventService = favoriteEventService;
     }
 
-    @PostMapping("{userId}/favoriteevent")
+    @PostMapping("user/{userId}/favoriteevent")
     public ResponseEntity createFavoriteEvent(@PathVariable("userId") Long userId, RequestFavoriteE dto){
-
         try {
             favoriteEventService.createFavoriteEvent(userId, dto);
         } catch(IllegalStateException e){
@@ -35,12 +34,10 @@ public class FavoriteEventController {
 
         }
         return new ResponseEntity<>("FavoriteEvent 생성", HttpStatus.CREATED);
-
     }
 
-    @GetMapping("{userId}/favoriteevent/")
+    @GetMapping("user/{userId}/favoriteevent/")
     public ResponseEntity getFavoriteEvent(@PathVariable("userId") Long userId){
-
         List<FavoriteEvent> favoriteEvents;
         try{
             favoriteEvents = favoriteEventService.getFavoriteEvent(userId);
@@ -50,20 +47,20 @@ public class FavoriteEventController {
         return new ResponseEntity(favoriteEvents, HttpStatus.OK);
     }
 
-    @PutMapping("{userid}/favoriteevent/{fEventId}")
-    public ResponseEntity updateFavoriteEvent(UpdateFavoriteE dto){
+    @PutMapping("user/{userid}/favoriteevent/{favoriteeventId}")
+    public ResponseEntity updateFavoriteEvent(@PathVariable("favoriteeventId") UUID favoriteeventId, UpdateFavoriteE dto){
         try{
-            favoriteEventService.updateFavoriteEvent(dto);
+            favoriteEventService.updateFavoriteEvent(favoriteeventId, dto);
         }catch(Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity("이벤트좋아요 수행여부 수정완료", HttpStatus.OK);
     }
 
-    @DeleteMapping ("{userid}/favoriteevent/{fEventId}")
-    public ResponseEntity deleteFavoriteEvent(@PathVariable("fEventId") UUID fEventId){
+    @DeleteMapping ("user/{userid}/favoriteevent/{favoriteeventId}")
+    public ResponseEntity deleteFavoriteEvent(@PathVariable("favoriteeventId") UUID favoriteeventId){
         try{
-            favoriteEventService.deleteFavoriteEvent(fEventId);
+            favoriteEventService.deleteFavoriteEvent(favoriteeventId);
         }catch(Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
