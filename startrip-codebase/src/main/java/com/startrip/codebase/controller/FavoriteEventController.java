@@ -25,7 +25,7 @@ public class FavoriteEventController {
         this.favoriteEventService = favoriteEventService;
     }
 
-    @PostMapping("user/{userId}/favoriteevent")
+    @PostMapping("user/{userId}/event/favoriteevent")
     @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity createFavoriteEvent(@PathVariable("userId") Long userId, RequestFavoriteEventDto dto){
         try {
@@ -36,7 +36,7 @@ public class FavoriteEventController {
         return new ResponseEntity<>("FavoriteEvent 생성", HttpStatus.CREATED);
     }
 
-    @GetMapping("user/{userId}/favoriteevent/")
+    @GetMapping("user/{userId}/event/favoriteevent/")
     @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity getFavoriteEvent(@PathVariable("userId") Long userId){
         List<ResponseFavoriteEventDto> responseFavoriteEventDtos;
@@ -48,7 +48,7 @@ public class FavoriteEventController {
         return new ResponseEntity(responseFavoriteEventDtos, HttpStatus.OK);
     }
 
-    @PutMapping("user/{userid}/favoriteevent/{favoriteeventId}")
+    @PutMapping("user/{userid}/event/favoriteevent/{favoriteeventId}")
     @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity updateFavoriteEvent(@PathVariable("favoriteeventId") UUID favoriteeventId, UpdateFavoriteEventDto dto){
         try{
@@ -59,7 +59,7 @@ public class FavoriteEventController {
         return new ResponseEntity("이벤트좋아요 수행여부 수정완료", HttpStatus.OK);
     }
 
-    @DeleteMapping ("user/{userid}/favoriteevent/{favoriteeventId}")
+    @DeleteMapping ("user/{userid}/event/favoriteevent/{favoriteeventId}")
     @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public ResponseEntity deleteFavoriteEvent(@PathVariable("favoriteeventId") UUID favoriteeventId){
         try{
