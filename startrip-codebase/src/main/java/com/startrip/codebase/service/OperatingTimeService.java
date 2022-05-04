@@ -1,21 +1,14 @@
 package com.startrip.codebase.service;
 
-import com.startrip.codebase.domain.Operating_time.OperatingTime;
-import com.startrip.codebase.domain.Operating_time.OperatingTimeRepository;
+import com.startrip.codebase.domain.operating_time.OperatingTime;
+import com.startrip.codebase.domain.operating_time.OperatingTimeRepository;
 import com.startrip.codebase.domain.place.PlaceRepository;
 import com.startrip.codebase.dto.operatingTime.RequestOptimeDto;
-import com.startrip.codebase.dto.operatingTime.ResponseOptimeDto;
 import com.startrip.codebase.dto.operatingTime.UpdateOptimePeriodDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
