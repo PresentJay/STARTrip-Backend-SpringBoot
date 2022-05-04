@@ -29,8 +29,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class EventServiceTest {
     private final UUID eventReviewId = UUID.randomUUID();
 
-    private final static Logger logger = LoggerFactory.getLogger(EventServiceTest.class);
-
     @Autowired
     private EventService eventService;
 
@@ -43,9 +41,6 @@ public class EventServiceTest {
     @Autowired
     private EventReviewRepository eventReviewRepository;
 
-    @Autowired
-    private DataSource dataSource;
-
     @BeforeEach
     public void setup() {
     }
@@ -53,7 +48,7 @@ public class EventServiceTest {
     private void createEventReview(Event event){
         EventReview eventReview = EventReview.builder()
                 .event(event)
-                .reviewId(event.getEventId())
+                .reviewId(eventReviewId)
                 .eventReviewTitle("이벤트리뷰제목")
                 .text("이벤트리뷰내용")
                 .reviewRate(3.5)
@@ -78,7 +73,7 @@ public class EventServiceTest {
     @Test
     void eventReview_event(){
         Event event = Event.builder()
-                .eventId(UUID.randomUUID())
+                .eventId(eventReviewId)
                 .eventTitle("서울 롯데월드")
                 .description("환상의 나라 에버랜드로~")
                 .contact("02-123-421")

@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("test")
 public class EventReviewServiceTest {
+    private final UUID eventReviewId = UUID.randomUUID();
 
     @Autowired
     private EventService eventService;
@@ -97,7 +98,7 @@ public class EventReviewServiceTest {
     void eventReview_event_delete() {
         Event event = createEvent();
         EventReview  eventReview= EventReview.builder()
-                .reviewId(UUID.randomUUID())
+                .reviewId(event.getEventId())
                 .event(event)
                 .eventReviewTitle("이벤트리뷰제목")
                 .text("이벤트리뷰내용")
@@ -105,7 +106,7 @@ public class EventReviewServiceTest {
                 .build();
 
         eventReviewRepository.save(eventReview);
-        eventRepository.delete(event);
+        eventRepository.deleteAll();
 
         List<EventReview> eventReviews = eventReviewRepository.findAll();
         assertThat(eventReviews.size()).isEqualTo(0);

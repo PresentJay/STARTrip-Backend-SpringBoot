@@ -8,7 +8,6 @@ import com.startrip.codebase.service.EventReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,7 +34,6 @@ public class EventReviewController {
 
     //생성
     @PostMapping("/eventReview")
-    @PreAuthorize("isAuthenticated() and hasRole('USER')")
     public ResponseEntity
     createEvent(@RequestBody CreateEventReviewDto dto) {
         UUID id = eventReviewService.createEventReview(dto);
@@ -56,7 +54,6 @@ public class EventReviewController {
 
     //수정
     @PutMapping("/eventReview/{id}")
-    @PreAuthorize("isAuthenticated() and hasRole('USER')")
     public ResponseEntity updateReviewEvent(@PathVariable("id") UUID id, @RequestBody UpdateEventReviewDto dto) {
         try{
             eventReviewService.updateReviewEvent(id, dto);
@@ -68,7 +65,6 @@ public class EventReviewController {
 
     //삭제
     @DeleteMapping("/eventReview/{id}")
-    @PreAuthorize("isAuthenticated() and hasAnyRole('USER','ADMIN')")
     public String deleteEventReveiw(@PathVariable("id") UUID id){
         eventReviewService.deleteEventReveiw(id);
         return "삭제";

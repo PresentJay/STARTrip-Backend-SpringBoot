@@ -8,7 +8,6 @@ import com.startrip.codebase.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,7 +34,6 @@ public class EventController {
 
     //생성
     @PostMapping("/event")
-    @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_EVENT_CREATOR','ADMIN')")
     public ResponseEntity
     createEvent(@RequestBody CreateEventDto dto) {
         eventService.createEvent(dto);
@@ -56,7 +54,6 @@ public class EventController {
 
     //수정
     @PutMapping("/event/{id}")
-    @PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_EVENT_CREATOR','ADMIN')")
     public ResponseEntity updateEvent(@PathVariable("id") UUID id, @RequestBody UpdateEventDto dto) {
         try{
             eventService.updateEvent(id, dto);
@@ -68,7 +65,6 @@ public class EventController {
 
     //삭제
     @DeleteMapping("/event/{id}")
-    @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
     public String deleteEvent(@PathVariable("id") UUID id){
         eventService.deleteEvent(id);
         return "삭제";
