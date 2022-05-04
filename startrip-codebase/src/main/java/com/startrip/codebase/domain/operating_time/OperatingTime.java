@@ -1,4 +1,4 @@
-package com.startrip.codebase.domain.Operating_time;
+package com.startrip.codebase.domain.operating_time;
 
 import com.startrip.codebase.dto.operatingTime.RequestOptimeDto;
 import com.startrip.codebase.dto.operatingTime.UpdateOptimePeriodDto;
