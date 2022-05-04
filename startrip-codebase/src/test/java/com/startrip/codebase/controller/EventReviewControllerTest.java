@@ -174,7 +174,7 @@ public class EventReviewControllerTest {
     @DisplayName("EventReview  Read After Delete TEST")
     @Order(7)
     @Test
-    void evnetReview_Read_After_Delete() throws Exception {
+    void eventReview_Read_After_Delete() throws Exception {
         mockMvc.perform(get("/api/eventReview/" + Id1)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
