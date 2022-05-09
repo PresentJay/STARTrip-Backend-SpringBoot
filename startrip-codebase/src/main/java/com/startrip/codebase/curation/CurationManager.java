@@ -1,15 +1,15 @@
-package com.example.querydsldemo.curation;
+package com.startrip.codebase.curation;
 
-import com.example.querydsldemo.curation.chains.*;
+
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.startrip.codebase.curation.chains.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 @Slf4j

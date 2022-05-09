@@ -1,9 +1,8 @@
-package com.example.querydsldemo.curation.chains;
+package com.startrip.codebase.curation.chains;
 
-import com.example.querydsldemo.curation.CurationChain;
-import com.example.querydsldemo.entity.QPlace;
 import com.querydsl.core.BooleanBuilder;
-
+import com.startrip.codebase.curation.CurationChain;
+import com.startrip.codebase.domain.place.QPlace;
 import java.util.HashMap;
 
 public class LocationCuration implements CurationChain {

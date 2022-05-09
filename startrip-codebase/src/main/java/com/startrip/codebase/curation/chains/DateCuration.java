@@ -1,8 +1,7 @@
-package com.example.querydsldemo.curation.chains;
+package com.startrip.codebase.curation.chains;
 
-import com.example.querydsldemo.curation.CurationChain;
 import com.querydsl.core.BooleanBuilder;
-
+import com.startrip.codebase.curation.CurationChain;
 import java.time.LocalDate;
 import java.util.HashMap;
 

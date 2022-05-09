@@ -1,4 +1,4 @@
-package com.example.querydsldemo.curation.chains;
+package com.startrip.codebase.curation.chains;
 
 public class WeatherCuration {
     //skip

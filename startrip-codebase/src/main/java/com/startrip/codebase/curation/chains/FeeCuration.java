@@ -1,9 +1,8 @@
-package com.example.querydsldemo.curation.chains;
+package com.startrip.codebase.curation.chains;
 
-import com.example.querydsldemo.curation.CurationChain;
-import com.example.querydsldemo.entity.QPlace;
 import com.querydsl.core.BooleanBuilder;
-
+import com.startrip.codebase.curation.CurationChain;
+import com.startrip.codebase.domain.place.QPlace;
 import java.util.HashMap;
 
 public class FeeCuration implements CurationChain {
@@ -19,9 +18,9 @@ public class FeeCuration implements CurationChain {
     public void curation(HashMap<ChainType, Object> inputChains, BooleanBuilder whereClause) {
         if (inputChains.containsKey(ChainType.FEE)){
              fee = (int []) inputChains.get(ChainType.FEE);
-                whereClause.and(
+                /*whereClause.and(
                     QPlace.place.fee.between(fee[0], fee[1]) // todo: Place -> Event -> Event-Pricing -> price_range(double)조회
-            );
+            );*/
         }
         nextChain.curation(inputChains, whereClause);
     }
