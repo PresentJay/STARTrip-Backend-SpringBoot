@@ -37,7 +37,7 @@ public class Event {
     private Place place;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)//, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<EventReview> reviews;
 
     private String eventTitle;

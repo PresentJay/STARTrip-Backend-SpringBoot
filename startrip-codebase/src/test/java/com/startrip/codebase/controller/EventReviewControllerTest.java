@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -33,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EventReviewControllerTest {
     private final UUID EventId1 = UUID.randomUUID();
@@ -53,9 +55,7 @@ public class EventReviewControllerTest {
     @Autowired
     private WebApplicationContext wac;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
-
-    private EventReview target = null;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void setup() {
@@ -63,18 +63,6 @@ public class EventReviewControllerTest {
                 .addFilter(new CharacterEncodingFilter("UTF-8", true))
                 .build();
     }
-/*
-    public Event event_create() throws  Exception {
-        Event event = Event.builder()
-                .eventId(UUID.randomUUID())
-                .eventTitle("진해 군항제")
-                .description("매해 4월1일 ~ 4월10일 진행된다.")
-                .contact("010-1234-1231")
-                .build();
-        eventRepository.save(event);
-        return  event;
-    }
- */
 
     @DisplayName("EventReview Create TEST1")
     @Order(1)
@@ -186,7 +174,7 @@ public class EventReviewControllerTest {
     @DisplayName("EventReview  Read After Delete TEST")
     @Order(7)
     @Test
-    void evnetReview_Read_After_Delete() throws Exception {
+    void eventReview_Read_After_Delete() throws Exception {
         mockMvc.perform(get("/api/eventReview/" + Id1)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
