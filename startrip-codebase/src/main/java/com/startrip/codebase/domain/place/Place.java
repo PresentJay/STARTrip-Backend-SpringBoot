@@ -1,10 +1,11 @@
 package com.startrip.codebase.domain.place;
 
-import com.startrip.codebase.domain.category.Category;
 import com.startrip.codebase.dto.PlaceDto;
 import com.sun.istack.NotNull;
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
@@ -40,12 +41,16 @@ public class Place {
     @NotNull
     private String placeName;
 
+    @ElementCollection(targetClass = String.class)
+    private List<String>  placeAnotherName;
+
     private String phoneNumber;
 
     public static Place of (PlaceDto dto){
         return Place.builder()
                 .id(UUID.randomUUID())
                 .placeName(dto.getPlaceName())
+                .placeAnotherName(dto.getPlaceAnotherName())
                 .address(dto.getAddress())
                 .placePhoto(dto.getPlacePhoto())
                 .categoryId(dto.getCategoryId())
@@ -63,5 +68,6 @@ public class Place {
         this.placePhoto = dto.getPlacePhoto();
         this.placeDescription = dto.getPlaceDescription();
         this.phoneNumber = dto.getPhoneNumber();
+        this.placeAnotherName = dto.getPlaceAnotherName();
     }
 }

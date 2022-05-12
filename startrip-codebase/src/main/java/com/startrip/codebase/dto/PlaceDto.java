@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -22,5 +23,6 @@ public class PlaceDto {
     private String phoneNumber;
     private Double latitude;
     private Double longitude;
+    private List<String>placeAnotherName;
 
 }
