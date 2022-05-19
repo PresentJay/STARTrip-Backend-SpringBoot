@@ -13,6 +13,19 @@ on:
   pull_request:
     branches: [ master, develop ]
 
+env:
+  BRANCH: ${{github.head_ref}}
+  datago.api_key: ${{secrets.DATAGO_API_KEY1}}
+  datago.api_key2: ${{secrets.DATAGO_API_KEY2}}
+  db.postgres-addr: ${{secrets.DB_POSTGRES_ADDR}}
+  db.postgres-password: ${{secrets.DB_POSTGRES_PASSWORD}}
+  db.postgres-username: ${{secrets.DB_POSTGRES_USERNAME}}
+  google.client-id: ${{secrets.GOOGLE_CLIENT_ID}}
+  google.client-secret: ${{secrets.GOOGLE_CLIENT_SECRET}}
+  jwt.header: ${{secrets.JWT_HEADER}}
+  jwt.secret: ${{secrets.JWT_SECRET}}
+  jwt.token-validity-in-seconds: ${{secrets.JWT_TOKEN_VALIDITY_IN_SECONDS}}
+
 jobs:
   build:
 
@@ -41,29 +54,67 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          ~/startrip-codebase/.gradle/caches
-          ~/startrip-codebase/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('startrip-codebase/**/*.gradle*', 'startrip-codebase/**/gradle-wrapper.properties') }}
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle-    
         
     - name: Grant execute permission for gradlew
-      run: cd startrip-codebase && chmod +x ./gradlew
-      
-    - name: Test with Gradle
-      run: cd startrip-codebase && ./gradlew --info test
+      run: chmod +x ./gradlew
 
-    - name: startrip-ls
-      run: echo $(ls startrip-codebase)
-      
+    - name: Build with Gradle
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      with:
+        arguments: build
+
+  test:
+
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-    
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
+
+    - name: Test with Gradle
+      run: ./gradlew --info test
+
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
       if: ${{ always() }}
       with:
-        files: startrip-codebase/build/test-results/**/*.xml
+        files: build/test-results/**/*.xml
         
     - name: Cleanup Gradle Cache
       if: ${{ always() }}
       run: |
-        rm -f ~/startrip-codebase/.gradle/caches/modules-2/modules-2.lock
-        rm -f ~/startrip-codebase/.gradle/caches/modules-2/gc.properties
+        rm -f ~/.gradle/caches/modules-2/modules-2.lock
+        rm -f ~/.gradle/caches/modules-2/gc.properties
