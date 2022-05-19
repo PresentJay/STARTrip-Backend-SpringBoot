@@ -1,16 +1,8 @@
 package com.startrip.codebase.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.startrip.codebase.domain.event.dto.CreateEventDto;
-import com.startrip.codebase.domain.event_review.EventReviewRepository;
-import com.startrip.codebase.domain.event_review.dto.CreateEventReviewDto;
-import com.startrip.codebase.domain.place.Place;
-import com.startrip.codebase.domain.place.PlaceRepository;
 import com.startrip.codebase.dto.LoginDto;
 import com.startrip.codebase.dto.PlaceDto;
-import com.startrip.codebase.service.PlaceService;
-import org.apache.logging.log4j.core.LifeCycle;
-import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -19,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
@@ -29,7 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -37,13 +26,12 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.core.IsEqual.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -71,6 +59,8 @@ public class PlaceControllerTest {
 
     private final UUID category_id_sample = UUID.randomUUID();
     private UUID id1;
+
+    private ArrayList<String> nicknameArr;
 
     @BeforeEach
     public void setup() {
@@ -129,6 +119,13 @@ public class PlaceControllerTest {
         userToken = mvcResult.getResponse().getContentAsString();
     }
 
+    @BeforeEach
+    public void nameSetting() throws  Exception {
+        nicknameArr = new ArrayList<>();
+        nicknameArr.add("별칭1");
+        nicknameArr.add(("별칭2"));
+    }
+
     @WithMockUser(roles = "ADMIN")
     @DisplayName("Place에 새로운 장소를 추가한다 1")
     @Order(1)
@@ -143,6 +140,7 @@ public class PlaceControllerTest {
         dto.setPlacePhoto("사진2");
         dto.setPhoneNumber("010-0000-0000");
         dto.setPlaceDescription("멋있는 장소이다.");
+        dto.setPlaceAnotherName(nicknameArr);
 
         MvcResult result = mockMvc.perform(
                         post("/api/place")
