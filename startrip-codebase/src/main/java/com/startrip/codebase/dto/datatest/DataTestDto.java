@@ -10,4 +10,7 @@ import java.util.UUID;
 public class DataTestDto {
     private UUID testId;
     private String placeName;
+    private double mapx;
+    private double mapy;
+    private String address;
 }

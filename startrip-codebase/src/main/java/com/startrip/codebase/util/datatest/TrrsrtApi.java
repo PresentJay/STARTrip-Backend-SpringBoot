@@ -30,7 +30,7 @@ public class TrrsrtApi {
                 if (str.contains("trrsrtNm")) {
                     String s = str.trim().substring(10).split("<")[0];
                     //System.out.println(s);
-                    dataTestRepository.save(new DataTest(UUID.randomUUID(), s));
+                    //dataTestRepository.save(new DataTest(UUID.randomUUID(), s));
                 }
             }
             fileReader.close();

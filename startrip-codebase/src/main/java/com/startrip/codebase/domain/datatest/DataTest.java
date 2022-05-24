@@ -20,4 +20,10 @@ public class DataTest {
 
     @Column(name = "place_name")
     private String placeName; // json 파일의 title 부분을 넣기
+
+    private double mapx; // GPS X좌표
+
+    private double mapy; // GPS Y좌표
+
+    private String address;
 }
