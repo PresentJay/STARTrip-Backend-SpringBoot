@@ -1,28 +1,28 @@
 package com.startrip.codebase.curation.chains;
 
 import com.querydsl.core.BooleanBuilder;
-import com.startrip.codebase.curation.CurationChain;
+import com.startrip.codebase.curation.Curation;
 import com.startrip.codebase.domain.place.QPlace;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.HashMap;
+import java.util.List;
 
-public class LocationCuration implements CurationChain {
-    private CurationChain nextChain;
-    double[] location = new double [2]; // 0: latitude, 1: longitude
-
-    @Override
-    public void setNextChain(CurationChain chain) {
-        this.nextChain = chain;
-    }
+@Slf4j
+public class LocationCuration
+        implements Curation< HashMap<ChainType, Double []>, BooleanBuilder> {
 
     @Override
-    public void curation(HashMap<ChainType, Object> inputChains, BooleanBuilder whereClause) {
-        if (inputChains.containsKey(ChainType.LOCATION)){
-            location = (double [] )inputChains.get(ChainType.LOCATION);
+    public BooleanBuilder curationProcess(HashMap<ChainType, Double []> input) {
+        Double[] location; // 0: latitude, 1: longitude
+        BooleanBuilder whereClause = new BooleanBuilder();
+        location = input.get(ChainType.LOCATION);
 
-            whereClause.and(QPlace.place.latitude.between(location[0]-0.1,location[0]+0.9)) // TODO: 범위값 조정
-                        .and(QPlace.place.longitude.between(location[1]-2, location[1]+2)
-            );
-        }
-        nextChain.curation(inputChains, whereClause);
+        whereClause.and(QPlace.place.latitude.between(location[0]-0.1,location[0]+0.9)) // TODO: 범위값 조정
+                .and(QPlace.place.longitude.between(location[1]-2, location[1]+2)
+                );
+
+        log.info("LocationCuration작동, 현 조건절: "+whereClause.toString());
+        return null;
     }
 }

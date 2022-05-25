@@ -1,27 +1,27 @@
 package com.startrip.codebase.curation.chains;
 
 import com.querydsl.core.BooleanBuilder;
-import com.startrip.codebase.curation.CurationChain;
+import com.startrip.codebase.curation.Curation;
 import com.startrip.codebase.domain.place.QPlace;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.HashMap;
+import java.util.List;
 
-public class FeeCuration implements CurationChain {
-    private CurationChain nextChain;
-    private int [] fee = new int [2]; // 0:start, 1: end
-
-    @Override
-    public void setNextChain(CurationChain chain) {
-        this.nextChain = chain;
-    }
+@Slf4j
+public class FeeCuration
+        implements Curation< HashMap<ChainType, Integer[]>, BooleanBuilder> {
 
     @Override
-    public void curation(HashMap<ChainType, Object> inputChains, BooleanBuilder whereClause) {
-        if (inputChains.containsKey(ChainType.FEE)){
-             fee = (int []) inputChains.get(ChainType.FEE);
+    public BooleanBuilder curationProcess(HashMap<ChainType, Integer []> input) {
+        Integer [] fee;
+        Double[] location; // 0: latitude, 1: longitude
+        BooleanBuilder whereClause = new BooleanBuilder();
+        fee = input.get(ChainType.FEE);
                 /*whereClause.and(
                     QPlace.place.fee.between(fee[0], fee[1]) // todo: Place -> Event -> Event-Pricing -> price_range(double)조회
             );*/
-        }
-        nextChain.curation(inputChains, whereClause);
+        log.info("FeeCuration 작동, 현 조건절: "+whereClause.toString());
+        return whereClause;
     }
 }

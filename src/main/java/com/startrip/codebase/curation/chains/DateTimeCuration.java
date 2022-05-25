@@ -1,27 +1,28 @@
 package com.startrip.codebase.curation.chains;
 
 import com.querydsl.core.BooleanBuilder;
-import com.startrip.codebase.curation.CurationChain;
+import com.startrip.codebase.curation.Curation;
+import lombok.extern.slf4j.Slf4j;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
-public class DateTimeCuration implements CurationChain {
-    private CurationChain nextChain;
-    private LocalDateTime[] datetime = new LocalDateTime [2]; // 0:start, 1: end
+@Slf4j
+public class DateTimeCuration
+        implements Curation< HashMap<ChainType, LocalDateTime[]>, BooleanBuilder> {
 
     @Override
-    public void setNextChain(CurationChain chain) {
-        this.nextChain = chain;
-    }
-
-    @Override
-    public void curation(HashMap<ChainType, Object> inputChains, BooleanBuilder whereClause) {
+    public BooleanBuilder curationProcess(HashMap<ChainType, LocalDateTime[]> inputChains ) {
+        LocalDateTime [] datetime;
+        BooleanBuilder whereClause = new BooleanBuilder();
         if (inputChains.containsKey(ChainType.DATETIME)){
-            datetime = (LocalDateTime []) inputChains.get(ChainType.DATETIME);
+            datetime = inputChains.get(ChainType.DATETIME);
             /* whereClause.and(  //TODO: Place → Operation_time → start_time(DATETIME), end_time(DATETIME) 조회
                     QPlace.place.
             ); */
         }
-        nextChain.curation(inputChains, whereClause);
+        log.info("DateTimeCuration작동, 현 조건절: "+whereClause.toString());
+       return whereClause;
     }
 }
