@@ -2,6 +2,7 @@ package com.startrip.codebase.curation.chains;
 
 import com.querydsl.core.BooleanBuilder;
 import com.startrip.codebase.curation.Curation;
+import com.startrip.codebase.curation.CurationReturnVal;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
@@ -9,20 +10,24 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 
 @Slf4j
-public class DateTimeCuration
-        implements Curation< HashMap<ChainType, LocalDateTime[]>, BooleanBuilder> {
+public class DateTimeCuration implements Curation{
+    CurationReturnVal curationReturnVal;
 
     @Override
-    public BooleanBuilder curationProcess(HashMap<ChainType, LocalDateTime[]> inputChains ) {
-        LocalDateTime [] datetime;
-        BooleanBuilder whereClause = new BooleanBuilder();
-        if (inputChains.containsKey(ChainType.DATETIME)){
-            datetime = inputChains.get(ChainType.DATETIME);
-            /* whereClause.and(  //TODO: Place → Operation_time → start_time(DATETIME), end_time(DATETIME) 조회
-                    QPlace.place.
-            ); */
-        }
+    public CurationReturnVal curationProcess(CurationReturnVal curationReturnVal) {
+
+        BooleanBuilder whereClause = curationReturnVal.getWhereClause();
+        HashMap<ChainType, Object> input = curationReturnVal.getInput();
+
+        LocalDateTime[] dateTime;
+        dateTime = (LocalDateTime[]) curationReturnVal.getInput().get(ChainType.DATETIME);
+
+        /* whereClause.and(  //TODO: Place → Operation_time → start_time(DATETIME), end_time(DATETIME) 조회
+                QPlace.place.
+        ); */
+        this.curationReturnVal= new CurationReturnVal(input, whereClause);
         log.info("DateTimeCuration작동, 현 조건절: "+whereClause.toString());
-       return whereClause;
+
+        return curationReturnVal;
     }
 }
