@@ -38,7 +38,7 @@ public class InitPlaceCurationService implements CommandLineRunner {
         /* String [] regions = {"울산", "서울", "세종", "인천", "부산", "광주", "대전", "대구", "제주도", "강원도", "경기도", "경상남도", "경상북도"
         , "경상남도", "전라남도", "전라북도", "충청북도", "충청남도"}; */  // build time: 10m
 
-        String [] regions = {"울산", "서울", "세종"};
+        String [] regions = {"울산", "세종", "경기도"};
         for(String region : regions){
             resource = new ClassPathResource("xml/" + region + ".xml");
             getXmlDataToPlace(new File(resource.getURI()));
