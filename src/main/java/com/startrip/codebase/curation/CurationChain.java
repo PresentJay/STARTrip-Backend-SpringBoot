@@ -7,7 +7,6 @@ import com.startrip.codebase.curation.chains.ChainType;
 
 import java.util.HashMap;
 
-public interface CurationChain {
-    void setNextChain(CurationChain chain);
-    void curation(HashMap<ChainType, Object> tags, BooleanBuilder whereClause);
+public interface CurationChain<I, O> {
+    O process(I input);
 }

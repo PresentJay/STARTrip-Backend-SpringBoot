@@ -16,35 +16,23 @@ import java.util.List;
 @Component
 public class CurationManager {
     private final JPAQueryFactory jpaQueryFactory;
-    private List<CurationChain> chains;
+    private final CurationPipeline pipeline;
 
     @Autowired
     public CurationManager(JPAQueryFactory jpaQueryFactory) {
         this.jpaQueryFactory = jpaQueryFactory;
-        setup();
+
+        pipeline = new CurationPipeline(new TagCuration());
     }
 
-    private void setup() {
-        chains = new ArrayList<>();
-        chains.add(new DateCuration());
-        chains.add(new DateTimeCuration());
-        chains.add(new FeeCuration());
-        chains.add(new LocationCuration());
-        chains.add(new TagCuration());
-
-        for (int i = 0; i < chains.size() - 1; i++){
-            chains.get(i).setNextChain(chains.get(i+1));
-        }
-    }
-
-    public BooleanBuilder start(HashMap<ChainType, Object> inputCurations) {
-        BooleanBuilder whereClause = new BooleanBuilder();
+    public CurationObject start() {
         try {
-            chains.stream().findFirst().get().curation(inputCurations, whereClause);
+            CurationObject curationObject = new CurationObject();
+            pipeline.execute(curationObject);
+            return curationObject;
         } catch (Exception e) {
             log.error(e.getMessage());
-        } finally {
-            return whereClause;
         }
+        return null;
     }
 }
