@@ -1,7 +1,8 @@
-package com.startrip.codebase.domain.curation;
+package com.startrip.codebase.domain.curation.entity;
 
 import com.startrip.codebase.domain.user.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,18 +15,23 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CurationObject {
 
     @Id
     @GeneratedValue(generator = "UUID")
     private UUID curationObjectId;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @NotNull
-    private Byte object;
+    private String encodeObject;
 
     private LocalDateTime createdTime;
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
