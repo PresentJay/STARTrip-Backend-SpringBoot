@@ -2,29 +2,23 @@ package com.startrip.codebase.curation.chains;
 
 import com.querydsl.core.BooleanBuilder;
 import com.startrip.codebase.curation.CurationChain;
+import com.startrip.codebase.curation.CurationObject;
 import com.startrip.codebase.domain.place.QPlace;
 import java.util.HashMap;
 import java.util.List;
 
-public class TagCuration implements CurationChain {
-    private CurationChain nextChain;
-    private List<String>tags;
+public class TagCuration implements CurationChain<CurationObject, CurationObject> {
 
     @Override
-    public void setNextChain(CurationChain chain) {
-        this.nextChain = chain;
-    }
-
-    @Override
-    public void curation(HashMap<ChainType, Object> inputChains, BooleanBuilder whereClause) {
-        if (inputChains.containsKey(ChainType.TAG)){
-            this.tags = (List<String>)inputChains.get(ChainType.TAG);
-            for( String s:tags){
-                whereClause.and(QPlace.place.placeName.contains(s)
-                        .or(QPlace.place.address.contains(s)) // 나중에는 분류된 카테고리에서도 검색되도록.
-                );
+    public CurationObject process(CurationObject input) {
+        Object object = input.userInput.get(ChainType.TAG);
+        if (object instanceof List){
+            List<String> userTags = (List<String>) object;
+            for (String tag : userTags) {
+                input.booleanBuilder.or(QPlace.place.placeName.contains(tag).or(QPlace.place.address.contains(tag)));
             }
+
         }
-        nextChain.curation(inputChains, whereClause);
+        return input;
     }
 }
