@@ -9,13 +9,13 @@ services:
       - postgresql
     environment:
       SPRING_DATABASE_URL: jdbc:postgresql://postgresql:5432/startrip
-      SPRING_DATASOURCE_USERNAME:  postgres
+      SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
 
   nginx:
     image: nginx
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf\
+      - ./nginx.conf:/etc/nginx/nginx.conf
     ports:
       - 80:80
     environment:
@@ -26,13 +26,13 @@ services:
   postgresql:
     image: postgres
     volumes:
-      - db_datas:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - PGDATA= /var/lib/postgresql/data/pgdata
+      - PGDATA=/var/lib/postgresql/data/
     ports:
       - 5432:5432
 
 volumes:
-  db_datas:
+  postgres_data:
