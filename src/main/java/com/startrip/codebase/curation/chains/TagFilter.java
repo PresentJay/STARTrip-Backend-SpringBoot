@@ -1,13 +1,12 @@
 package com.startrip.codebase.curation.chains;
 
-import com.querydsl.core.BooleanBuilder;
 import com.startrip.codebase.curation.CurationChain;
 import com.startrip.codebase.curation.CurationObject;
 import com.startrip.codebase.domain.place.QPlace;
-import java.util.HashMap;
+
 import java.util.List;
 
-public class TagCuration implements CurationChain<CurationObject, CurationObject> {
+public class TagFilter implements CurationChain<CurationObject, CurationObject> {
 
     @Override
     public CurationObject process(CurationObject input) {

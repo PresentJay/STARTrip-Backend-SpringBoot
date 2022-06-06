@@ -1,5 +1,5 @@
 package com.startrip.codebase.curation.chains;
 
-public class WeatherCuration {
+public class WeatherFilter {
     //skip
 }
