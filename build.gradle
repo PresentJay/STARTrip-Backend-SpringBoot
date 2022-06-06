@@ -81,6 +81,8 @@ dependencies {
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
+    implementation 'org.json:json:20200518'
+
 }
 
 test {
