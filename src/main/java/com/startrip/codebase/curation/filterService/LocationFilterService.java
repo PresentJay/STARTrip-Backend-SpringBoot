@@ -45,7 +45,7 @@ public class LocationFilterService implements CurationChain<CurationObject, Cura
         if (object instanceof Double []){
             userInputLocate= (Double []) object;
             NumberExpression<Double> distanceFormula = getDistanceFormula(userInputLocate[0], userInputLocate[1]);
-            input.booleanBuilder.and(distanceFormula.lt(2));
+            input.booleanBuilder.and(distanceFormula.lt(5));
         }
         return input;
     }
@@ -55,7 +55,7 @@ public class LocationFilterService implements CurationChain<CurationObject, Cura
 
         NumberExpression<Double> distanceFormula = getDistanceFormula(input[0], input[1]);
         BooleanBuilder whereClause = new BooleanBuilder();
-        whereClause.and(distanceFormula.lt(2));
+        whereClause.and(distanceFormula.lt(5));
         JPAQuery<Place> query = new JPAQuery<>();
 
         QPlace qPlace = QPlace.place;
