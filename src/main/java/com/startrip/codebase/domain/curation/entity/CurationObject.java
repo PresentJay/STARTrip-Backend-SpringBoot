@@ -41,11 +41,11 @@ public class CurationObject {
         this.user = user;
     }
 
-    public CurationObject deSerialize() throws IOException, ClassNotFoundException {
+    public CurationInputObject deSerialize() throws IOException, ClassNotFoundException {
         byte[] serializedSource = Base64.getDecoder().decode(this.getEncodeObject());
         ByteArrayInputStream bais = new ByteArrayInputStream(serializedSource);
         ObjectInputStream ois = new ObjectInputStream(bais);
         Object objectSource = ois.readObject();
-        CurationInputObject deSerialized = (CurationInputObject) objectSource;
+        return (CurationInputObject) objectSource;
     }
 }
