@@ -22,10 +22,11 @@ public class CurationObject {
     @GeneratedValue(generator = "UUID")
     private UUID curationObjectId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Lob // Binary Data
     @NotNull
     private String encodeObject;
 

@@ -1,8 +1,6 @@
 package com.startrip.codebase.domain.curation.repository;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.startrip.codebase.curation.CurationManager;
-import com.startrip.codebase.curation.CurationObjectSource;
+import com.startrip.codebase.curation.CurationInputObject;
 import com.startrip.codebase.curation.chains.ChainType;
 import com.startrip.codebase.domain.curation.entity.CurationObject;
 import com.startrip.codebase.domain.user.User;
@@ -19,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.Base64;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,7 +50,7 @@ class CurationObjectRepositoryTest {
          User user = userRepository.findByEmail("test@test.com").orElseThrow(() -> {
              throw new RuntimeException("없는 유저");
          });
-        CurationObjectSource source = new CurationObjectSource();
+        CurationInputObject source = new CurationInputObject();
         source.addInput(ChainType.TAG, new String("미술관"));
 
         // 직렬화
@@ -78,7 +75,7 @@ class CurationObjectRepositoryTest {
         ByteArrayInputStream bais = new ByteArrayInputStream(serializedSource);
         ObjectInputStream ois = new ObjectInputStream(bais);
         Object objectSource = ois.readObject();
-        CurationObjectSource deSerialized = (CurationObjectSource) objectSource;
+        CurationInputObject deSerialized = (CurationInputObject) objectSource;
 
         System.out.println("역직렬화된 Object : " + deSerialized);
         assertEquals(source.getData(ChainType.TAG), deSerialized.getData(ChainType.TAG));

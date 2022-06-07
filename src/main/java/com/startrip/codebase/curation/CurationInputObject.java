@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CurationObjectSource implements Serializable {
+public class CurationInputObject implements Serializable {
     private BooleanBuilder booleanBuilder = new BooleanBuilder();
     private Map<ChainType, Object> userInput = new HashMap<ChainType, Object>();
 
