@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  springboot:
+    image: startrip:0.0.1
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgresql
+    restart: always
+    environment:
+      SPRING_DATABASE_URL: jdbc:postgresql://postgresql:5432/startrip
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+  nginx:
+    image: nginx
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+    environment:
+      - NGINX_PORT=80
+    depends_on:
+      - springboot
+
+  postgresql:
+    restart: always
+    image: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - PGDATA=/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+volumes:
+  pgdata:
