@@ -1,5 +1,6 @@
 package com.startrip.codebase.domain.curation.entity;
 
+import com.startrip.codebase.curation.CurationInputObject;
 import com.startrip.codebase.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +9,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.UUID;
 
 @Entity
@@ -34,5 +39,13 @@ public class CurationObject {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public CurationObject deSerialize() throws IOException, ClassNotFoundException {
+        byte[] serializedSource = Base64.getDecoder().decode(this.getEncodeObject());
+        ByteArrayInputStream bais = new ByteArrayInputStream(serializedSource);
+        ObjectInputStream ois = new ObjectInputStream(bais);
+        Object objectSource = ois.readObject();
+        CurationInputObject deSerialized = (CurationInputObject) objectSource;
     }
 }

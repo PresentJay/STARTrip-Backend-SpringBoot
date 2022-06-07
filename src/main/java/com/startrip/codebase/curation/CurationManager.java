@@ -52,7 +52,7 @@ public class CurationManager {
         log.debug(userEmail + " SecurityContext");
 
         User user = findUser(userEmail);
-        String encode = curationObjectSerialize(object);
+        String encode = object.serialize();
 
         CurationObject resultObject = CurationObject.builder()
                 .curationObjectId(UUID.randomUUID())
@@ -75,14 +75,5 @@ public class CurationManager {
         return SecurityUtil.getCurrentUsername().orElseThrow(() -> {
             throw new RuntimeException("SecurityContextHolder에 유저 정보가 없습니다.");
         });
-    }
-
-    private String curationObjectSerialize(CurationInputObject object) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream out = new ObjectOutputStream(bos);
-        out.writeObject(object);
-        byte[] serializeSource;
-        serializeSource = bos.toByteArray();
-        return Base64.getEncoder().encodeToString(serializeSource);
     }
 }
