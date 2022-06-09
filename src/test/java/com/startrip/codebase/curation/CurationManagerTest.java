@@ -19,6 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,5 +83,28 @@ class CurationManagerTest {
         });
         assertThat(curationObject.getEncodeObject()).isEqualTo(savedObject.getEncodeObject());
     }
+
+    @DisplayName("큐레이션 후 DB에 저장된 CurationObject 바이너리를 역직렬화 테스트")
+    @WithMockCustomUser(username = "test@test.com", role = "USER")
+    @Test
+    public void test2() throws IOException, ClassNotFoundException {
+        createUser();
+        CurationInputObject inputObject = new CurationInputObject();
+        List<String> userInputTags = new ArrayList<>();
+        userInputTags.add("공원");
+        userInputTags.add("박물관");
+
+        inputObject.addInput(ChainType.TAG, userInputTags); // 사용자 입력
+
+        CurationObject curationObject = curationManager.start(inputObject);
+
+        CurationObject savedObject = curationObjectRepository.findById(curationObject.getCurationObjectId()).orElseThrow(() -> {
+            throw new RuntimeException("해당 CurationObject를 찾을 수 없습니다.");
+        });
+        CurationInputObject deSerializedObject = savedObject.deSerialize();
+
+        assertThat(inputObject.toString()).isEqualTo(deSerializedObject.toString());
+    }
+
 
 }
